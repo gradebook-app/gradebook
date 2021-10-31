@@ -1,0 +1,1 @@
+export const queryGrades= (markingPeriod:string) => `grades?markingPeriod=${markingPeriod}`;

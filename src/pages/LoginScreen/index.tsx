@@ -1,3 +1,5 @@
+import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import React, { useCallback, useEffect, useState } from 'react';
 import { 
     Dimensions, 
@@ -91,11 +93,13 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                         secureTextEntry={true}
                     /> 
                     <BrandButton 
-                        title="View Grades 😆"
+                        title="View Grades"
                         color="#fff"
                         style={styles.button}
                         onPress={handleLogin}
-                    />
+                    >
+                        <FontAwesomeIcon color={"#fff"} icon={faBinoculars} />
+                    </BrandButton>
                 </View>
             </KeyboardAvoidingView>
         </SafeAreaView>

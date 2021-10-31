@@ -13,5 +13,5 @@ export interface ILoginClient {
 
 export interface ISetAccessToken {
     type: EAuthActions.SET_ACCESS_TOKEN,
-    payload: string
+    payload: string | null
 }

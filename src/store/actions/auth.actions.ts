@@ -8,7 +8,7 @@ export const setLoginClient = ({ userId, pass } : any) : ILoginClient => ({
     }
 })
 
-export const setSetAccessToken = (accessToken: string) : ISetAccessToken => ({
+export const setSetAccessToken = (accessToken: string | null) : ISetAccessToken => ({
     type: EAuthActions.SET_ACCESS_TOKEN,
     payload: accessToken,
 })

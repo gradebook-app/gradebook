@@ -1,5 +1,7 @@
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from '@react-native-community/netinfo';
 import React, { ReactChild, useCallback, useEffect } from 'react';
 import { 
     Dimensions, 
@@ -10,6 +12,10 @@ import {
     Animated,
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoginClient } from '../../store/actions/auth.actions';
+import { IRootReducer } from '../../store/reducers';
+import { getAccessToken } from '../../store/selectors';
 
 const { width, height } = Dimensions.get('window');
 
@@ -19,12 +25,38 @@ type LoadingScreenProps = {
 
 const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     const { colors } = useTheme();
+    const dispatch = useDispatch();
+    const state = useSelector((state:IRootReducer) => state);
+    const isAccessToken = !!getAccessToken(state);
 
-    const handleAuth = useCallback(() => {
-        navigation.navigate("login")
-    }, []);
+    const hasInternetAsync = async () => {
+        let netInfoState = await NetInfo.fetch()
+        return netInfoState && netInfoState.isInternetReachable
+    }
 
-    useEffect(handleAuth, [ handleAuth ]);
+    const handleAuth = useCallback(async () => {
+        NetInfo.fetch().then(async state => {
+            if (isAccessToken) {
+                navigation.navigate("navigator");
+                return;
+            };
+            
+            const credentials = await AsyncStorage.getItem("@credentials");
+        
+            if (credentials) {
+                const cachedMarkingPeriod = await AsyncStorage.getItem("@markingPeriod");
+                navigation.setParams({ cachedMarkingPeriod });
+                const data = JSON.parse(credentials);
+                dispatch(setLoginClient(data));
+            } else {
+                navigation.navigate("login")
+            }
+        })
+    }, [ isAccessToken, NetInfo ]);
+
+    useEffect(() => {
+        handleAuth();
+    }, [ handleAuth ])
 
     return (
         <SafeAreaView style={[ styles.container, {  backgroundColor: "#fff" }]}>

@@ -1,5 +1,5 @@
 import { useTheme } from 'react-native-paper';
-import React from 'react';
+import React, { ReactChild } from 'react';
 import { 
     TouchableOpacity, 
     Button,
@@ -14,22 +14,26 @@ const { width, height } = Dimensions.get('window');
 
 type BrandButtonProps = {
     style?: StyleProp<ViewStyle>,
+    children?: ReactChild,
 }
 
-const BrandButton : React.FC<BrandButtonProps & ButtonProps> = ({ style, title, onPress, ...props }) => {
+const BrandButton : React.FC<BrandButtonProps & ButtonProps> = ({ style, title, onPress, children, ...props }) => {
     const { colors } = useTheme();
 
     return (
         <TouchableOpacity 
             onPress={onPress}
             style={[ styles.container, {
-                backgroundColor: colors.primary
+                backgroundColor: colors.primary,
+                display: 'flex',
+                flexDirection: 'row',
             }, style ]}>
             <Button 
                 { ...props }
                 onPress={onPress}
                 title={title} 
             />
+            { children }
         </TouchableOpacity>
     )
 }

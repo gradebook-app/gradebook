@@ -1,0 +1,162 @@
+import React, { useCallback, useEffect, useState } from "react";
+import { 
+    Dimensions, 
+    SafeAreaView, 
+    StyleSheet,
+    ScrollView,
+    View,
+    RefreshControl,
+    Picker,
+    Text,
+    Button
+} from "react-native";
+import { useSelector } from "react-redux";
+import { useGrades } from "../../hooks/useGrades";
+import { ICourse } from "../../store/interfaces/course.interface";
+import { IRootReducer } from "../../store/reducers";
+import { getAccessToken } from "../../store/selectors";
+import CourseBox from "./components/CourseBox";
+import BottomSheet from "reanimated-bottom-sheet";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import Blocker from "../../components/Blocker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const { width, height } = Dimensions.get('window');
+
+type GradesScreenProps = {
+    navigation: any,
+}
+
+interface INavigationParams {
+    params: { 
+        cachedMarkingPeriod?: string | null 
+    }
+}
+
+const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
+    const { params: { cachedMarkingPeriod = null  } = {} as any} : INavigationParams = 
+        navigation?.getState()?.routes?.find((route:any) => (route.name == "loading"));
+
+    const [selectedValue, setSelectedValue] = useState(cachedMarkingPeriod ?? "MP1");
+    const [ adjustedMarkingPeriod, setAdjustedMarkingPeriod ] = useState(cachedMarkingPeriod ?? "MP1");
+
+    const { courses, markingPeriods, currentMarkingPeriod, loading, reload } = useGrades({
+        markingPeriod: adjustedMarkingPeriod
+    });
+
+    const state = useSelector((state:IRootReducer) => state);
+    const isAccessToken = !!getAccessToken(state);
+
+    const handleCourse = (course:ICourse) => {
+        navigation.setParams({ course, markingPeriod: currentMarkingPeriod });
+        navigation.navigate('assignments');
+    };
+
+    const setMarkingPeriod = useCallback(() => {
+        AsyncStorage.setItem("@markingPeriod", currentMarkingPeriod);
+    }, [ currentMarkingPeriod ]);
+
+    useEffect(setMarkingPeriod, [ setMarkingPeriod ]);
+
+    const selectionSheet = React.useRef<null | any>(null);
+
+    const handleAuth = useCallback(() => {
+        reload();
+    }, [ isAccessToken ]);
+
+    useEffect(handleAuth, [ handleAuth ]);
+
+    const onRefresh = () => {
+        reload();
+    };
+
+    const renderMPSelector = () => {
+        return (
+            <View style={styles.selectContainer}>
+                <Text style={styles.markingPeriod}>Select Marking Period</Text>
+                <Picker
+                    selectedValue={selectedValue}
+                    onValueChange={(itemValue) => setSelectedValue(itemValue)}
+                >
+                    { markingPeriods.map((mp, index) => (
+                        <Picker.Item label={mp} value={mp} key={index} />
+                    ))}
+                </Picker>
+            </View>
+        )
+    }
+
+    const [ showSelector, setShowSelector ] = useState(false);
+
+    const handleSelectorBack = () => {
+        setShowSelector(false);
+        selectionSheet.current.snapTo(1);
+
+        setAdjustedMarkingPeriod(selectedValue);
+    }
+
+    const handleSelectionMenuPress = () => {
+        setShowSelector(true);
+        selectionSheet.current.snapTo(0);
+    }
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <ScrollView 
+                contentContainerStyle={styles.courses}
+                refreshControl={
+                    <RefreshControl
+                    refreshing={loading}
+                    onRefresh={onRefresh}
+                    />
+                }>
+               <TouchableWithoutFeedback onPress={handleSelectionMenuPress}>
+                   <Button title={selectedValue} onPress={handleSelectionMenuPress} />
+                </TouchableWithoutFeedback>
+                { courses.map((course, index) => {
+                    return (
+                        <CourseBox 
+                            course={course} 
+                            key={index} 
+                            handleCourse={handleCourse}
+                        />
+                    )
+                })}
+            </ScrollView>
+            <Blocker block={showSelector} onPress={handleSelectorBack} />
+            <BottomSheet 
+                ref={selectionSheet}
+                initialSnap={1}
+                snapPoints={[350, 0]} 
+                borderRadius={25}
+                renderContent={renderMPSelector}
+                onCloseEnd={handleSelectorBack}
+            />
+        </SafeAreaView>
+    )
+}
+
+const styles = StyleSheet.create({
+    markingPeriod: {
+        fontWeight: '500',
+        fontSize: 25,
+        marginTop: 25,
+        marginLeft: 25,
+    },
+    container: {
+        width: width,
+        height: height,
+        backgroundColor: "#fff",
+    },
+    courses: {
+        display: 'flex',
+        alignItems: 'center',
+        paddingBottom: 100,
+    },
+    selectContainer: {
+        height: 350,
+        width: width,
+        backgroundColor: "#fff",
+    }
+})
+export default React.memo(GradesScreen); 
