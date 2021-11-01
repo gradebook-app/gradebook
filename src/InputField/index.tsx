@@ -1,5 +1,6 @@
 import React, { ReactChild } from 'react';
 import { View, StyleSheet, Dimensions, TextInput, TextInputProps, Keyboard } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -10,11 +11,14 @@ interface InputFieldProps {
 
 const InputField : React.FC<InputFieldProps & TextInputProps> = 
     ({ style, children, ...props }) => {
+
+    const { theme } : any = useTheme();
+
     return (
-        <View style={[ styles.container, style ]}>
+        <View style={[ styles.container, { backgroundColor: theme.secondary }, style ]}>
             <TextInput 
                 onBlur={() => Keyboard.dismiss}
-                style={styles.input}
+                style={[ styles.input, { color: theme.text }]}
                 { ...props }
             />
             { children }
@@ -25,7 +29,6 @@ const InputField : React.FC<InputFieldProps & TextInputProps> =
 const styles = StyleSheet.create({
     container: {
         zIndex: 1,
-        backgroundColor: '#fff',
         width: width * 0.90,
         height: 55,
         maxWidth: 500,

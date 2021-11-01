@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Dimensions, SafeAreaView, StyleSheet, View, Text, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useAssigments } from '../../hooks/useAssignments';
@@ -11,7 +11,14 @@ import { ICourse } from '../../store/interfaces/course.interface';
 import { useGradeColor } from '../../hooks/useGradeColor';
 import GradeGraphSlider from './components/GradeGraphSlider';
 import LoadingBox from '../../components/LoadingBox';
+import BottomSheet from "reanimated-bottom-sheet";
+import { IAssignment } from '../../store/interfaces/assignment.interface';
+import Blocker from '../../components/Blocker';
+import AssignmentSheet from './components/AssignmentSheet';
+import { useTheme } from 'react-native-paper';
 
+import NoDataSVG from "../../SVG/NoDataSVG";
+import { useAppearanceTheme } from '../../hooks/useAppearanceTheme';
 const NoDataPNG = require("../../../assets/no-data.png");
 
 const { width, height } = Dimensions.get('window');
@@ -34,6 +41,12 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
         route.name == "navigator"
     ));
 
+    const { theme } : any = useTheme();
+
+    navigation?.setOptions({ headerStyle: { 
+        backgroundColor: theme.background,
+    }})
+
     const { courseId, sectionId } = course; 
 
     const { assignments, loading } = useAssigments({ courseId, sectionId, markingPeriod });
@@ -51,17 +64,40 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
 
     const gradeColor = useGradeColor(course.grade.percentage);
 
+    const assignmentSheet = useRef<any | null>(null);
+
+    const [ selectedAssignment, setSelectedAssignment ] = useState<IAssignment | null>(null); 
+
+    const handleOpenSheet = useCallback((assignment:IAssignment) => {
+        setSelectedAssignment(assignment);
+        assignmentSheet.current.snapTo(0);
+    }, []);
+
+    const handleCloseSheet = useCallback(() => {
+        setSelectedAssignment(null);
+        assignmentSheet.current.snapTo(1);
+    }, []);
+
+    const renderAssignmentSheet = () => {
+        return (
+            <AssignmentSheet assignment={selectedAssignment} />
+        )
+    };
+
+    const { isDark } = useAppearanceTheme();
+
     return (
-        <SafeAreaView style={[ styles.container, { backgroundColor: "#fff" }]}>
+        <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
+            <Blocker block={!!selectedAssignment} onPress={handleCloseSheet} />
             <LoadingBox loading={loading && !assignments.length} />
             <View style={ styles.classHeader }>
                     <View>
                         <Text 
                             numberOfLines={1}
-                            style={styles.className}>
+                            style={[ styles.className, { color: theme.text } ]}>
                                 { course?.name || "" }
                         </Text>
-                        <Text style={styles.teacher}>{ course?.teacher || "" }</Text>
+                        <Text style={[ styles.teacher, { color: theme.grey} ]}>{ course?.teacher || "" }</Text>
                     </View>
                     <View>
                         <Text style={[ styles.grade, { color: gradeColor }]}>
@@ -73,13 +109,13 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
             <ScrollView contentContainerStyle={ styles.scrollView }>
                 { graded.length ? <GradeGraphSlider assignments={graded} /> : <></> }
                 { ungraded.length ? (
-                    <View style={[ styles.assignments, { backgroundColor: "#fff", maxHeight: 200 }]}>
+                    <View style={[ styles.assignments, { backgroundColor: theme.secondary, maxHeight: 200 }]}>
                         {/* <Text style={ styles.header }>Ungraded Assignments</Text> */}
                         <ScrollView contentContainerStyle={styles.assignmentsContainer}>
                             {
                                 ungraded.map((assignment, index) => {
                                     return (
-                                        <Assignment assignment={assignment} key={index}>
+                                        <Assignment onPress={handleOpenSheet} assignment={assignment} key={index}>
                                             <UngradedAssignment assignment={assignment}/>
                                         </Assignment>
                                     )
@@ -90,13 +126,13 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                 ) : <></> }
                 {
                     graded.length ? (
-                        <View style={[ styles.assignments, { backgroundColor: "#fff" }]}>
+                        <View style={[ styles.assignments, {  backgroundColor: theme.secondary }]}>
                             {/* <Text style={ styles.header }>Graded Assignments</Text> */}
                             <ScrollView contentContainerStyle={[ styles.assignmentsContainer, styles.graded]}>
                             {
                                 graded.map((assignment, index) => {
                                     return (
-                                        <Assignment assignment={assignment} key={index}>
+                                        <Assignment onPress={handleOpenSheet} assignment={assignment} key={index}>
                                             <GradedAssignment assignment={assignment}/>
                                         </Assignment>
                                     )
@@ -109,12 +145,24 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                 {
                     !assignments.length ? (
                         <View style={styles.noDataContainer}>
-                            <Image style={styles.noDataImage} source={NoDataPNG} />
-                            <Text style={styles.noDataCaption}>No Assignments.</Text>
+                            { isDark ? 
+                                <></> : 
+                                <Image style={styles.noDataImage} source={NoDataPNG} />
+                            }
+                            {/* <NoDataSVG width={width * 0.8} /> */}
+                            <Text style={[ styles.noDataCaption, { color: theme.text }]}>No Assignments.</Text>
                         </View>
                     ) : <></>
                 }
             </ScrollView>
+            <BottomSheet 
+                ref={assignmentSheet}
+                initialSnap={1}
+                snapPoints={[400, 0]}
+                borderRadius={25}
+                renderContent={renderAssignmentSheet}
+                onCloseEnd={handleCloseSheet}
+            />
         </SafeAreaView>
     )
 }
@@ -196,7 +244,7 @@ const styles = StyleSheet.create({
     noDataCaption: {
         fontSize: 17.5,
         color: "rgba(0, 0, 0, 0.5)",
-    }
+    },
 });
 
 export default React.memo(AssignmentsScreen)

@@ -14,6 +14,7 @@ const { width } = Dimensions.get('window');
 
 const CourseBox : React.FC<CourseBoxProps> = ({ course, handleCourse }) => {
     const gradeColor = useGradeColor(course.grade.percentage);
+    const { theme } : any = useTheme();
 
     const handlePress = () => {
         handleCourse(course);
@@ -21,10 +22,10 @@ const CourseBox : React.FC<CourseBoxProps> = ({ course, handleCourse }) => {
 
     return (
         <TouchableOpacity onPress={handlePress}>
-            <View style={[ styles.container, { backgroundColor: '#fff'} ]} >
+            <View style={[ styles.container, { backgroundColor: theme.secondary } ]} >
                 <View>
-                    <Text style={styles.name}>{ course.name }</Text>
-                    <Text style={styles.teacher}>{ course.teacher }</Text>
+                    <Text style={[ styles.name, { color: theme.text } ]}>{ course.name }</Text>
+                    <Text style={[ styles.teacher, { color: theme.grey }]}>{ course.teacher }</Text>
                 </View>
                 <View style={styles.gradeContainer}>
                     <Text style={[ styles.grade, { color: gradeColor } ]}>

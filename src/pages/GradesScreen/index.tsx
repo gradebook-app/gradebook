@@ -6,10 +6,10 @@ import {
     ScrollView,
     View,
     RefreshControl,
-    Picker,
     Text,
     Button
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { useSelector } from "react-redux";
 import { useGrades } from "../../hooks/useGrades";
 import { ICourse } from "../../store/interfaces/course.interface";
@@ -20,6 +20,7 @@ import BottomSheet from "reanimated-bottom-sheet";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import Blocker from "../../components/Blocker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "react-native-paper";
 
 const { width, height } = Dimensions.get('window');
 
@@ -70,16 +71,18 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         reload();
     };
 
+    const { theme } : any = useTheme();
+
     const renderMPSelector = () => {
         return (
-            <View style={styles.selectContainer}>
-                <Text style={styles.markingPeriod}>Select Marking Period</Text>
+            <View style={[ styles.selectContainer, { backgroundColor: theme.background } ]}>
+                <Text style={[ styles.markingPeriod, { color: theme.text } ]}>Select Marking Period</Text>
                 <Picker
                     selectedValue={selectedValue}
                     onValueChange={(itemValue) => setSelectedValue(itemValue)}
                 >
                     { markingPeriods.map((mp, index) => (
-                        <Picker.Item label={mp} value={mp} key={index} />
+                        <Picker.Item color={theme.text} label={mp} value={mp} key={index} />
                     ))}
                 </Picker>
             </View>
@@ -101,7 +104,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <ScrollView 
                 contentContainerStyle={styles.courses}
                 refreshControl={

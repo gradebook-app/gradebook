@@ -1,5 +1,9 @@
-import React, { ReactChild } from 'react';
+import { faCommentDots } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import React, { ReactChild, useCallback, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet, Dimensions } from "react-native";
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useTheme } from 'react-native-paper';
 import { IAssignment } from '../../../store/interfaces/assignment.interface';
 
 const { width, height } = Dimensions.get('window');
@@ -7,22 +11,41 @@ const { width, height } = Dimensions.get('window');
 type AssignmentProp = {
     assignment: IAssignment,
     children?: ReactChild,
+    onPress: (e:IAssignment) => void,
 }
 
-const Assignment : React.FC<AssignmentProp> = ({ assignment, children }) => {
+const Assignment : React.FC<AssignmentProp> = ({ assignment, children, onPress }) => {
+    const handlePress = useCallback(() => {
+        onPress(assignment);
+    }, []);
+
+    const { theme } : any = useTheme();
+
     return (
-        <View style={ styles.container }>
-        <View>
-            <View style={ styles.metaInfo }>
-                <Text numberOfLines={1} style={ styles.title }>{ assignment?.name  }</Text>
+        <TouchableOpacity onPress={handlePress}>
+            <View style={[ styles.container, { backgroundColor: theme.background } ]}>
+                <View>
+                    <View style={ styles.metaInfo }>
+                        <Text 
+                            numberOfLines={1} 
+                            style={[ styles.title, { color: theme.text }]}
+                        >{ assignment?.name  }</Text>
+                        { assignment.comment ? 
+                            <FontAwesomeIcon 
+                                style={styles.comment} 
+                                size={20} 
+                                color={"rgba(0, 0, 0, 0.15)"} 
+                                icon={faCommentDots} /> 
+                        : <></>}
+                    </View>
+                    <View style={ styles.metaInfo }>
+                        <Text style={[ styles.date, { color: theme.grey } ]}>Due: { assignment.date.split(/\s/g).join(" ") }</Text>
+                        <Text numberOfLines={1} style={[ styles.category, {color: theme.grey }] }>- { assignment.category }</Text>
+                    </View>
+                </View>
+                { children }
             </View>
-            <View style={ styles.metaInfo }>
-                <Text style={ styles.date }>Due: { assignment.date.split(/\s/g).join(" ") }</Text>
-                <Text numberOfLines={1} style={ styles.category }>- { assignment.category }</Text>
-            </View>
-        </View>
-        { children }
-    </View>
+        </TouchableOpacity>
     )
 }
 
@@ -68,6 +91,9 @@ const styles = StyleSheet.create({
         maxWidth: 115,
         marginTop: 7.5,
     },
+    comment: {
+        marginLeft: 7.5,
+    }
 });
 
 export default Assignment;

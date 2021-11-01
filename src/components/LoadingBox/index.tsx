@@ -40,7 +40,7 @@ type LoadingScreenProps = {
 
 
 const LoadingBox: React.FC<LoadingScreenProps> = ({ loading = false }) => {
-    const { colors } = useTheme();
+    const { theme } : any = useTheme();
 
     const slides = loadingConfig.slide.slides;
 
@@ -96,7 +96,7 @@ const LoadingBox: React.FC<LoadingScreenProps> = ({ loading = false }) => {
         <Animated.View 
             pointerEvents={loading ? 'box-only' : 'none' }
             style={[ styles.container, { opacity: containerOpacity }]}>
-            <View style={styles.loadingContainer}>
+            <View style={[styles.loadingContainer, { backgroundColor: theme.secondary }]}>
                 <Animated.View
                     style={[ styles.track, { 
                         transform: [{

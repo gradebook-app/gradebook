@@ -1,5 +1,6 @@
 import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { useTheme } from 'react-native-paper';
 import React, { useCallback, useEffect, useState } from 'react';
 import { 
     Dimensions, 
@@ -15,6 +16,7 @@ import { setLoginClient } from '../../store/actions/auth.actions';
 import { IRootReducer } from '../../store/reducers';
 import { getAccessToken, isLoading } from '../../store/selectors';
 
+import EducationSVG from "../../SVG/EducationSVG";
 const EducationPNG = require('../../../assets/education.png');
 
 const { width, height } = Dimensions.get('window');
@@ -36,6 +38,8 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
     const state = useSelector((state:IRootReducer) => state);
     const loading = isLoading(state);
     const isAccessToken = !!getAccessToken(state);
+
+    const { theme } : any = useTheme();
 
     const [ values, setValues ] = useState<IFormValues>({
         userId: "",
@@ -68,12 +72,14 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         setValues({ ...values, [ type ]: text });
     };
 
+
     return (
-        <SafeAreaView style={[ styles.container, { backgroundColor: "#fff" }]}>
+        <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <LoadingBox loading={loading}/>
             <KeyboardAvoidingView behavior={'padding'}>
-                <View>
-                    <Image style={styles.image} source={EducationPNG} />
+                <View style={ styles.imageContainer }>
+                    {/* <Image style={styles.image} source={EducationPNG} /> */}
+                    <EducationSVG width={width * 0.85}/>
                 </View>
                 <View style={styles.form}>
                     <InputField 
@@ -126,6 +132,11 @@ const styles = StyleSheet.create({
     image: {
         width: width * 0.85,
         height: width * 0.85,
+    },
+    imageContainer: {
+        width: width,
+        display: 'flex',
+        alignItems: 'center',
     }
 }); 
 

@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, View, Text, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import GradeChart from '../../../components/GradeChart';
+import { useAppearanceTheme } from '../../../hooks/useAppearanceTheme';
 import { useCategoryColor } from '../../../hooks/useCategoryColor';
 import { IAssignment } from '../../../store/interfaces/assignment.interface';
 
@@ -22,6 +23,7 @@ const GradeSlide : React.FC<GradeSlideProps> = ({ category, value }) => {
             .filter((value) => !!value?.grade?.percentage)
             .map((value) => (value.grade.percentage || 0)).reverse();
     }, []);
+    const { theme } : any = useTheme();
 
     const formattedCategory = useMemo(() => {
         return `${category.substring(0, 1).toUpperCase()}${category.substring(1)}` 
@@ -30,7 +32,7 @@ const GradeSlide : React.FC<GradeSlideProps> = ({ category, value }) => {
     const categoryColor = useCategoryColor(category);
 
     return (
-        <View style={styles.slide}>
+        <View style={[ styles.slide, { backgroundColor: theme.background } ]}>
            <View>
                 <Text style={[ styles.category, { color: categoryColor } ]}>{ formattedCategory } Progess</Text>
                 <GradeChart stroke={categoryColor} data={points} />
@@ -42,7 +44,7 @@ const GradeSlide : React.FC<GradeSlideProps> = ({ category, value }) => {
 const GradeGraphSlider : React.FC<GradeGraphSliderProps> = ({ assignments }) => {
     const [ slideNumber, setSlideNumber ] = useState<number>(0);
 
-    const { colors } = useTheme();
+    const { colors, theme } : any = useTheme();
 
     const grouped = useMemo(() => {
         const sortingHandler = <Object, Key>(list:Object[], keyGetter:(e:Object) => Key) => {
@@ -82,6 +84,8 @@ const GradeGraphSlider : React.FC<GradeGraphSliderProps> = ({ assignments }) => 
         setSlideNumber(currentSlide);
     };
 
+    const { isDark } = useAppearanceTheme();
+
     return (
         <>
             <ScrollView 
@@ -104,7 +108,9 @@ const GradeGraphSlider : React.FC<GradeGraphSliderProps> = ({ assignments }) => 
                                 key={index} 
                                 style={[ 
                                     styles.dot, 
-                                    index === slideNumber ?  { backgroundColor: colors.primary } : null 
+                                    index === slideNumber ?  
+                                    { backgroundColor: colors.primary } : 
+                                    { backgroundColor: isDark ? theme.grey : "rgba(0, 0, 0, 0.1)"} 
                                 ]}
                             ></View>
                         )

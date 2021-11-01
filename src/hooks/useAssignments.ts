@@ -29,7 +29,6 @@ export const useAssigments = ({ courseId, sectionId, markingPeriod  }:IUseAssigm
 
         setLoading(true);
 
-        console.log(markingPeriod);
         const response = await api.get(queryAssignments(courseId, sectionId, markingPeriod ));
         
         setLoading(false);

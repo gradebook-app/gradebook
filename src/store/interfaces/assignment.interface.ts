@@ -9,4 +9,5 @@ export interface IAssignment {
     category: string,
     course: string,
     date: string,
+    comment: string,
 }

@@ -29,6 +29,8 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     const state = useSelector((state:IRootReducer) => state);
     const isAccessToken = !!getAccessToken(state);
 
+    const { theme } : any = useTheme();
+
     const hasInternetAsync = async () => {
         let netInfoState = await NetInfo.fetch()
         return netInfoState && netInfoState.isInternetReachable
@@ -59,8 +61,8 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     }, [ handleAuth ])
 
     return (
-        <SafeAreaView style={[ styles.container, {  backgroundColor: "#fff" }]}>
-            <View style={styles.loadingContainer}>
+        <SafeAreaView style={[ styles.container, {  backgroundColor: theme.background }]}>
+            <View style={[ styles.loadingContainer, { backgroundColor:  theme.secondary }]}>
                 <FontAwesomeIcon size={65} color={colors.primary} icon={faBook} />
             </View>
         </SafeAreaView>

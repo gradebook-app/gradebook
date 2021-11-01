@@ -11,11 +11,11 @@ type GradeChartProps = {
 }
 
 const GradeChart : React.FC<GradeChartProps> = ({ data = [], stroke }) => {
-    const { colors } = useTheme();
+    const { colors, theme  } : any = useTheme();
 
     return  (
         <View style={styles.graphContainer}>
-            <View style={styles.graph}>
+            <View style={[ styles.graph, { backgroundColor: theme.secondary } ]}>
                 <YAxis
                     data={data}
                     contentInset={{ top: 20, bottom: 20 }}

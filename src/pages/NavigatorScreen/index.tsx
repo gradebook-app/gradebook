@@ -2,13 +2,14 @@ import "react-native-gesture-handler";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import React from 'react';
-import { SafeAreaView, Text } from 'react-native';
+import { Appearance } from 'react-native';
 import GradesScreen from "../GradesScreen";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBook, faCalendarAlt, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "react-native-paper";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import AccountScreen from "../AccountScreen";
+import { useAppearanceTheme } from "../../hooks/useAppearanceTheme";
 
 type TabIconProps = {
     focused: boolean,
@@ -18,12 +19,16 @@ type TabIconProps = {
 
 const TabIcon : React.FC<TabIconProps> = ({ focused, iconSize, icon, ...props }) => {
     const size = iconSize || 25; 
-    const { colors } = useTheme();
-    const color = focused ? colors.primary : "rgba(0, 0, 0, 0.15)";
+    const { colors, theme } : any = useTheme();
+
+    const { isDark } = useAppearanceTheme();
+
+    const iconColor = focused ? colors.primary : isDark ? 
+        theme?.icon?.dynamic?.dark : theme?.icon?.dynamic?.light;
 
     return (
         <FontAwesomeIcon 
-            color={color}
+            color={iconColor}
             size={size} 
             icon={icon} 
             { ...props } 
@@ -37,6 +42,12 @@ type INavigatorScreenProps = {
 
 const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...props }) => {
     const Tabs = createBottomTabNavigator();
+
+    const { theme } : any = useTheme();
+
+    navigation?.setOptions({ headerStyle: { 
+        backgroundColor: theme.background,
+    }})
 
     return (
         <Tabs.Navigator 
@@ -58,11 +69,14 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                         }
                     }
                 },
+                tabBarStyle: {
+                    backgroundColor: theme?.secondary,
+                },
                 headerShown: false,
                 tabBarLabel: '',
                 tabBarIconStyle: {
                     marginTop: 15,
-                }
+                },
                 })}
             >
             <Tabs.Screen 
