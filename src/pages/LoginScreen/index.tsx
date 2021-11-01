@@ -1,12 +1,13 @@
 import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useTheme } from 'react-native-paper';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { 
     Dimensions, 
     SafeAreaView, 
     StyleSheet, 
-    View, Image, KeyboardAvoidingView
+    Button,
+    View, Text, KeyboardAvoidingView
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import BrandButton from '../../components/BrandButton';
@@ -14,10 +15,16 @@ import LoadingBox from '../../components/LoadingBox';
 import InputField from '../../InputField';
 import { setLoginClient } from '../../store/actions/auth.actions';
 import { IRootReducer } from '../../store/reducers';
-import { getAccessToken, isLoading } from '../../store/selectors';
+import { getAccessToken, isAccessDenied, isLoading } from '../../store/selectors';
+import BottomSheet from "reanimated-bottom-sheet";
 
 import EducationSVG from "../../SVG/EducationSVG";
-const EducationPNG = require('../../../assets/education.png');
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { Picker } from '@react-native-picker/picker';
+import { schoolDistrictsMapped } from '../../utils/mapping';
+import { ESchoolDistricts } from '../../store/enums/school-districts.enum';
+import Blocker from '../../components/Blocker';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -26,6 +33,7 @@ interface IFormValues {
     pass: string
     passError: boolean,
     userIdError: boolean,
+    schoolDistrict?: string,
 }
 
 type LoginScreenProps = {
@@ -45,7 +53,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         userId: "",
         pass: "",
         passError: false,
-        userIdError: false
+        userIdError: false,
     });
 
     const handleLogin = (useCallback(() => {
@@ -54,6 +62,8 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
             return; 
         } else if (!values.userId) {
             handleValueChange("userIdError")(true);
+            return; 
+        } else if (!values.schoolDistrict) {
             return; 
         }
 
@@ -72,23 +82,77 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         setValues({ ...values, [ type ]: text });
     };
 
+    const [ sheetOpen, setSheetOpen ] = useState(false);
+    const schoolDistrictSheet = useRef<any | null>(null);
+
+    const handleSchoolDistrictOpen = () => {
+        setSheetOpen(true);
+        schoolDistrictSheet.current.snapTo(0);
+    };
+
+    const handleSchoolDistrictClose = () => {
+        setSheetOpen(false);
+        schoolDistrictSheet.current.snapTo(1);
+    }
+
+    const renderSchoolDistrictSheet = () => {
+        return (
+            <View style={[styles.schoolDistrictSheet, { backgroundColor: theme.background }]}>
+                <View style={{ 
+                    flexDirection: "row", 
+                    justifyContent: "space-between",
+                    alignItems: 'center',
+                    display: 'flex',
+                }}>
+                    <Text style={[ styles.schoolDistrictHeader, { color: theme.text }]}>Select School District</Text>
+                    <Button title="Done" onPress={handleSchoolDistrictClose} />
+                </View>
+                <Picker 
+                    onValueChange={(itemValue) => handleValueChange('schoolDistrict')(itemValue)}
+                    selectedValue={values.schoolDistrict}
+                >
+                    <Picker.Item 
+                        color={theme.text}
+                        label={"Choose School District"} 
+                        value={undefined} 
+                    />
+                    { Object.keys(schoolDistrictsMapped).map((schoolDistrict) => {
+                        return (
+                            <Picker.Item 
+                                color={theme.text}
+                                label={schoolDistrictsMapped[schoolDistrict as ESchoolDistricts]} 
+                                value={schoolDistrict} 
+                            />
+                        )
+                    })}
+                </Picker>
+            </View>
+        )
+    }
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <LoadingBox loading={loading}/>
+            <Blocker onPress={handleSchoolDistrictClose} block={sheetOpen}/>
             <KeyboardAvoidingView behavior={'padding'}>
                 <View style={ styles.imageContainer }>
                     {/* <Image style={styles.image} source={EducationPNG} /> */}
                     <EducationSVG width={width * 0.85}/>
                 </View>
                 <View style={styles.form}>
+                    <TouchableWithoutFeedback onPress={handleSchoolDistrictOpen}>
+                        <InputField 
+                            value={schoolDistrictsMapped[values.schoolDistrict as ESchoolDistricts]}
+                            editable={false}
+                            placeholder={"Select School District"}
+                        />
+                    </TouchableWithoutFeedback>
                     <InputField 
                         value={values.userId}
                         returnKeyType={'done'}
-                        keyboardType="numeric"
                         autoCompleteType={'off'}
                         onChangeText={handleValueChange('userId')}
-                        placeholder="Student ID"
+                        placeholder="Email"
                     /> 
                     <InputField 
                         value={values.pass}
@@ -108,6 +172,14 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                     </BrandButton>
                 </View>
             </KeyboardAvoidingView>
+            <BottomSheet
+                ref={schoolDistrictSheet}
+                initialSnap={1}
+                snapPoints={[500, 0]}
+                borderRadius={25}
+                onCloseEnd={handleSchoolDistrictClose}
+                renderContent={renderSchoolDistrictSheet}
+            />
         </SafeAreaView>
     )
 }
@@ -137,6 +209,15 @@ const styles = StyleSheet.create({
         width: width,
         display: 'flex',
         alignItems: 'center',
+    },
+    schoolDistrictSheet: {
+        width: width,
+        height: 500,
+        padding: 15,
+    },
+    schoolDistrictHeader: {
+        fontWeight: '600',
+        fontSize: 25,
     }
 }); 
 

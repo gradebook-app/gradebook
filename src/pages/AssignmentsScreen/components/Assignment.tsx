@@ -4,6 +4,7 @@ import React, { ReactChild, useCallback, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet, Dimensions } from "react-native";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from 'react-native-paper';
+import { useAppearanceTheme } from '../../../hooks/useAppearanceTheme';
 import { IAssignment } from '../../../store/interfaces/assignment.interface';
 
 const { width, height } = Dimensions.get('window');
@@ -20,6 +21,7 @@ const Assignment : React.FC<AssignmentProp> = ({ assignment, children, onPress }
     }, []);
 
     const { theme } : any = useTheme();
+    const { isDark } : any = useAppearanceTheme();
 
     return (
         <TouchableOpacity onPress={handlePress}>
@@ -34,7 +36,8 @@ const Assignment : React.FC<AssignmentProp> = ({ assignment, children, onPress }
                             <FontAwesomeIcon 
                                 style={styles.comment} 
                                 size={20} 
-                                color={"rgba(0, 0, 0, 0.15)"} 
+                                color={ isDark ? theme.grey.dynamic.dark 
+                                    : "rgba(0, 0, 0, 0.15)"} 
                                 icon={faCommentDots} /> 
                         : <></>}
                     </View>

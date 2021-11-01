@@ -3,7 +3,7 @@ import { all, put, takeLatest } from "@redux-saga/core/effects"
 import { LOGIN_CLIENT } from "../../constants/endpoints/auth";
 import * as api from "../../utils/api";
 import { setLoading } from "../actions";
-import { setSetAccessToken } from "../actions/auth.actions";
+import { setAccessDenied, setSetAccessToken } from "../actions/auth.actions";
 import { EAuthActions, ILoginClient } from "../constants/auth.constants";
 
 function* loginClient({ payload } : ILoginClient) : Generator<any> {
@@ -12,7 +12,10 @@ function* loginClient({ payload } : ILoginClient) : Generator<any> {
     if (response && response?.access === true) {
         yield put(setSetAccessToken(response.accessToken));
         yield AsyncStorage.setItem("@credentials", JSON.stringify(payload))
-    } 
+    } else if (response && response?.access === false) {
+        yield put(setAccessDenied(true));
+        yield AsyncStorage.removeItem("@credentials")
+    }
     yield put(setLoading(false));
 }
 

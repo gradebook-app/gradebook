@@ -1,5 +1,8 @@
+import { ESchoolDistricts } from "../enums/school-districts.enum";
+
 export enum EAuthActions {
     LOGIN_CLIENT = "LOGIN_CLIENT",
+    SET_ACCESS_DENIED = "SET_ACCESS_DENIED",
     SET_ACCESS_TOKEN = "SET_ACCESS_TOKEN"
 }
 
@@ -7,8 +10,14 @@ export interface ILoginClient {
     type: EAuthActions.LOGIN_CLIENT,
     payload: {
         userId: string,
-        pass: string
+        pass: string,
+        schoolDistrict: ESchoolDistricts,
     }
+}
+
+export interface ISetAccessDenied {
+    type: EAuthActions.SET_ACCESS_DENIED,
+    payload: boolean,
 }
 
 export interface ISetAccessToken {

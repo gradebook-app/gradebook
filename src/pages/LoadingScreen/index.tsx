@@ -13,9 +13,9 @@ import {
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoginClient } from '../../store/actions/auth.actions';
+import { setAccessDenied, setLoginClient } from '../../store/actions/auth.actions';
 import { IRootReducer } from '../../store/reducers';
-import { getAccessToken } from '../../store/selectors';
+import { getAccessToken, isAccessDenied } from '../../store/selectors';
 
 const { width, height } = Dimensions.get('window');
 
@@ -28,20 +28,27 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     const dispatch = useDispatch();
     const state = useSelector((state:IRootReducer) => state);
     const isAccessToken = !!getAccessToken(state);
+    const accessDenied = isAccessDenied(state);
 
     const { theme } : any = useTheme();
 
-    const hasInternetAsync = async () => {
-        let netInfoState = await NetInfo.fetch()
-        return netInfoState && netInfoState.isInternetReachable
-    }
+    // const hasInternetAsync = async () => {
+    //     let netInfoState = await NetInfo.fetch()
+    //     return netInfoState && netInfoState.isInternetReachable
+    // }
 
     const handleAuth = useCallback(async () => {
-        NetInfo.fetch().then(async state => {
+        NetInfo.fetch().then(async _ => {
             if (isAccessToken) {
                 navigation.navigate("navigator");
                 return;
             };
+
+            if (accessDenied) {
+                navigation.navigate("login")
+                dispatch(setAccessDenied(false));
+                return; 
+            }
             
             const credentials = await AsyncStorage.getItem("@credentials");
         
@@ -54,7 +61,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
                 navigation.navigate("login")
             }
         })
-    }, [ isAccessToken, NetInfo ]);
+    }, [ isAccessToken, NetInfo, accessDenied ]);
 
     useEffect(() => {
         handleAuth();
