@@ -36,10 +36,13 @@ export const get = async (endpoint:string) => {
 }
 
 export const post = async (endpoint:string, body?:any) => {
+    const accessToken = retrieveAccessToken();
+
     const defaultOptions = {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`
         },
         body: JSON.stringify(body || {}),
     };

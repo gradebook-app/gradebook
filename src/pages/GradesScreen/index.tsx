@@ -21,6 +21,8 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import Blocker from "../../components/Blocker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "react-native-paper";
+import GPASlideshow from "./components/GPASlideshow";
+import { useGPA } from "../../hooks/useGPA";
 
 const { width, height } = Dimensions.get('window');
 
@@ -38,12 +40,14 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     const { params: { cachedMarkingPeriod = null  } = {} as any} : INavigationParams = 
         navigation?.getState()?.routes?.find((route:any) => (route.name == "loading"));
 
-    const [selectedValue, setSelectedValue] = useState(cachedMarkingPeriod ?? "MP1");
-    const [ adjustedMarkingPeriod, setAdjustedMarkingPeriod ] = useState(cachedMarkingPeriod ?? "MP1");
+    const [selectedValue, setSelectedValue] = useState(cachedMarkingPeriod ?? "");
+    const [ adjustedMarkingPeriod, setAdjustedMarkingPeriod ] = useState(cachedMarkingPeriod ?? "");
 
     const { courses, markingPeriods, currentMarkingPeriod, loading, reload } = useGrades({
         markingPeriod: adjustedMarkingPeriod
     });
+
+    const { reload:reloadGPA, loading:loadingGPA, gpa } = useGPA();
 
     const state = useSelector((state:IRootReducer) => state);
     const isAccessToken = !!getAccessToken(state);
@@ -69,6 +73,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
     const onRefresh = () => {
         reload();
+        reloadGPA();
     };
 
     const { theme } : any = useTheme();
@@ -109,13 +114,14 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                 contentContainerStyle={styles.courses}
                 refreshControl={
                     <RefreshControl
-                    refreshing={loading}
+                    refreshing={loading || loadingGPA}
                     onRefresh={onRefresh}
                     />
                 }>
                <TouchableWithoutFeedback onPress={handleSelectionMenuPress}>
                    <Button title={selectedValue} onPress={handleSelectionMenuPress} />
                 </TouchableWithoutFeedback>
+                <GPASlideshow gpa={gpa} />
                 { courses.map((course, index) => {
                     return (
                         <CourseBox 

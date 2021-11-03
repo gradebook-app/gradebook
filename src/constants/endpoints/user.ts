@@ -1,0 +1,1 @@
+export const SET_NOTIFICATION_TOKEN = "user/setNotificationToken";
