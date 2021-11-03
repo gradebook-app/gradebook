@@ -1,11 +1,9 @@
 import { EUserActions } from "../constants/user.constants";
+import { IUser } from "../interfaces/user.interface";
 
 export interface IUserReducer {
     accessToken: string | null,
-    user?: {
-        _id: string,
-        notificationToken: string,
-    }
+    user?: IUser,
 }
 
 const initialState = {

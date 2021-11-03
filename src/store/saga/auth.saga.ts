@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { all, put, takeLatest } from "@redux-saga/core/effects"
-import { LOGIN_CLIENT } from "../../constants/endpoints/auth";
+import { LOGIN_CLIENT, LOGOUT_CLIENT } from "../../constants/endpoints/auth";
 import * as api from "../../utils/api";
 import { setLoading } from "../actions";
 import { setAccessDenied, setSetAccessToken } from "../actions/auth.actions";
@@ -22,9 +22,15 @@ function* loginClient({ payload } : ILoginClient) : Generator<any> {
     yield put(setLoading(false));
 }
 
+function* logoutClient() : Generator<any> {
+    yield api.post(LOGOUT_CLIENT);
+    yield put(setSetAccessToken(null));
+}
+
 const authSaga = function*(){
     yield all([
-        takeLatest(EAuthActions.LOGIN_CLIENT, loginClient)
+        takeLatest(EAuthActions.LOGIN_CLIENT, loginClient),
+        takeLatest(EAuthActions.LOGOUT_CLIENT, logoutClient)
     ])
 }
 

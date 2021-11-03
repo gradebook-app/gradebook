@@ -1,10 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Dimensions, SafeAreaView, StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import BrandButton from '../../components/BrandButton';
-import { setSetAccessToken } from '../../store/actions/auth.actions';
+import LoadingBox from '../../components/LoadingBox';
+import { setLogoutClient, setSetAccessToken } from '../../store/actions/auth.actions';
+import { IRootReducer } from '../../store/reducers';
+import { getAccessToken, isLoading } from '../../store/selectors';
 
 type AccountScreenProps = {
     navigation: any,
@@ -17,18 +20,14 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
     const { theme } : any = useTheme();
 
     const handleLogOut = async () => {
+        navigation.navigate('login');
+        dispatch(setLogoutClient());
         await AsyncStorage.getAllKeys()
             .then(keys => AsyncStorage.multiRemove(keys))
-            .then(() => {
-                console.log("Cleared Data");
-            })
-        dispatch(setSetAccessToken(null));
-        navigation.navigate("login");
     };
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
-            
             <BrandButton 
                 style={styles.logOut}
                 title="Log Out"

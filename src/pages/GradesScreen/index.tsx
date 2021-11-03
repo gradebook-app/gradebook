@@ -48,7 +48,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     });
 
     const { reload:reloadGPA, loading:loadingGPA, gpa } = useGPA();
-
+    
     const state = useSelector((state:IRootReducer) => state);
     const isAccessToken = !!getAccessToken(state);
 

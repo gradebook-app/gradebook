@@ -15,7 +15,7 @@ import LoadingBox from '../../components/LoadingBox';
 import InputField from '../../InputField';
 import { setLoginClient } from '../../store/actions/auth.actions';
 import { IRootReducer } from '../../store/reducers';
-import { getAccessToken, isAccessDenied, isLoading } from '../../store/selectors';
+import { getAccessToken, getUser, isAccessDenied, isLoading } from '../../store/selectors';
 import BottomSheet from "reanimated-bottom-sheet";
 
 import EducationSVG from "../../SVG/EducationSVG";
@@ -24,7 +24,9 @@ import { Picker } from '@react-native-picker/picker';
 import { schoolDistrictsMapped } from '../../utils/mapping';
 import { ESchoolDistricts } from '../../store/enums/school-districts.enum';
 import Blocker from '../../components/Blocker';
-
+import { hasNotificationPermission } from '../../utils/notification';
+import { setNotificationToken } from '../../store/actions/user.actions';
+import * as Notifications from "expo-notifications"
 
 const { width, height } = Dimensions.get('window');
 
@@ -46,6 +48,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
     const state = useSelector((state:IRootReducer) => state);
     const loading = isLoading(state);
     const isAccessToken = !!getAccessToken(state);
+    const user = getUser(state);
 
     const { theme } : any = useTheme();
 
@@ -55,6 +58,18 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         passError: false,
         userIdError: false,
     });
+
+    const handleNotificationConfig = useCallback(async () => {
+        try {
+            const hasPermission = await hasNotificationPermission()
+            if (hasPermission) {
+                const token = (await Notifications.getExpoPushTokenAsync()).data;
+                const storedToken = user?.notificationToken; 
+                if (!token || storedToken === token) return; 
+                dispatch(setNotificationToken(token));
+            };
+        } catch(e) { return };
+    }, [ user, ])
 
     const handleLogin = (useCallback(() => {
         if (!values.pass) {
@@ -73,6 +88,8 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
     const handleNavigate = useCallback(() => {
         if (isAccessToken) {
             navigation.navigate('navigator');
+            console.log('calling')
+            // handleNotificationConfig();
         }
     }, [ isAccessToken ]);
 
