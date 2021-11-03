@@ -67,6 +67,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
     const handleAuth = useCallback(() => {
         reload();
+        reloadGPA();
     }, [ isAccessToken ]);
 
     useEffect(handleAuth, [ handleAuth ]);

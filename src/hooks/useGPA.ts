@@ -12,7 +12,7 @@ export const useGPA = () => {
     const [ loading, setLoading ] = useState(false);
     const [ gpa, setGPA ] = useState<IGPA>({});
 
-    const setCache = useCallback(async () => {
+    const setCache = async () => {
         const cache = await AsyncStorage.getItem(`@gpa`);
         if (cache) {
             const cachedDataParsed = JSON.parse(cache);
@@ -20,7 +20,7 @@ export const useGPA = () => {
                 Object.keys(cachedDataParsed).length && !Object.keys(gpa).length
             ) setGPA(cachedDataParsed);
         }
-    }, [ gpa ]); 
+    };
 
     const getGPA = useCallback(async () => {
         if (!Object.keys(gpa).length) setCache();

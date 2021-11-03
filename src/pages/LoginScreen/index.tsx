@@ -153,6 +153,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                         autoCompleteType={'off'}
                         onChangeText={handleValueChange('userId')}
                         placeholder="Email"
+                        onSubmitEditing={handleLogin}
                     /> 
                     <InputField 
                         value={values.pass}
@@ -161,6 +162,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                         placeholder="Password"
                         onChangeText={handleValueChange('pass')}
                         secureTextEntry={true}
+                        onSubmitEditing={handleLogin}
                     /> 
                     <BrandButton 
                         title="View Grades"
