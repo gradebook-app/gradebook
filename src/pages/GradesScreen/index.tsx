@@ -24,6 +24,7 @@ import { useTheme } from "react-native-paper";
 import GPASlideshow from "./components/GPASlideshow";
 import { useGPA } from "../../hooks/useGPA";
 import * as Notifications from "expo-notifications";
+import { usePastGPA } from "../../hooks/usePastGPA";
 
 const { width, height } = Dimensions.get('window');
 
@@ -49,6 +50,8 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     });
 
     const { reload:reloadGPA, loading:loadingGPA, gpa } = useGPA();
+    const { pastGPA } = usePastGPA();
+    
     const notificationListener = useRef<any | null>(null);
 
     useEffect(() => {
@@ -135,7 +138,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                <TouchableWithoutFeedback onPress={handleSelectionMenuPress}>
                    <Button title={selectedValue} onPress={handleSelectionMenuPress} />
                 </TouchableWithoutFeedback>
-                <GPASlideshow gpa={gpa} />
+                <GPASlideshow pastGPA={pastGPA} gpa={gpa} />
                 { courses.map((course, index) => {
                     return (
                         <CourseBox 

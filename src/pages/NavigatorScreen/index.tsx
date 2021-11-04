@@ -24,7 +24,7 @@ const TabIcon : React.FC<TabIconProps> = ({ focused, iconSize, icon, ...props })
     const size = iconSize || 25; 
     const { colors, theme } : any = useTheme();
 
-    const iconColor = focused ? colors.primary : "#C8C8C8";
+    const iconColor = focused ? colors.primary : "#DEDEDE";
 
     return (
         <FontAwesomeIcon 

@@ -36,7 +36,7 @@ const GradeChart : React.FC<GradeChartProps> = ({ data = [], stroke, yAxis }) =>
                     }}
                     contentInset={{ top: 20, bottom: 20, left: 5, right: 5, }}
                 >
-                    <Grid />
+                    <Grid svg={{ stroke: 'rgba(0, 0, 0, 0.1)' }} />
                 </LineChart>
             </View>
         </View>

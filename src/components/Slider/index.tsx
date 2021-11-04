@@ -11,9 +11,10 @@ import { useAppearanceTheme } from "../../hooks/useAppearanceTheme";
 
 type SliderProps = {
     children: ReactChild[],
+    caption?: () => ReactChild,
 }
 
-const Slider : React.FC<SliderProps> = ({ children }) => {
+const Slider : React.FC<SliderProps> = ({ children, caption }) => {
     const [ slideNumber, setSlideNumber ] = useState<number>(0);
 
     const handleScrollEnd = (e:NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -44,6 +45,7 @@ const Slider : React.FC<SliderProps> = ({ children }) => {
             >
                 { children }
             </ScrollView>
+            { caption && caption() }
             <View style={ styles.dots }>
                 {
                     new Array(React.Children.count(children)).fill(0).map((_, index) => {
@@ -64,6 +66,7 @@ const Slider : React.FC<SliderProps> = ({ children }) => {
     </>
     )
 }
+
 
 const styles = StyleSheet.create({
     dots: {

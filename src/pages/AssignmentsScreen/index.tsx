@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View, Text, Image } from 'react-native';
+import { Dimensions, SafeAreaView, StyleSheet, View, Text, Image, RefreshControl } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useAssigments } from '../../hooks/useAssignments';
 import Assignment from './components/Assignment';
@@ -49,7 +49,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
 
     const { courseId, sectionId } = course; 
 
-    const { assignments, loading } = useAssigments({ courseId, sectionId, markingPeriod });
+    const { assignments, loading, reload } = useAssigments({ courseId, sectionId, markingPeriod });
 
     const { graded, ungraded } = useMemo(() => {
         const graded = assignments.filter(assignment => {
@@ -84,6 +84,10 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
         )
     };
 
+    const onRefresh = () => {
+        reload();
+    };
+
     const { isDark } = useAppearanceTheme();
 
     return (
@@ -106,7 +110,14 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                         </Text>
                     </View>
                 </View>
-            <ScrollView contentContainerStyle={ styles.scrollView }>
+            <ScrollView 
+                refreshControl={
+                    <RefreshControl
+                        refreshing={loading}
+                        onRefresh={onRefresh}
+                    />
+                }
+                contentContainerStyle={ styles.scrollView }>
                 { graded.length ? <GradeGraphSlider assignments={graded} /> : <></> }
                 { ungraded.length ? (
                     <View style={[ styles.assignments, { backgroundColor: theme.secondary, maxHeight: 200 }]}>

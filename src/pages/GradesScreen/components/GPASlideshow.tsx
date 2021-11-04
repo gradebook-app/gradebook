@@ -7,6 +7,9 @@ import Slider from "../../../components/Slider";
 import { useSelector } from 'react-redux';
 import { IRootReducer } from '../../../store/reducers';
 import { getUser } from '../../../store/selectors';
+import Box from "../../../components/Box";
+import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
+import { IGPAPast } from '../../../hooks/usePastGPA';
 
 type GPASlideProps = {
     header: string,
@@ -46,9 +49,10 @@ const GPASlide : React.FC<GPASlideProps> = ({ header, gpa, gpaProgression = [] }
 
 type GPASlideshowProps = {
     gpa: IGPA,
+    pastGPA: IGPAPast[],
 }
 
-const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa }) => {
+const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA }) => {
     const state = useSelector((state:IRootReducer) => state);
     const user = getUser(state);
 
@@ -64,10 +68,66 @@ const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa }) => {
         }) || []
     }, [ user?.gpaHistory ]);
 
+    const pastGPAUnweighted = useMemo(() => {
+        let total = 0 
+        pastGPA.forEach((eachGPA) => { total += eachGPA.unweightedGPA });
+        const totalGPAs = pastGPA.length
+        if (!totalGPAs) return 0; 
+        return Math.round((total / totalGPAs) * Math.pow(10, 4)) / Math.pow(10, 4);
+    }, [ pastGPA ]);
+
+    const pastGPAWeighted = useMemo(() => {
+        let total = 0;
+        pastGPA.forEach((eachGPA) => { total += eachGPA.weightedGPA });
+        const totalGPAs = pastGPA.length;
+        if (!totalGPAs) return 0; 
+        return Math.round((total / totalGPAs) * Math.pow(10, 4)) / Math.pow(10, 4);
+    }, [ pastGPA ]);
+
+    const highschoolGPAUnweighted = useMemo(() => {
+        const total = pastGPAUnweighted + (gpa.unweightedGPA || 0);
+        return (total / (pastGPAUnweighted ? 2 : 1));
+    }, [ pastGPAUnweighted, gpa ]);
+
+    const highschoolGPAWeighted = useMemo(() => {
+        const total = pastGPAWeighted + (gpa.weightedGPA || 0);
+        return (total / (pastGPAWeighted ? 2 : 1));
+    }, [ pastGPAWeighted, gpa ]);
+
+    const highschoolGPAUnweightedProgression = useMemo(() => {
+        return unweightedProgression.map(value => {
+            return (value + pastGPAUnweighted) / (pastGPAUnweighted ? 2 : 1);
+        });
+    }, [ unweightedProgression, pastGPAUnweighted ]);
+
+    const highschoolGPAWeightedProgression = useMemo(() => {
+        return weightedProgression.map(value => {
+            return (value + pastGPAWeighted) / (pastGPAWeighted ? 2 : 1);
+        });
+    }, [ weightedProgression, pastGPAWeighted ]);
+
+    const renderCaption = () => {
+        return (
+            <Box style={styles.detail}>
+                <Box.Clickable>
+                    <Box.Content 
+                        icon={faGraduationCap} 
+                        title="More About GPA" 
+                        iconColor={"#006B57"}
+                    >
+                        <Box.Arrow onPress={() => {}} />
+                    </Box.Content>  
+                </Box.Clickable>
+            </Box>
+        )
+    }
+
     return (
-        <Slider>
+        <Slider caption={renderCaption}>
             <GPASlide gpaProgression={unweightedProgression} gpa={gpa?.unweightedGPA} header={"Unweighted GPA"}/>
             <GPASlide gpaProgression={weightedProgression} gpa={gpa?.weightedGPA} header={"Weighted GPA"}/>
+            <GPASlide gpaProgression={highschoolGPAUnweightedProgression} gpa={highschoolGPAUnweighted} header={"Unweighted Highschool GPA"}/>
+            <GPASlide gpaProgression={highschoolGPAWeightedProgression} gpa={highschoolGPAWeighted} header={"Weighted Highschool GPA"}/>
         </Slider> 
     )
 }
@@ -92,8 +152,9 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         fontSize: 25,
     },
-    slideHeader: {
-        
+    slideHeader: {},
+    detail: {
+        marginBottom: 10,
     }
 });
 
