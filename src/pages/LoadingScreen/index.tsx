@@ -16,9 +16,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAccessDenied, setLoginClient } from '../../store/actions/auth.actions';
 import { IRootReducer } from '../../store/reducers';
 import { getAccessToken, getUser, isAccessDenied } from '../../store/selectors';
-import { hasNotificationPermission } from '../../utils/notification';
-import * as Notifications from "expo-notifications"
-import { setNotificationToken } from '../../store/actions/user.actions';
 
 const { width, height } = Dimensions.get('window');
 
@@ -31,27 +28,9 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     const dispatch = useDispatch();
     const state = useSelector((state:IRootReducer) => state);
     const isAccessToken = !!getAccessToken(state);
-    const user = getUser(state);
     const accessDenied = isAccessDenied(state);
 
     const { theme } : any = useTheme();
-
-    const handleNotificationConfig = useCallback(async () => {
-        try {
-            const hasPermission = await hasNotificationPermission()
-            if (hasPermission) {
-                const token = (await Notifications.getExpoPushTokenAsync()).data;
-                const storedToken = user?.notificationToken; 
-                if (!token || storedToken === token) return; 
-                dispatch(setNotificationToken(token));
-            };
-        } catch(e) { return };
-    }, [ user, ])
-
-    useEffect(() => {
-        // const subscription = Notifications.addPushTokenListener(handleNotificationConfig);
-        // return () => subscription.remove();
-    }, []);
 
     const handleAuth = useCallback(async () => {
         NetInfo.fetch().then(async _ => {

@@ -8,9 +8,10 @@ const { width, height } = Dimensions.get('window');
 type GradeChartProps = {
     data: number[],
     stroke?: any,
+    yAxis?: (e:any) => any,
 }
 
-const GradeChart : React.FC<GradeChartProps> = ({ data = [], stroke }) => {
+const GradeChart : React.FC<GradeChartProps> = ({ data = [], stroke, yAxis }) => {
     const { colors, theme  } : any = useTheme();
 
     return  (
@@ -24,7 +25,7 @@ const GradeChart : React.FC<GradeChartProps> = ({ data = [], stroke }) => {
                         fontSize: 10,
                     }}
                     numberOfTicks={5}
-                    formatLabel={(value) => `${value}%`}
+                    formatLabel={(value) => yAxis ? yAxis(value) : value}
                 />
                 <LineChart
                     style={{ height: 300, width: width * 0.8 }}

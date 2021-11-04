@@ -36,7 +36,7 @@ const GradeSlide : React.FC<GradeSlideProps> = ({ category, value }) => {
         <View style={[ styles.slide, { backgroundColor: theme.background } ]}>
            <View>
                 <Text style={[ styles.category, { color: categoryColor } ]}>{ formattedCategory } Progess</Text>
-                <GradeChart stroke={categoryColor} data={points} />
+                <GradeChart yAxis={(y) => `${y}%`} stroke={categoryColor} data={points} />
            </View>
         </View>
     )

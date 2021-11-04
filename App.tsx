@@ -1,18 +1,12 @@
 import "react-native-gesture-handler";
-import { NavigationContainer, DarkTheme } from '@react-navigation/native';
-import { createStackNavigator } from "@react-navigation/stack";
-import { StatusBar } from 'expo-status-bar';
 import React, { Suspense } from 'react';
-import { StyleSheet, Text, View, DynamicColorIOS } from 'react-native';
+import { StyleSheet, DynamicColorIOS } from 'react-native';
 import LoadingScreen from "./src/pages/LoadingScreen";
 import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
-import LoginScreen from "./src/pages/LoginScreen";
 import { Provider as ReduxProvider } from "react-redux";
 import store from "./src/store";
-import NavigatorScreen from "./src/pages/NavigatorScreen";
-import AssignmentsScreen from "./src/pages/AssignmentsScreen";
+import AppNavigator from "./AppNavigator";
 
-const Stack = createStackNavigator();
 
 const dynamicBackgroundColor = DynamicColorIOS({
   light: "#fff",
@@ -84,38 +78,7 @@ export default function App() {
     <ReduxProvider store={store}>
       <PaperProvider theme={theme}>
         <Suspense fallback={LoadingScreen}>
-          <NavigationContainer theme={DarkTheme}>
-            <Stack.Navigator initialRouteName="loading">
-              <Stack.Screen 
-                name="loading"
-                component={LoadingScreen}
-                options={{ headerShown: false, gestureEnabled: true }}
-              />
-              <Stack.Screen 
-                name="login"
-                component={LoginScreen}
-                options={{ 
-                  headerShown: false, 
-                  gestureEnabled: false,
-                }}
-              />
-              <Stack.Screen
-                name="navigator"
-                component={NavigatorScreen}
-                options={{ headerShown: false, gestureEnabled: false }}
-              />
-              <Stack.Screen
-                name="assignments"
-                component={AssignmentsScreen}
-                options={{ 
-                  headerShown: true, 
-                  headerTitle: "", 
-                  gestureEnabled: true,
-                  headerBackTitle: "",
-                }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
+          <AppNavigator />
         </Suspense>
       </PaperProvider>
     </ReduxProvider>

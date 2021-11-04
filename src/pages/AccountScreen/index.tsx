@@ -1,13 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useCallback, useEffect } from 'react';
+import React from 'react';
 import { Dimensions, SafeAreaView, StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import BrandButton from '../../components/BrandButton';
-import LoadingBox from '../../components/LoadingBox';
-import { setLogoutClient, setSetAccessToken } from '../../store/actions/auth.actions';
+import { setLogoutClient } from '../../store/actions/auth.actions';
 import { IRootReducer } from '../../store/reducers';
-import { getAccessToken, isLoading } from '../../store/selectors';
 
 type AccountScreenProps = {
     navigation: any,
@@ -25,6 +23,8 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
         await AsyncStorage.getAllKeys()
             .then(keys => AsyncStorage.multiRemove(keys))
     };
+
+    const state = useSelector((state:IRootReducer) => state);
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>

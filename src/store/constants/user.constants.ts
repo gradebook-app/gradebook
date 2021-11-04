@@ -10,5 +10,5 @@ export interface ISetUser {
 
 export interface ISetNotificationToken {
     type: EUserActions.SET_NOTIFICATION_TOKEN,
-    payload: string,
+    payload: string | null,
 }

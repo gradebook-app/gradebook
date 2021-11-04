@@ -5,7 +5,7 @@ export const setUser = (payload:any) : ISetUser => ({
     payload,
 });
 
-export const setNotificationToken = (payload:string) : ISetNotificationToken => ({
+export const setNotificationToken = (payload:string | null) : ISetNotificationToken => ({
     type: EUserActions.SET_NOTIFICATION_TOKEN,
     payload,
 })
