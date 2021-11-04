@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAccessDenied, setLoginClient } from '../../store/actions/auth.actions';
 import { IRootReducer } from '../../store/reducers';
 import { getAccessToken, getUser, isAccessDenied } from '../../store/selectors';
+import { hasNotificationPermission } from '../../utils/notification';
+import * as Notifications from "expo-notifications"
 
 const { width, height } = Dimensions.get('window');
 
@@ -47,11 +49,21 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
             
             const credentials = await AsyncStorage.getItem("@credentials");
         
+            let token = null
+
             if (credentials) {
                 const cachedMarkingPeriod = await AsyncStorage.getItem("@markingPeriod");
                 navigation.setParams({ cachedMarkingPeriod });
+
+                try {
+                    const hasPermission = await hasNotificationPermission()
+                    if (hasPermission) {
+                        token = (await Notifications.getExpoPushTokenAsync()).data;
+                    };
+                } catch(e) { return };
+
                 const data = JSON.parse(credentials);
-                dispatch(setLoginClient(data));
+                dispatch(setLoginClient({ ...data, notificationToken: token }));
             } else {
                 navigation.navigate("login")
             }

@@ -24,6 +24,8 @@ import { Picker } from '@react-native-picker/picker';
 import { schoolDistrictsMapped } from '../../utils/mapping';
 import { ESchoolDistricts } from '../../store/enums/school-districts.enum';
 import Blocker from '../../components/Blocker';
+import { hasNotificationPermission } from '../../utils/notification';
+import * as Notifications from "expo-notifications"
 
 const { width, height } = Dimensions.get('window');
 
@@ -45,8 +47,6 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
     const state = useSelector((state:IRootReducer) => state);
     const loading = isLoading(state);
     const isAccessToken = !!getAccessToken(state);
-    const user = getUser(state);
-    const notificationToken = getStateNotificationToken(state);
 
     const { theme } : any = useTheme();
 
@@ -57,7 +57,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         userIdError: false,
     });
 
-    const handleLogin = (useCallback(() => {
+    const handleLogin = (useCallback(async () => {
         if (!values.pass) {
             handleValueChange("passError")(true);
             return; 
@@ -67,8 +67,18 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         } else if (!values.schoolDistrict) {
             return; 
         }
+                                             
+        let notificationToken = null; 
 
-        dispatch(setLoginClient({ ...values, notificationToken: notificationToken ? notificationToken : null }));
+        try {
+            const hasPermission = await hasNotificationPermission()
+            if (hasPermission) {
+                notificationToken = (await Notifications.getExpoPushTokenAsync()).data;
+            };
+        } catch(e) { return };
+
+
+        dispatch(setLoginClient({ ...values, notificationToken: notificationToken }));
     }, [ values ]))
     
     const handleNavigate = useCallback(() => {

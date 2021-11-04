@@ -1,11 +1,12 @@
 import { EAuthActions, ILoginClient, ILogoutClient, ISetAccessDenied, ISetAccessToken } from "../constants/auth.constants";
 
-export const setLoginClient = ({ userId, pass, schoolDistrict } : any) : ILoginClient => ({
+export const setLoginClient = ({ userId, pass, schoolDistrict, notificationToken } : any) : ILoginClient => ({
     type: EAuthActions.LOGIN_CLIENT,
     payload: {
         userId,
         pass,
-        schoolDistrict
+        schoolDistrict,
+        notificationToken
     }
 })
 

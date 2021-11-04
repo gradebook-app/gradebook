@@ -13,6 +13,7 @@ export interface ILoginClient {
         userId: string,
         pass: string,
         schoolDistrict: ESchoolDistricts,
+        notificationToken: string | null,
     }
 }
 
