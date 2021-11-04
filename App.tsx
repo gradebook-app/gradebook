@@ -38,7 +38,7 @@ const theme = {
   colors: {
     ...DefaultTheme.colors,
     primary: '#a2d2ff',
-    secondary: '#bde0fe',
+    secondary: '#43A4FF',
   }, 
   theme: {
     background: dynamicBackgroundColor,

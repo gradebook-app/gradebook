@@ -2,7 +2,7 @@ import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
-import React, { ReactChild, useCallback, useEffect } from 'react';
+import React, { ReactChild, useCallback, useEffect, useState } from 'react';
 import { 
     Dimensions, 
     SafeAreaView, 
@@ -10,14 +10,17 @@ import {
     View, 
     Text,
     Animated,
+    Button,
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAccessDenied, setLoginClient } from '../../store/actions/auth.actions';
+import { setAccessDenied, setLoginClient, setLogoutClient } from '../../store/actions/auth.actions';
 import { IRootReducer } from '../../store/reducers';
 import { getAccessToken, getUser, isAccessDenied } from '../../store/selectors';
 import { hasNotificationPermission } from '../../utils/notification';
 import * as Notifications from "expo-notifications"
+import * as LocalAuthentication from 'expo-local-authentication';
+import BrandButton from '../../components/BrandButton';
 
 const { width, height } = Dimensions.get('window');
 
@@ -26,13 +29,20 @@ type LoadingScreenProps = {
 }
 
 const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
-    const { colors } = useTheme();
     const dispatch = useDispatch();
     const state = useSelector((state:IRootReducer) => state);
     const isAccessToken = !!getAccessToken(state);
     const accessDenied = isAccessDenied(state);
+    const [ isBiometricsEnabled, setIsBiometricsEnabled ] = useState(false);
 
-    const { theme } : any = useTheme();
+    const { theme, colors } : any = useTheme();
+
+    const handleLogOut = async () => {
+        navigation.navigate('login');
+        dispatch(setLogoutClient());
+        await AsyncStorage.getAllKeys()
+            .then(keys => AsyncStorage.multiRemove(keys))
+    };
 
     const handleAuth = useCallback(async () => {
         NetInfo.fetch().then(async _ => {
@@ -52,6 +62,21 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
             let token = null
 
             if (credentials) {
+                const cachedSettings = await AsyncStorage.getItem("@settings");
+                const settings = cachedSettings ? JSON.parse(cachedSettings) : null;
+
+                if (settings) {
+                    const biometricsEnabled = settings.biometricsEnabled;
+                    if (biometricsEnabled) {
+                        setIsBiometricsEnabled(true);
+                        const response = await LocalAuthentication.authenticateAsync({
+                            promptMessage: "Enter Passcode to View Grades"
+                            })
+                        if (!response.success) return; 
+                    };
+                }
+                
+
                 const cachedMarkingPeriod = await AsyncStorage.getItem("@markingPeriod");
                 navigation.setParams({ cachedMarkingPeriod });
 
@@ -60,11 +85,12 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
                     if (hasPermission) {
                         token = (await Notifications.getExpoPushTokenAsync()).data;
                     };
-                } catch(e) { return };
+                } catch(e) {};
 
                 const data = JSON.parse(credentials);
                 dispatch(setLoginClient({ ...data, notificationToken: token }));
             } else {
+                setIsBiometricsEnabled(false);
                 navigation.navigate("login")
             }
         })
@@ -79,6 +105,24 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
             <View style={[ styles.loadingContainer, { backgroundColor:  theme.secondary }]}>
                 <FontAwesomeIcon size={65} color={colors.primary} icon={faBook} />
             </View>
+            <View style={styles.buttonGroup}>
+                { isBiometricsEnabled ? (
+                    <>
+                        <BrandButton 
+                            style={[{ backgroundColor: colors.secondary } ]}
+                            color="#fff" 
+                            title="Login" 
+                            onPress={handleAuth}
+                        ></BrandButton>
+                        <BrandButton 
+                            style={[ styles.logout ]}
+                            color="#fff" 
+                            title="Log out" 
+                            onPress={handleLogOut}
+                        />
+                    </>
+                ) : null }
+            </View>
         </SafeAreaView>
     )
 }
@@ -88,7 +132,6 @@ const styles = StyleSheet.create({
         width: width,
         height: height,
         display: 'flex',
-        justifyContent: 'center',
         alignItems: 'center',
     },
     loadingContainer: {
@@ -98,9 +141,8 @@ const styles = StyleSheet.create({
         height: width * 0.35,
         minWidth: 100,
         minHeight: 100,
-        maxHeight: 200,
+        top: (height * 0.5) - (0.5 * width * 0.35),
         backgroundColor: '#fff',
-        maxWidth: 200,
         borderRadius: 10,
         shadowColor: '#000',
         shadowRadius: 5,
@@ -110,6 +152,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    buttonGroup: {
+        marginTop: 'auto',
+        marginBottom: 50,
+    },
+    logout: {
+        marginTop: 10,
+    }
 });
 
 export default LoadingScreen;

@@ -75,7 +75,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
             if (hasPermission) {
                 notificationToken = (await Notifications.getExpoPushTokenAsync()).data;
             };
-        } catch(e) { return };
+        } catch(e) {};
 
 
         dispatch(setLoginClient({ ...values, notificationToken: notificationToken }));

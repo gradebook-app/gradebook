@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { 
     Dimensions, 
     SafeAreaView, 
@@ -23,6 +23,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "react-native-paper";
 import GPASlideshow from "./components/GPASlideshow";
 import { useGPA } from "../../hooks/useGPA";
+import * as Notifications from "expo-notifications";
 
 const { width, height } = Dimensions.get('window');
 
@@ -48,6 +49,18 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     });
 
     const { reload:reloadGPA, loading:loadingGPA, gpa } = useGPA();
+    const notificationListener = useRef<any | null>(null);
+
+    useEffect(() => {
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            reload()
+            reloadGPA();
+        });
+
+        return () => {
+            Notifications.removeNotificationSubscription(notificationListener.current);
+        }
+    });
     
     const state = useSelector((state:IRootReducer) => state);
     const isAccessToken = !!getAccessToken(state);

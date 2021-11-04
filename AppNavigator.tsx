@@ -6,8 +6,17 @@ import AssignmentsScreen from "./src/pages/AssignmentsScreen";
 import LoadingScreen from "./src/pages/LoadingScreen";
 import LoginScreen from "./src/pages/LoginScreen";
 import React from 'react';
+import * as Notifications from "expo-notifications";
 
 const Stack = createStackNavigator();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 const AppNavigator = () => {
     return (
