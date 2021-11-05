@@ -108,17 +108,17 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
                 { isBiometricsEnabled ? (
                     <>
                         <BrandButton 
-                            style={[{ backgroundColor: colors.secondary } ]}
+                            style={[{ backgroundColor: colors.primary } ]}
                             color="#fff" 
                             title="Login" 
                             onPress={handleAuth}
                         ></BrandButton>
-                        <BrandButton 
+                        {/* <BrandButton 
                             style={[ styles.logout ]}
                             color="#fff" 
                             title="Log out" 
                             onPress={handleLogOut}
-                        />
+                        /> */}
                     </>
                 ) : null }
             </View>
