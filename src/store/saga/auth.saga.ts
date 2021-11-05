@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { all, put, takeLatest } from "@redux-saga/core/effects"
 import { LOGIN_CLIENT, LOGOUT_CLIENT } from "../../constants/endpoints/auth";
+import { ISettings } from "../../pages/AccountScreen";
 import * as api from "../../utils/api";
 import { setLoading } from "../actions";
 import { setAccessDenied, setSetAccessToken } from "../actions/auth.actions";
@@ -14,7 +15,15 @@ function* loginClient({ payload } : ILoginClient) : Generator<any> {
         const user = response?.user
         yield put(setUser(user || {}));
         yield put(setSetAccessToken(response.accessToken));
-        yield AsyncStorage.setItem("@credentials", JSON.stringify(payload))
+        const settings:any = yield AsyncStorage.getItem("@settings");
+        if (settings) {
+            const settingsParsed:ISettings = JSON.parse(settings); 
+            const savePassword = settingsParsed.savePassword; 
+            if (savePassword) yield AsyncStorage.setItem("@credentials", JSON.stringify(payload));
+        } else {
+            yield AsyncStorage.setItem("@settings", JSON.stringify({ savePassword: true }));
+            yield AsyncStorage.setItem("@credentials", JSON.stringify(payload))
+        }
     } else if (response && response?.access === false) {
         yield put(setAccessDenied(true));
         yield AsyncStorage.removeItem("@credentials")

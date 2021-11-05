@@ -84,7 +84,6 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
     const handleNavigate = useCallback(() => {
         if (isAccessToken) {
             navigation.navigate('navigator');
-            console.log('calling')
         }
     }, [ isAccessToken ]);
 

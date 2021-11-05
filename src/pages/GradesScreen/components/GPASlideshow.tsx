@@ -22,6 +22,7 @@ const { width, height } = Dimensions.get('window');
 const GPASlide : React.FC<GPASlideProps> = ({ header, gpa, gpaProgression = [] }) => {
     const { theme } : any = useTheme();
 
+
     const roundedGPA = useMemo(() => {
         if (!gpa) return gpa;
         return Math.round(gpa * Math.pow(10, 4)) / Math.pow(10, 4);
@@ -50,21 +51,27 @@ const GPASlide : React.FC<GPASlideProps> = ({ header, gpa, gpaProgression = [] }
 type GPASlideshowProps = {
     gpa: IGPA,
     pastGPA: IGPAPast[],
+    handleGPAScreen: () => void,
 }
 
-const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA }) => {
+const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA, handleGPAScreen }) => {
     const state = useSelector((state:IRootReducer) => state);
     const user = getUser(state);
 
+    const roundGrade = (value:number | undefined) : number => {
+        if (!value && value !== 0) return 0; 
+        return Math.round(value * Math.pow(10, 4)) / Math.pow(10, 4);
+    }
+
     const unweightedProgression = useMemo(() => {
         return user?.gpaHistory?.map(history => {
-            return Math.round(history.unweightedGPA * Math.pow(10, 4)) / Math.pow(10, 4);
+            return roundGrade(history.unweightedGPA);
         }) || []
     }, [ user?.gpaHistory ]);
 
     const weightedProgression = useMemo(() => {
         return user?.gpaHistory?.map(history => {
-            return Math.round(history.weightedGPA * Math.pow(10, 4)) / Math.pow(10, 4);
+            return roundGrade(history.weightedGPA);
         }) || []
     }, [ user?.gpaHistory ]);
 
@@ -73,7 +80,7 @@ const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA }) => {
         pastGPA.forEach((eachGPA) => { total += eachGPA.unweightedGPA });
         const totalGPAs = pastGPA.length
         if (!totalGPAs) return 0; 
-        return Math.round((total / totalGPAs) * Math.pow(10, 4)) / Math.pow(10, 4);
+        return roundGrade(total / totalGPAs);
     }, [ pastGPA ]);
 
     const pastGPAWeighted = useMemo(() => {
@@ -81,7 +88,7 @@ const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA }) => {
         pastGPA.forEach((eachGPA) => { total += eachGPA.weightedGPA });
         const totalGPAs = pastGPA.length;
         if (!totalGPAs) return 0; 
-        return Math.round((total / totalGPAs) * Math.pow(10, 4)) / Math.pow(10, 4);
+        return roundGrade(total / totalGPAs);
     }, [ pastGPA ]);
 
     const highschoolGPAUnweighted = useMemo(() => {
@@ -106,16 +113,20 @@ const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA }) => {
         });
     }, [ weightedProgression, pastGPAWeighted ]);
 
+    const handleMoreAboutGPA = () => {
+        handleGPAScreen();
+    };
+
     const renderCaption = () => {
         return (
             <Box style={styles.detail}>
-                <Box.Clickable>
+                <Box.Clickable onPress={handleMoreAboutGPA}>
                     <Box.Content 
                         icon={faGraduationCap} 
                         title="More About GPA" 
                         iconColor={"#006B57"}
                     >
-                        <Box.Arrow onPress={() => {}} />
+                        <Box.Arrow onPress={handleMoreAboutGPA} />
                     </Box.Content>  
                 </Box.Clickable>
             </Box>
@@ -126,8 +137,8 @@ const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA }) => {
         <Slider caption={renderCaption}>
             <GPASlide gpaProgression={unweightedProgression} gpa={gpa?.unweightedGPA} header={"Unweighted GPA"}/>
             <GPASlide gpaProgression={weightedProgression} gpa={gpa?.weightedGPA} header={"Weighted GPA"}/>
-            <GPASlide gpaProgression={highschoolGPAUnweightedProgression} gpa={highschoolGPAUnweighted} header={"Unweighted Highschool GPA"}/>
-            <GPASlide gpaProgression={highschoolGPAWeightedProgression} gpa={highschoolGPAWeighted} header={"Weighted Highschool GPA"}/>
+            <GPASlide gpaProgression={highschoolGPAUnweightedProgression} gpa={highschoolGPAUnweighted} header={"Unweighted Total GPA"}/>
+            <GPASlide gpaProgression={highschoolGPAWeightedProgression} gpa={highschoolGPAWeighted} header={"Weighted Total GPA"}/>
         </Slider> 
     )
 }

@@ -66,7 +66,8 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     });
     
     const state = useSelector((state:IRootReducer) => state);
-    const isAccessToken = !!getAccessToken(state);
+    const accessToken = getAccessToken(state);
+    const isAccessToken = !!accessToken;
 
     const handleCourse = (course:ICourse) => {
         navigation.setParams({ course, markingPeriod: currentMarkingPeriod });
@@ -82,6 +83,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     const selectionSheet = React.useRef<null | any>(null);
 
     const handleAuth = useCallback(() => {
+        if (!accessToken) return; 
         reload();
         reloadGPA();
     }, [ isAccessToken ]);
@@ -94,6 +96,10 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     };
 
     const { theme } : any = useTheme();
+
+    const handleGPAScreen = () => {
+        navigation.navigate("gpa");
+    };
 
     const renderMPSelector = () => {
         return (
@@ -138,7 +144,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                <TouchableWithoutFeedback onPress={handleSelectionMenuPress}>
                    <Button title={selectedValue} onPress={handleSelectionMenuPress} />
                 </TouchableWithoutFeedback>
-                <GPASlideshow pastGPA={pastGPA} gpa={gpa} />
+                <GPASlideshow handleGPAScreen={handleGPAScreen} pastGPA={pastGPA} gpa={gpa} />
                 { courses.map((course, index) => {
                     return (
                         <CourseBox 

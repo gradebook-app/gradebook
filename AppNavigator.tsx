@@ -7,6 +7,7 @@ import LoadingScreen from "./src/pages/LoadingScreen";
 import LoginScreen from "./src/pages/LoginScreen";
 import React from 'react';
 import * as Notifications from "expo-notifications";
+import GPAScreen from "./src/pages/GPAScreen";
 
 const Stack = createStackNavigator();
 
@@ -39,6 +40,16 @@ const AppNavigator = () => {
                 name="navigator"
                 component={NavigatorScreen}
                 options={{ headerShown: false, gestureEnabled: false }}
+              />
+              <Stack.Screen 
+                name="gpa"
+                component={GPAScreen}
+                options={{
+                  headerShown: true, 
+                  headerTitle: "", 
+                  gestureEnabled: true,
+                  headerBackTitle: "",
+                }}
               />
               <Stack.Screen
                 name="assignments"

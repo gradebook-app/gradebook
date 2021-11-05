@@ -12,15 +12,16 @@ import {
     ViewStyle,
     TouchableNativeFeedback,
     DynamicColorIOS,
+    GestureResponderEvent,
 } from "react-native";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from 'react-native-paper';
-import { useAppearanceTheme } from '../../hooks/useAppearanceTheme';
 
 const { width } = Dimensions.get('window');
 
 type BoxProps = {
     style?: StyleProp<ViewStyle>,
+    title?: string,
 };
 
 type IBoxContentProps = {
@@ -31,23 +32,48 @@ type IBoxContentProps = {
     showIcon?: boolean,
 }
 
+type IBoxButtonProps = {
+    active: boolean | null, 
+    handleChange: (e:boolean) => void; 
+}
+
+type IBoxArrowProps = { 
+    onPress: () => void 
+}
+
+type IBoxClickableProps = {
+    children: ReactChild, 
+    onPress: ((event: GestureResponderEvent) => void) & (() => void),
+}
+
+type IBoxSpaceProps = {}
+
+type IBoxSeparatorProps = {}
+
+type IBoxValueProps = {
+    value: any,
+}
+
 type IBoxChilds = {
     Content: React.FC<IBoxContentProps>,
-    Button: React.FC<any>,
-    Arrow: React.FC<{ onPress: () => void }>,
-    Clickable: React.FC<any>,
-    Space: React.FC<any>,
-    Separator: React.FC<any>,
-    Value: React.FC<any>,
+    Button: React.FC<IBoxButtonProps>,
+    Arrow: React.FC<IBoxArrowProps>,
+    Clickable: React.FC<IBoxClickableProps>,
+    Space: React.FC<IBoxSpaceProps>,
+    Separator: React.FC<IBoxSeparatorProps>,
+    Value: React.FC<IBoxValueProps>,
 }
 
 
-const Box : React.FC<BoxProps> & IBoxChilds = ({ children, style }) => {
+const Box : React.FC<BoxProps> & IBoxChilds = ({ children, style, title }) => {
     const { theme, colors } : any = useTheme();
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.secondary }, style ]}>
-            { children }
+        <View>
+            { title &&  <Text style={[ styles.boxTitle, { color: theme.grey }]}>{ title }</Text> }
+            <View style={[styles.container, { backgroundColor: theme.secondary }, style ]}>
+                { children }
+            </View>
         </View>
     )
 }
@@ -86,10 +112,10 @@ Box.Button = ({ active, handleChange }) => {
         <View style={ styles.buttonContainer }>
             <Switch
                 trackColor={{ false: theme.secondary, true: colors.primary }}
-                thumbColor={active ? "#f4f3f4" : "#f4f3f4"}
+                thumbColor={!!active ? "#f4f3f4" : "#f4f3f4"}
                 ios_backgroundColor={theme.secondary}
                 onValueChange={handleChange}
-                value={active}
+                value={!!active}
             />
         </View>
     )
@@ -190,7 +216,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     space: {
-        height: 25,
+        height: 22.5,
         width: width,
         backgroundColor: "rgba(0, 0, 0, 0.0)",
     },
@@ -211,6 +237,11 @@ const styles = StyleSheet.create({
     },
     value: {
         marginHorizontal: 10,
+    },
+    boxTitle: {
+        textAlign: 'right',
+        marginTop: 10,
+        marginRight: 10,
     }
 });
 

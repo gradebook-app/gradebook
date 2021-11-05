@@ -7,5 +7,6 @@ export interface IUser {
         unweightedGPA: number,
         weightedGPA: number
         timestamp: number,
-    }[]
+    }[],
+    schoolDistrict: string,
 }

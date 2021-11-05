@@ -43,9 +43,11 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
 
     const { theme } : any = useTheme();
 
-    navigation?.setOptions({ headerStyle: { 
-        backgroundColor: theme.background,
-    }})
+    useEffect(() => {
+        navigation?.setOptions({ headerStyle: { 
+            backgroundColor: theme.background,
+        }})
+    });
 
     const { courseId, sectionId } = course; 
 

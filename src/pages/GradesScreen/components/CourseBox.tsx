@@ -1,9 +1,10 @@
 import { useTheme } from 'react-native-paper';
-import React, { useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, Text } from "react-native";
 import { ICourse } from '../../../store/interfaces/course.interface';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useGradeColor } from '../../../hooks/useGradeColor';
+import FadeIn from '../../../components/FadeIn';
 
 type CourseBoxProps = {
     course: ICourse,
@@ -15,25 +16,30 @@ const { width } = Dimensions.get('window');
 const CourseBox : React.FC<CourseBoxProps> = ({ course, handleCourse }) => {
     const gradeColor = useGradeColor(course.grade.percentage);
     const { theme } : any = useTheme();
+    const [ show, setShow ] = useState(false);
+
+    useEffect(() => setShow(true), []);
 
     const handlePress = () => {
         handleCourse(course);
     };
 
     return (
-        <TouchableOpacity onPress={handlePress}>
-            <View style={[ styles.container, { backgroundColor: theme.secondary } ]} >
-                <View>
-                    <Text style={[ styles.name, { color: theme.text } ]}>{ course.name }</Text>
-                    <Text style={[ styles.teacher, { color: theme.grey }]}>{ course.teacher }</Text>
+        <FadeIn show={show}>
+            <TouchableOpacity onPress={handlePress}>
+                <View style={[ styles.container, { backgroundColor: theme.secondary } ]} >
+                    <View>
+                        <Text style={[ styles.name, { color: theme.text } ]}>{ course.name }</Text>
+                        <Text style={[ styles.teacher, { color: theme.grey }]}>{ course.teacher }</Text>
+                    </View>
+                    <View style={styles.gradeContainer}>
+                        <Text style={[ styles.grade, { color: gradeColor } ]}>
+                            { course.grade.percentage || "N/A " }% { course.grade.letter }
+                        </Text>
+                    </View>
                 </View>
-                <View style={styles.gradeContainer}>
-                    <Text style={[ styles.grade, { color: gradeColor } ]}>
-                        { course.grade.percentage || "N/A " }% { course.grade.letter }
-                    </Text>
-                </View>
-            </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
+        </FadeIn>
     )
 }
 
@@ -68,4 +74,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default CourseBox; 
+export default React.memo(CourseBox); 

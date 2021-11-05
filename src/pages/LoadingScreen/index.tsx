@@ -61,22 +61,21 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
         
             let token = null
 
+            const cachedSettings = await AsyncStorage.getItem("@settings");
+            const settings = cachedSettings ? JSON.parse(cachedSettings) : null;
+
+            if (settings) {
+                const biometricsEnabled = settings.biometricsEnabled;
+                if (biometricsEnabled) {
+                    setIsBiometricsEnabled(true);
+                    const response = await LocalAuthentication.authenticateAsync({
+                        promptMessage: "Enter Passcode to View Grades"
+                        })
+                    if (!response.success) return; 
+                };
+            }
+
             if (credentials) {
-                const cachedSettings = await AsyncStorage.getItem("@settings");
-                const settings = cachedSettings ? JSON.parse(cachedSettings) : null;
-
-                if (settings) {
-                    const biometricsEnabled = settings.biometricsEnabled;
-                    if (biometricsEnabled) {
-                        setIsBiometricsEnabled(true);
-                        const response = await LocalAuthentication.authenticateAsync({
-                            promptMessage: "Enter Passcode to View Grades"
-                            })
-                        if (!response.success) return; 
-                    };
-                }
-                
-
                 const cachedMarkingPeriod = await AsyncStorage.getItem("@markingPeriod");
                 navigation.setParams({ cachedMarkingPeriod });
 

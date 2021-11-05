@@ -6,15 +6,7 @@ import * as api from "../utils/api";
 
 export const useAccount = () => {
     const [ loading, setLoading ] = useState(false);
-    const [ account, setAccount ] = useState<IAccount>({
-        grade: null,
-        name: "",
-        school: "",
-        locker: "",
-        lunchBalance: "",
-        stateId: "",
-        studentId: "",
-    });
+    const [ account, setAccount ] = useState<IAccount>({});
 
     const setCache = async () => {
         const cache = await AsyncStorage.getItem(`@account`);

@@ -1,7 +1,7 @@
-import { faBell, faFingerprint, faLock } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faFingerprint, faFlagUsa, faIdBadge, faKey, faLock, faPizzaSlice, faSchool } from '@fortawesome/free-solid-svg-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl } from 'react-native';
+import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Linking } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import BrandButton from '../../components/BrandButton';
@@ -10,6 +10,10 @@ import { IRootReducer } from '../../store/reducers';
 import Box from '../../components/Box';
 import Avatar from "../../components/Avatar";
 import { useAccount } from '../../hooks/useAccount';
+import { getAccessToken, getUser } from '../../store/selectors';
+import { genesisConfig } from '../../constants/genesis';
+import jwt_decode from "jwt-decode";
+import { hasNotificationPermission } from '../../utils/notification';
 
 type AccountScreenProps = {
     navigation: any,
@@ -17,13 +21,19 @@ type AccountScreenProps = {
 
 const { width, height } = Dimensions.get('window');
 
-interface ISettings {
+export interface ISettings {
     biometricsEnabled: boolean | null,
+    savePassword: boolean | null,
 }
 
 const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
     const dispatch = useDispatch();
     const { theme } : any = useTheme();
+
+    const state = useSelector((state:IRootReducer) => state);
+    const accessToken = getAccessToken(state);
+    const isAccessToken = !!accessToken; 
+    const user = getUser(state);
 
     const handleLogOut = async () => {
         navigation.navigate('login');
@@ -34,7 +44,8 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
 
     const [ cacheInjected, setCacheInjected ] = useState(false);
     const [ settings, setSettings ] = useState<ISettings>({
-        biometricsEnabled: null
+        biometricsEnabled: null,
+        savePassword: null,
     });
 
     const insertCache = useCallback(async () => {
@@ -68,11 +79,37 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
         reload();
     };
 
+    const handleAuth = useCallback(() => {
+        if (!accessToken) return; 
+        reload();
+    }, [ isAccessToken ]);
+
+    useEffect(handleAuth, [ handleAuth ]);
+
     const userProfilePhotoURL = useMemo(() => {
-        const base = "https://parents.sbschools.org";
-        const url = `${base}/genesis/sis/photos?type=student&studentID=${account.studentId}`;
+        const schoolExtension = user?.schoolDistrict;
+        if (schoolExtension === undefined) return null; 
+        const base = genesisConfig[schoolExtension]?.root;
+        const url = `${base}/sis/photos?type=student&studentID=${account.studentId}`;
         return url; 
-    }, []);
+    }, [ user, account ]);
+
+    const avatarCookie = useMemo(() => {
+        try {
+            const tokenData:any = jwt_decode(accessToken || "");
+            const genesisToken = tokenData.token; 
+            return `JSESSIONID=${genesisToken}`;
+        } catch {
+            return "";
+        }
+    }, [ accessToken ]);
+
+    const handleSavePassword = async (e:boolean) => {
+        if (!e) {
+            await AsyncStorage.removeItem("@credentials");
+        }
+        handleSettingsChange('savePassword')(e);
+    };
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
@@ -94,31 +131,36 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                 </View>
                 <Box style={{ flexDirection: 'column' }}>
                     <View style={ styles.userSection }>
-                        <Avatar url={userProfilePhotoURL} />
+                        <Avatar 
+                            url={userProfilePhotoURL} 
+                            headers={{
+                                "Cookie": avatarCookie,
+                            }}
+                        />
                         <View style={ styles.userDetailsContainer }>
                             <Text style={[ styles.name, { color: theme.text }]}>{ account.name }</Text>
                             <Text style={[styles.school, { color: theme.grey }]}>{ account.school }</Text>
                         </View>
                     </View>
                     <Box.Separator />
-                    <Box.Content showIcon={false} title="Grade Level">
-                        <Box.Value value={`${account.grade || "N/A"}`}></Box.Value>
+                    <Box.Content iconColor={"#9B7F00"} icon={faSchool} title="Grade Level">
+                        <Box.Value value={`${account.grade || ""}`}></Box.Value>
                     </Box.Content>
                     <Box.Separator />
-                    <Box.Content showIcon={false} title="Lunch Balance">
-                        <Box.Value value={`${account.lunchBalance || "N/A"}`}></Box.Value>
+                    <Box.Content iconColor={"#DD0370"} icon={faPizzaSlice} title="Lunch Balance">
+                        <Box.Value value={`${account.lunchBalance || ""}`}></Box.Value>
                     </Box.Content>
                     <Box.Separator />
-                    <Box.Content showIcon={false} title="Locker">
-                        <Box.Value value={`${account.locker || "N/A"}`}></Box.Value>
+                    <Box.Content iconColor={"#034FDD"} icon={faKey} title="Locker">
+                        <Box.Value value={`${account.locker || ""}`}></Box.Value>
                     </Box.Content>
                     <Box.Separator />
-                    <Box.Content showIcon={false} title="Student ID">
-                        <Box.Value value={`${account.studentId || "N/A"}`}></Box.Value>
+                    <Box.Content iconColor={"#9B6000"} icon={faIdBadge} title="Student ID">
+                        <Box.Value value={`${account.studentId || ""}`}></Box.Value>
                     </Box.Content>
                     <Box.Separator />
-                    <Box.Content showIcon={false} title="State ID">
-                        <Box.Value value={`${account.stateId || "N/A"}`}></Box.Value>
+                    <Box.Content iconColor={"#009B8D"} icon={faFlagUsa} title="State ID">
+                        <Box.Value value={`${account.stateId || ""}`}></Box.Value>
                     </Box.Content>
                 </Box>
                 <Box.Space />
@@ -136,18 +178,22 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                         iconColor={"#EAB500"}
                         icon={faLock}
                     >
-                        <Box.Button />
+                        <Box.Button active={settings.savePassword} handleChange={handleSavePassword} />
                     </Box.Content>
                 </Box>
                 <Box.Space />
                 <Box>
-                    <Box.Content
-                            title="Notifications"
-                            iconColor={"#DD4503"}
-                            icon={faBell}
-                        >
-                            <Box.Button />
-                    </Box.Content>
+                    <Box.Clickable onPress={() => Linking.openSettings()}>
+                        <Box.Content
+                                title="Notifications"
+                                iconColor={"#DD4503"}
+                                icon={faBell}
+                            >
+                                <>
+                                    <Box.Arrow onPress={() => Linking.openSettings()}/>
+                                </>
+                        </Box.Content>
+                    </Box.Clickable>
                 </Box>
                 <BrandButton 
                     style={styles.logOut}
@@ -169,7 +215,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logOut: {
-        marginTop: 50,
+        marginTop: 15,
         marginBottom: 125,
     },
     account: {
@@ -179,6 +225,7 @@ const styles = StyleSheet.create({
     headerContainer: {
         width: width,
         padding: 25,
+        paddingTop: 15,
         paddingBottom: 5,
     },
     header: {

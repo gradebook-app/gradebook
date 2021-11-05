@@ -13,6 +13,7 @@ import * as Notifications from "expo-notifications";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootReducer } from "../../store/reducers";
 import { getUser } from "../../store/selectors";
+import { AppState, DynamicColorIOS, Settings } from "react-native";
 
 type TabIconProps = {
     focused: boolean,
@@ -48,6 +49,17 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
     const dispatch = useDispatch();
     const user = getUser(state);
 
+    // const handleAppStateUpdate = () => {
+    //     console.log("focused");
+    // };
+
+    // useEffect(() => {
+    //     AppState.addEventListener('focus', handleAppStateUpdate);
+    //     return () => {
+    //         AppState.removeEventListener('focus', handleAppStateUpdate);
+    //     }
+    // });
+
     const handleNotificationUpdate = useCallback(async () => {
         try {
             const hasPermission = await hasNotificationPermission()
@@ -63,12 +75,17 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
 
     useEffect(() => {
         const subscription = Notifications.addPushTokenListener(handleNotificationUpdate);
-        return () => subscription.remove();
+        return () => subscription.remove()
     }, []);
 
     navigation?.setOptions({ headerStyle: { 
         backgroundColor: theme.background,
     }})
+
+    const separatorBarColor = DynamicColorIOS({
+        light: "rgba(0, 0, 0, 0.15)",
+        dark: "rgba(255, 255, 255, 0.1)",
+    });
 
     return (
         <Tabs.Navigator 
@@ -92,6 +109,7 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 },
                 tabBarStyle: {
                     backgroundColor: theme?.secondary,
+                    borderTopColor: separatorBarColor,
                 },
                 headerShown: false,
                 tabBarLabel: '',
