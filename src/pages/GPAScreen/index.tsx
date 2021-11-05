@@ -62,7 +62,7 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
             <LoadingBox loading={loadingGPA || loadingPastGPA}/>
            <ScrollView>
                 {
-                    pastGPA.concat(pastGPA).map((eachPastGPA, index) => {
+                    pastGPA.map((eachPastGPA, index) => {
                         return (
                             <View style={styles.gpaContainer} key={index}>
                                 <Box title={`Grade ${eachPastGPA.gradeLevel} | ${eachPastGPA.year}`} style={{ flexDirection: 'column' }}>
