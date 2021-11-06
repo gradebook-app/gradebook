@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logOut: {
-        marginTop: 15,
+        marginTop: 20,
         marginBottom: 125,
     },
     account: {

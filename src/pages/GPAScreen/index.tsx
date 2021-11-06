@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { SafeAreaView, View, StyleSheet, Dimensions, Text } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Dimensions, Text, RefreshControl } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import LoadingBox from '../../components/LoadingBox';
 import { useGPA } from '../../hooks/useGPA';
@@ -16,7 +16,7 @@ const { width, height } = Dimensions.get('window');
 const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
     const { theme } : any = useTheme();
 
-    const { loading:loadingGPA, gpa } = useGPA();
+    const { loading:loadingGPA, gpa, reload } = useGPA();
     const { loading:loadingPastGPA, pastGPA } = usePastGPA();
 
     useEffect(() => {
@@ -57,10 +57,20 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
         return (total / (pastGPAWeighted ? 2 : 1));
     }, [ pastGPAWeighted, gpa ]);
 
+    const onRefresh = () => {
+        reload();
+    };
+
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background } ]}>
-            <LoadingBox loading={loadingGPA || loadingPastGPA}/>
-           <ScrollView>
+           <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={loadingGPA || loadingPastGPA}
+                        onRefresh={onRefresh}
+                />
+            }
+           >
                 {
                     pastGPA.map((eachPastGPA, index) => {
                         return (
