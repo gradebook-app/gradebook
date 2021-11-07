@@ -20,6 +20,7 @@ import * as Notifications from "expo-notifications"
 import * as LocalAuthentication from 'expo-local-authentication';
 import BrandButton from '../../components/BrandButton';
 import { TouchableOpacity } from 'react-native';
+import { ISettings } from '../AccountScreen';
 
 const { width, height } = Dimensions.get('window');
 
@@ -61,7 +62,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
             let token = null
 
             const cachedSettings = await AsyncStorage.getItem("@settings");
-            const settings = cachedSettings ? JSON.parse(cachedSettings) : null;
+            const settings:ISettings | null = cachedSettings ? JSON.parse(cachedSettings) : null;
 
             if (settings) {
                 const biometricsEnabled = settings.biometricsEnabled;
@@ -74,7 +75,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
                 };
             }
 
-            if (credentials) {
+            if (credentials && settings?.savePassword) {
                 const cachedMarkingPeriod = await AsyncStorage.getItem("@markingPeriod");
                 navigation.setParams({ cachedMarkingPeriod });
 

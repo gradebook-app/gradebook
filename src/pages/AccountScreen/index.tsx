@@ -105,10 +105,11 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
     }, [ accessToken ]);
 
     const handleSavePassword = async (e:boolean) => {
-        if (!e) {
-            await AsyncStorage.removeItem("@credentials");
-        }
         handleSettingsChange('savePassword')(e);
+    };
+
+    const handleNotificationSettings = () => {
+        navigation.navigate("notifications");
     };
 
     return (
@@ -183,14 +184,14 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                 </Box>
                 <Box.Space />
                 <Box>
-                    <Box.Clickable onPress={() => Linking.openSettings()}>
+                    <Box.Clickable onPress={handleNotificationSettings}>
                         <Box.Content
                                 title="Notifications"
                                 iconColor={"#DD4503"}
                                 icon={faBell}
                             >
                                 <>
-                                    <Box.Arrow onPress={() => Linking.openSettings()}/>
+                                    <Box.Arrow onPress={handleNotificationSettings}/>
                                 </>
                         </Box.Content>
                     </Box.Clickable>

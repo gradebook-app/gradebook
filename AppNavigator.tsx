@@ -8,6 +8,7 @@ import LoginScreen from "./src/pages/LoginScreen";
 import React, { useEffect } from 'react';
 import * as Notifications from "expo-notifications";
 import GPAScreen from "./src/pages/GPAScreen";
+import NotificationScreen from "./src/pages/NotificationScreen";
 
 const Stack = createStackNavigator();
 
@@ -59,6 +60,16 @@ const AppNavigator = () => {
                   headerTitle: "", 
                   gestureEnabled: true,
                   headerBackTitle: "",
+                }}
+              />
+              <Stack.Screen
+                name="notifications"
+                component={NotificationScreen}
+                options={{ 
+                  headerShown: true, 
+                  headerTitle: "", 
+                  gestureEnabled: true,
+                  headerBackTitle: "Account",
                 }}
               />
             </Stack.Navigator>
