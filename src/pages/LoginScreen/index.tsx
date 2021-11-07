@@ -180,7 +180,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                     <Text style={[ styles.sheetHeader, { color: theme.text }]}>Terms & Conditions</Text>
                     <Button title="Accept" onPress={handleTermsClose} />
                 </View>
-                <ScrollView contentContainerStyle={{ paddingBottom: 65 }} style={styles.termsList}>
+                <ScrollView contentContainerStyle={{ paddingBottom: 95 }} style={styles.termsList}>
                     <Text style={[ styles.termItem, { color: theme.grey }]}>
                         1. All data, including the client's password, is securely stored on Gradebook's servers 
                         for providing clients with access to their grades. Passwords and other client data
