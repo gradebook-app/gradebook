@@ -7,7 +7,7 @@ import {
     SafeAreaView, 
     StyleSheet, 
     Button,
-    View, Text, KeyboardAvoidingView
+    View, Text, KeyboardAvoidingView, TouchableOpacity, ScrollView
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import BrandButton from '../../components/BrandButton';
@@ -107,7 +107,10 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
     };
 
     const [ sheetOpen, setSheetOpen ] = useState(false);
+    const [ termsSheetOpen, setTermsSheetOpen ] = useState(false);
+
     const schoolDistrictSheet = useRef<any | null>(null);
+    const termsSheet = useRef<any | null>(null);
 
     const handleSchoolDistrictOpen = () => {
         setSheetOpen(true);
@@ -119,6 +122,16 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         schoolDistrictSheet.current.snapTo(1);
     }
 
+    const handleTermsOpen = () => {
+        setTermsSheetOpen(true);
+        termsSheet.current.snapTo(0);
+    };  
+
+    const handleTermsClose = () => {
+        setTermsSheetOpen(false);
+        termsSheet.current.snapTo(1);
+    };
+
     const renderSchoolDistrictSheet = () => {
         return (
             <View style={[styles.schoolDistrictSheet, { backgroundColor: theme.background }]}>
@@ -128,7 +141,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                     alignItems: 'center',
                     display: 'flex',
                 }}>
-                    <Text style={[ styles.schoolDistrictHeader, { color: theme.text }]}>Select School District</Text>
+                    <Text style={[ styles.sheetHeader, { color: theme.text }]}>Select School District</Text>
                     <Button title="Done" onPress={handleSchoolDistrictClose} />
                 </View>
                 <Picker 
@@ -155,10 +168,49 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         )
     }
 
+    const renderTermsSheet = () => {
+        return (
+            <View style={[ styles.termsSheet, { backgroundColor: theme.background }]}>
+                <View style={{ 
+                    flexDirection: "row", 
+                    justifyContent: "space-between",
+                    alignItems: 'center',
+                    display: 'flex',
+                }}>
+                    <Text style={[ styles.sheetHeader, { color: theme.text }]}>Terms & Conditions</Text>
+                    <Button title="Accept" onPress={handleTermsClose} />
+                </View>
+                <ScrollView contentContainerStyle={{ paddingBottom: 65 }} style={styles.termsList}>
+                    <Text style={[ styles.termItem, { color: theme.grey }]}>
+                        1. All data, including the client's password, is securely stored on Gradebook's servers 
+                        for providing clients with access to their grades. Passwords and other client data
+                        are not shared or sold, Gradebook respects everyone's privacy. Passwords are used to login to 
+                        Genesis Parent Portal and periodically query client's current grades, assignments, and past grades. 
+                        Additionally, passwords are used to query account details, grades, assignments, and past grades live every
+                        time a client uses Gradebook.
+                    </Text>
+                    <Text style={[ styles.termItem, { color: theme.grey }]}>
+                        2. By entering your credentials and clicking the "View Grades" button clients are giving Gradebook
+                        the authority to query data from Genesis Parent Portal on behalf of the client. 
+                    </Text>
+                    <Text style={[ styles.termItem, { color: theme.grey }]}>
+                        3. Client passwords and other data are securely encrypted on Gradebook's database to maximize security.
+                        Furthermore, client passwords are encrypted with AES in CBC mode with a 128-bit key for encryption; using PKCS7 padding. 
+                    </Text>
+                </ScrollView>
+            </View>
+        )
+    };  
+
+    const handleSheetClose = () => {
+        handleSchoolDistrictClose();
+        handleTermsClose();
+    }
+
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <LoadingBox loading={loading}/>
-            <Blocker onPress={handleSchoolDistrictClose} block={sheetOpen}/>
+            <Blocker onPress={handleSheetClose} block={sheetOpen || termsSheetOpen}/>
             <KeyboardAvoidingView behavior={'padding'}>
                 <View style={ styles.imageContainer }>
                     {/* <Image style={styles.image} source={EducationPNG} /> */}
@@ -199,8 +251,23 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                     >
                         <FontAwesomeIcon color={"#fff"} icon={faBinoculars} />
                     </BrandButton>
+                    <TouchableOpacity onPress={handleTermsOpen} style={styles.conditionContainer}>
+                        <Text 
+                            style={[{ color: theme.grey }]}
+                        >
+                            I Accept <Text style={styles.terms}>Terms & Conditions</Text> by Proceeding.
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
+            <BottomSheet
+                ref={termsSheet}
+                initialSnap={1}
+                snapPoints={[500, 0]}
+                borderRadius={25}
+                onCloseEnd={handleTermsClose}
+                renderContent={renderTermsSheet}
+            />
             <BottomSheet
                 ref={schoolDistrictSheet}
                 initialSnap={1}
@@ -244,7 +311,7 @@ const styles = StyleSheet.create({
         height: 500,
         padding: 15,
     },
-    schoolDistrictHeader: {
+    sheetHeader: {
         fontWeight: '600',
         fontSize: 25,
     },
@@ -254,6 +321,24 @@ const styles = StyleSheet.create({
     errorMessage: {
         color: "red",
 
+    },
+    conditionContainer: {
+        marginTop: 25, 
+        marginBottom: 5,
+    },
+    terms: { 
+        textDecorationLine: "underline",
+    },
+    termsSheet: {
+        width: width,
+        height: 500,
+        padding: 25,
+    },
+    termsList: {
+        marginVertical: 15,
+    },
+    termItem: {
+        marginBottom: 15,
     }
 }); 
 
