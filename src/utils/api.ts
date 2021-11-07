@@ -32,7 +32,9 @@ export const get = async (endpoint:string) => {
 
     return await fetch(url, defaultOptions)
         .then(res => res.json())
-        .catch(e => e);
+        .catch(e => {
+            console.log(e);
+        });
 }
 
 export const post = async (endpoint:string, body?:any) => {

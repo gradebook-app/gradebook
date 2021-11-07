@@ -5,7 +5,7 @@ import NavigatorScreen from "./src/pages/NavigatorScreen";
 import AssignmentsScreen from "./src/pages/AssignmentsScreen";
 import LoadingScreen from "./src/pages/LoadingScreen";
 import LoginScreen from "./src/pages/LoginScreen";
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as Notifications from "expo-notifications";
 import GPAScreen from "./src/pages/GPAScreen";
 

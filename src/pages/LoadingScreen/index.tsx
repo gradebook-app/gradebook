@@ -1,4 +1,4 @@
-import { faBook } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
@@ -8,8 +8,6 @@ import {
     SafeAreaView, 
     StyleSheet, 
     View, 
-    Text,
-    Animated,
     Button,
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
@@ -21,6 +19,7 @@ import { hasNotificationPermission } from '../../utils/notification';
 import * as Notifications from "expo-notifications"
 import * as LocalAuthentication from 'expo-local-authentication';
 import BrandButton from '../../components/BrandButton';
+import { TouchableOpacity } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -101,6 +100,12 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
 
     return (
         <SafeAreaView style={[ styles.container, {  backgroundColor: theme.background }]}>
+            { isBiometricsEnabled && (
+                <TouchableOpacity onPress={handleLogOut} style={styles.signOut}>
+                    <Button title="Sign Out" onPress={handleLogOut}/> 
+                    <FontAwesomeIcon color={"#006ee6"} icon={faSignOutAlt} />
+                </TouchableOpacity>
+            )}
             <View style={[ styles.loadingContainer, { backgroundColor:  theme.secondary }]}>
                 <FontAwesomeIcon size={65} color={colors.primary} icon={faBook} />
             </View>
@@ -113,12 +118,6 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
                             title="Login" 
                             onPress={handleAuth}
                         ></BrandButton>
-                        {/* <BrandButton 
-                            style={[ styles.logout ]}
-                            color="#fff" 
-                            title="Log out" 
-                            onPress={handleLogOut}
-                        /> */}
                     </>
                 ) : null }
             </View>
@@ -155,8 +154,13 @@ const styles = StyleSheet.create({
         marginTop: 'auto',
         marginBottom: 50,
     },
-    logout: {
-        marginTop: 10,
+    signOut: {
+        position: 'absolute',
+        display: 'flex',
+        flexDirection: 'row',
+        right: 15,
+        top: 45,
+        alignItems: 'center',
     }
 });
 

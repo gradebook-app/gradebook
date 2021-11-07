@@ -70,7 +70,7 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 dispatch(setNotificationToken(token));
             };
         } catch(e) { return };
-    }, [ user?.notificationToken])
+    }, [ user?.notificationToken ])
 
 
     useEffect(() => {

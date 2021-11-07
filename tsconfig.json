@@ -1,12 +1,6 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true,
-    "paths": {
-      "*": [
-        "node_modules/*",
-        "src/@types/*"
-      ]
-    }
+    "strict": true
   }
 }

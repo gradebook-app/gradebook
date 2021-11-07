@@ -12,11 +12,12 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import BrandButton from '../../components/BrandButton';
 import LoadingBox from '../../components/LoadingBox';
-import InputField from '../../InputField';
+import InputField from '../../components/InputField';
 import { setLoginClient } from '../../store/actions/auth.actions';
 import { IRootReducer } from '../../store/reducers';
 import { getAccessToken, getStateNotificationToken, getUser, isAccessDenied, isLoading } from '../../store/selectors';
 import BottomSheet from "reanimated-bottom-sheet";
+import PasswordField from '../../components/PasswordField';
 
 import EducationSVG from "../../SVG/EducationSVG";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -35,6 +36,7 @@ interface IFormValues {
     passError: boolean,
     userIdError: boolean,
     schoolDistrict?: string,
+    errorMessage: string,
 }
 
 type LoginScreenProps = {
@@ -47,6 +49,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
     const state = useSelector((state:IRootReducer) => state);
     const loading = isLoading(state);
     const isAccessToken = !!getAccessToken(state);
+    const accessDenied = isAccessDenied(state);
 
     const { theme } : any = useTheme();
 
@@ -55,7 +58,17 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         pass: "",
         passError: false,
         userIdError: false,
+        errorMessage: "",
     });
+
+    const handleAccessDenied = useCallback(() => {
+        if (accessDenied) {
+            const message = "Password or Email is not Valid.";
+            handleValueChange('errorMessage')(message);
+        }
+    }, [ accessDenied ]);
+
+    useEffect(handleAccessDenied, [ handleAccessDenied ]);
 
     const handleLogin = (useCallback(async () => {
         if (!values.pass) {
@@ -89,8 +102,8 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
 
     useEffect(handleNavigate, [ handleNavigate ]);
 
-    const handleValueChange = (type:keyof IFormValues) => (text:any) => {
-        setValues({ ...values, [ type ]: text });
+    const handleValueChange = (type:keyof IFormValues) => (text:any) => { 
+        setValues({ ...values, errorMessage: "", [ type ]: text });
     };
 
     const [ sheetOpen, setSheetOpen ] = useState(false);
@@ -127,9 +140,10 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                         label={"Choose School District"} 
                         value={undefined} 
                     />
-                    { Object.keys(schoolDistrictsMapped).map((schoolDistrict) => {
+                    { Object.keys(schoolDistrictsMapped).map((schoolDistrict, index) => {
                         return (
                             <Picker.Item 
+                                key={index}
                                 color={theme.text}
                                 label={schoolDistrictsMapped[schoolDistrict as ESchoolDistricts]} 
                                 value={schoolDistrict} 
@@ -166,15 +180,17 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                         placeholder="Email"
                         onSubmitEditing={handleLogin}
                     /> 
-                    <InputField 
+                    <PasswordField 
                         value={values.pass}
                         returnKeyLabel={'Login'}
                         returnKeyType={'done'}
                         placeholder="Password"
                         onChangeText={handleValueChange('pass')}
-                        secureTextEntry={true}
                         onSubmitEditing={handleLogin}
-                    /> 
+                    />
+                    <View style={ styles.errorContainer }>
+                        <Text style={styles.errorMessage}>{ values.errorMessage }</Text>
+                    </View>
                     <BrandButton 
                         title="View Grades"
                         color="#fff"
@@ -231,6 +247,13 @@ const styles = StyleSheet.create({
     schoolDistrictHeader: {
         fontWeight: '600',
         fontSize: 25,
+    },
+    errorContainer: {
+        width: width * 0.9,
+    },
+    errorMessage: {
+        color: "red",
+
     }
 }); 
 
