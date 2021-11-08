@@ -180,7 +180,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                     <Text style={[ styles.sheetHeader, { color: theme.text }]}>Terms & Conditions</Text>
                     <Button title="Accept" onPress={handleTermsClose} />
                 </View>
-                <ScrollView contentContainerStyle={{ paddingBottom: 95 }} style={styles.termsList}>
+                <ScrollView contentContainerStyle={{ paddingBottom: 110 }} style={styles.termsList}>
                     <Text style={[ styles.termItem, { color: theme.grey }]}>
                         1. All data, including the client's password, is securely stored on Gradebook's servers 
                         for providing clients with access to their grades. Passwords and other client data
@@ -196,6 +196,10 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                     <Text style={[ styles.termItem, { color: theme.grey }]}>
                         3. Client passwords and other data are securely encrypted on Gradebook's database to maximize security.
                         Furthermore, client passwords are encrypted with AES in CBC mode with a 128-bit key for encryption; using PKCS7 padding. 
+                    </Text>
+                    <Text style={[ styles.termItem, { color: theme.grey }]}>
+                        4. Gradebook is not to be held reliable for any malicious activity regarding a client's Genesis Parent Portal account. 
+                        Upon signing up, it is the client's own risk of providing their credentials to Gradebook.
                     </Text>
                 </ScrollView>
             </View>
