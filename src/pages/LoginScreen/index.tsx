@@ -259,7 +259,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                         <Text 
                             style={[{ color: theme.grey }]}
                         >
-                            I Accept <Text style={styles.terms}>Terms & Conditions</Text> by Proceeding.
+                            I Accept the <Text style={styles.terms}>Terms & Conditions</Text> by Proceeding.
                         </Text>
                     </TouchableOpacity>
                 </View>
