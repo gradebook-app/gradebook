@@ -1,12 +1,13 @@
 import React, { ReactChild, useCallback, useEffect, useRef } from 'react';
-import { Animated } from 'react-native';
+import { Animated, StyleProp, ViewStyle } from 'react-native';
 
 type FadeInProps = {
     children: ReactChild,
     show: boolean, 
+    style?: StyleProp<ViewStyle>,
 }
 
-const FadeIn : React.FC<FadeInProps> = ({ show = false, children }) => {
+const FadeIn : React.FC<FadeInProps> = ({ show = false, children, style }) => {
     const containerOpacity = useRef(new Animated.Value(0)).current; 
 
     const handleOpacity = useCallback(() => {
@@ -23,7 +24,7 @@ const FadeIn : React.FC<FadeInProps> = ({ show = false, children }) => {
     useEffect(handleOpacity, [ handleOpacity ]);
 
     return (
-        <Animated.View style={{ opacity: containerOpacity }}>
+        <Animated.View style={[ { opacity: containerOpacity }, style ]}>
             { children }
         </Animated.View>
     )

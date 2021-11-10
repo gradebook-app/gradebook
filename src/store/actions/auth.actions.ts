@@ -1,4 +1,4 @@
-import { EAuthActions, ILoginClient, ILogoutClient, ISetAccessDenied, ISetAccessToken } from "../constants/auth.constants";
+import { EAuthActions, ILoginClient, ILogoutClient, ISetAccessDenied, ISetAccessToken, ISetLoginError } from "../constants/auth.constants";
 
 export const setLoginClient = ({ userId, pass, schoolDistrict, notificationToken } : any) : ILoginClient => ({
     type: EAuthActions.LOGIN_CLIENT,
@@ -24,3 +24,8 @@ export const setSetAccessToken = (accessToken: string | null) : ISetAccessToken 
     type: EAuthActions.SET_ACCESS_TOKEN,
     payload: accessToken,
 })
+
+export const setLoginError = (error:boolean) : ISetLoginError => ({
+    type: EAuthActions.LOGIN_ERROR,
+    payload: error,
+});

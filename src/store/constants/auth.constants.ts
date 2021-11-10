@@ -4,7 +4,8 @@ export enum EAuthActions {
     LOGIN_CLIENT = "LOGIN_CLIENT",
     LOGOUT_CLIENT = "LOGOUT_CLIENT",
     SET_ACCESS_DENIED = "SET_ACCESS_DENIED",
-    SET_ACCESS_TOKEN = "SET_ACCESS_TOKEN"
+    SET_ACCESS_TOKEN = "SET_ACCESS_TOKEN",
+    LOGIN_ERROR = "LOGIN_ERROR",
 }
 
 export interface ILoginClient {
@@ -30,4 +31,9 @@ export interface ISetAccessDenied {
 export interface ISetAccessToken {
     type: EAuthActions.SET_ACCESS_TOKEN,
     payload: string | null
+}
+
+export interface ISetLoginError {
+    type: EAuthActions.LOGIN_ERROR,
+    payload: boolean,
 }

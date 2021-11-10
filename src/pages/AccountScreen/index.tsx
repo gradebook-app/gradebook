@@ -153,6 +153,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                             <Box.Arrow onPress={handleSecuritySettings} />
                         </Box.Content>
                     </Box.Clickable>
+                    <Box.Separator />
                     <Box.Clickable onPress={handleNotificationSettings}>
                         <Box.Content
                                 title="Notifications"
@@ -173,6 +174,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                                 <Box.Arrow onPress={handleContactsSettings} />
                             </Box.Content>
                     </Box.Clickable>
+                    <Box.Separator />
                     <Box.Clickable onPress={handlePrivacySettings}>
                             <Box.Content 
                                 title="Privacy Policy"
