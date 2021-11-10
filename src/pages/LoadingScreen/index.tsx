@@ -9,12 +9,14 @@ import {
     StyleSheet, 
     View, 
     Button,
+    ActivityIndicator,
+    Image,
 } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAccessDenied, setLoginClient, setLogoutClient } from '../../store/actions/auth.actions';
+import { setAccessDenied, setLoginClient, setLoginError, setLogoutClient } from '../../store/actions/auth.actions';
 import { IRootReducer } from '../../store/reducers';
-import { getAccessToken, getUser, isAccessDenied } from '../../store/selectors';
+import { getAccessToken, getUser, isAccessDenied, isLoading, isLoginError } from '../../store/selectors';
 import { hasNotificationPermission } from '../../utils/notification';
 import * as Notifications from "expo-notifications"
 import * as LocalAuthentication from 'expo-local-authentication';
@@ -22,6 +24,10 @@ import BrandButton from '../../components/BrandButton';
 import { TouchableOpacity } from 'react-native';
 import { ISettings } from '../AccountScreen';
 import messaging from '@react-native-firebase/messaging'
+import FadeIn from '../../components/FadeIn';
+import { ScrollView } from 'react-native-gesture-handler';
+
+const GradebookIcon = require("../../../assets/gradebook-logo.png");
 
 const { width, height } = Dimensions.get('window');
 
@@ -34,9 +40,11 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     const state = useSelector((state:IRootReducer) => state);
     const isAccessToken = !!getAccessToken(state);
     const accessDenied = isAccessDenied(state);
+    const loginError = isLoginError(state);
     const [ isBiometricsEnabled, setIsBiometricsEnabled ] = useState(false);
 
     const { theme, colors } : any = useTheme();
+    const loading = isLoading(state);
 
     const handleLogOut = async () => {
         navigation.navigate('login');
@@ -60,6 +68,12 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
             
             const credentials = await AsyncStorage.getItem("@credentials");
         
+            if (loginError && credentials) {
+                navigation.navigate("navigator");
+                dispatch(setLoginError(false))
+                return false; 
+            };
+
             let token = null
 
             const cachedSettings = await AsyncStorage.getItem("@settings");
@@ -108,7 +122,13 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
                 navigation.navigate("login")
             }
         })
-    }, [ isAccessToken, NetInfo, accessDenied ]);
+    }, [ isAccessToken, NetInfo, accessDenied, loginError ]);
+
+    const [ visible, setVisible ] = useState(false);
+
+    useEffect(() => {
+        setVisible(true);
+    }, []);
 
     useEffect(() => {
         handleAuth();
@@ -116,27 +136,33 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
 
     return (
         <SafeAreaView style={[ styles.container, {  backgroundColor: theme.background }]}>
-            { isBiometricsEnabled && (
-                <TouchableOpacity onPress={handleLogOut} style={styles.signOut}>
-                    <Button title="Sign Out" onPress={handleLogOut}/> 
-                    <FontAwesomeIcon color={"#006ee6"} icon={faSignOutAlt} />
-                </TouchableOpacity>
-            )}
-            <View style={[ styles.loadingContainer, { backgroundColor:  theme.secondary }]}>
-                <FontAwesomeIcon size={65} color={colors.primary} icon={faBook} />
-            </View>
-            <View style={styles.buttonGroup}>
-                { isBiometricsEnabled ? (
+                { isBiometricsEnabled && (
+                    <TouchableOpacity onPress={handleLogOut} style={styles.signOut}>
+                        <Button title="Sign Out" onPress={handleLogOut}/> 
+                        <FontAwesomeIcon color={"#006ee6"} icon={faSignOutAlt} />
+                    </TouchableOpacity>
+                )}
+                <FadeIn style={styles.loadingContainer} show={visible}>
                     <>
-                        <BrandButton 
-                            style={[{ backgroundColor: colors.primary } ]}
-                            color="#fff" 
-                            title="Login" 
-                            onPress={handleAuth}
-                        ></BrandButton>
+                        {/* <FontAwesomeIcon size={65} color={colors.primary} icon={faBook} />   */}
+                        <View style={{ ...styles.loading, backgroundColor: theme.secondary }}>
+                            <Image style={{ width: 100, height: 100 }} source={GradebookIcon}/>
+                        </View>
+                        <ActivityIndicator animating={loading} />
                     </>
-                ) : null }
-            </View>
+                </FadeIn>
+                <View style={styles.buttonGroup}>
+                    { isBiometricsEnabled ? (
+                        <>
+                            <BrandButton 
+                                style={[{ backgroundColor: colors.primary } ]}
+                                color="#fff" 
+                                title="Login" 
+                                onPress={handleAuth}
+                            ></BrandButton>
+                        </>
+                    ) : null }
+                </View>
         </SafeAreaView>
     )
 }
@@ -155,7 +181,21 @@ const styles = StyleSheet.create({
         height: width * 0.35,
         minWidth: 100,
         minHeight: 100,
-        top: (height * 0.5) - (0.5 * width * 0.35),
+        top: ((height * 0.5) - (0.5 * width * 0.35)) + 5,
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowRadius: 5,
+        shadowOpacity: 0.075,
+        shadowOffset: { width: 0, height: 0 },
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    loading: {
+        width: width * 0.35,
+        height: width * 0.35,
+        minWidth: 100,
+        minHeight: 100,
         backgroundColor: '#fff',
         borderRadius: 10,
         shadowColor: '#000',
@@ -163,6 +203,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.075,
         shadowOffset: { width: 0, height: 0 },
         display: 'flex',
+        marginBottom: 10,
         alignItems: 'center',
         justifyContent: 'center',
     },

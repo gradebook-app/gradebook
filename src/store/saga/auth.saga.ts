@@ -4,13 +4,15 @@ import { LOGIN_CLIENT, LOGOUT_CLIENT } from "../../constants/endpoints/auth";
 import { ISettings } from "../../pages/AccountScreen";
 import * as api from "../../utils/api";
 import { setLoading } from "../actions";
-import { setAccessDenied, setSetAccessToken } from "../actions/auth.actions";
+import { setAccessDenied, setLoginError, setSetAccessToken } from "../actions/auth.actions";
 import { setUser } from "../actions/user.actions";
 import { EAuthActions, ILoginClient } from "../constants/auth.constants";
 
 function* loginClient({ payload } : ILoginClient) : Generator<any> {
     yield put(setLoading(true));
-    const response:any = yield api.post(LOGIN_CLIENT, payload);
+    const response:any = yield api.post(LOGIN_CLIENT, payload).catch(() => {
+        null; 
+    });
     if (response && response?.access === true) {
         const user = response?.user
         yield put(setUser(user || {}));
@@ -27,6 +29,8 @@ function* loginClient({ payload } : ILoginClient) : Generator<any> {
     } else if (response && response?.access === false) {
         yield put(setAccessDenied(true));
         yield AsyncStorage.removeItem("@credentials")
+    } else if (!response) {
+        // yield put(setLoginError(true));
     }
     yield put(setLoading(false));
 }

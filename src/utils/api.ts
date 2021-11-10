@@ -36,7 +36,7 @@ const revalidateClient = async () => {
 
     if (credentials) {
         const data = JSON.parse(credentials);
-        const response = await post(LOGIN_CLIENT, { ...data, notificationToken: token });
+        const response:any = await post(LOGIN_CLIENT, { ...data, notificationToken: token });
 
         if (response && response?.access === true) {
             const user = response?.user
@@ -79,7 +79,6 @@ export const get = async (endpoint:string) => {
                     });
                 }
             }
-            return {};
         });
 }
 
@@ -97,22 +96,24 @@ export const post = async (endpoint:string, body?:any) => {
 
     const url = constructURL(endpoint);
 
-    return await fetch(url, defaultOptions)
-        .then(res => {
-            console.log(res.status);
-            if (res.status === 401) throw 'expired';
-            else return res.json()
-        })
-        .catch(async e => {
-            if (e === 'expired') {
-                const hasAccess = await revalidateClient();
-                if (hasAccess) { 
-                    defaultOptions.headers.Authorization = `Bearer ${retrieveAccessToken()}`;
-                    return await fetch(url, defaultOptions).then(res => res.json()).catch(e => {
-                        return null;
-                    });
-                }
-            }
-            return {};
-        });
+    return await new Promise((resolve, _) => {
+        fetch(url, defaultOptions)
+            .then(res => {
+                if (res.status === 401) throw 'expired';
+                const initialResponse = res.json();
+                resolve(initialResponse);
+            })
+            .catch(async e => {
+                if (e === 'expired') {
+                    const hasAccess = await revalidateClient();
+                    if (hasAccess) { 
+                        defaultOptions.headers.Authorization = `Bearer ${retrieveAccessToken()}`;
+                        const retry = await fetch(url, defaultOptions).then(res => res.json()).catch(e => {
+                            return null;
+                        });
+                        resolve(retry);
+                    }
+                };
+            });
+    });
 }
