@@ -18,7 +18,6 @@
 		1742A0032738A5FF00CD05D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1742A0022738A5FF00CD05D3 /* Assets.xcassets */; };
 		1742A0052738A5FF00CD05D3 /* GradesWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1742A0012738A5FD00CD05D3 /* GradesWidget.intentdefinition */; };
 		1742A0062738A5FF00CD05D3 /* GradesWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1742A0012738A5FD00CD05D3 /* GradesWidget.intentdefinition */; };
-		1742A0092738A5FF00CD05D3 /* GradesWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 17429FF92738A5FD00CD05D3 /* GradesWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1742A0112738DADB00CD05D3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1742A0102738DADB00CD05D3 /* GoogleService-Info.plist */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		68E285628E724845928C2F84 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC680D9FBEC64770A2058EC7 /* noop-file.swift */; };
@@ -27,16 +26,6 @@
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		1742A0072738A5FF00CD05D3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 17429FF82738A5FD00CD05D3;
-			remoteInfo = GradesWidgetExtension;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		1742A00A2738A5FF00CD05D3 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -44,7 +33,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				1742A0092738A5FF00CD05D3 /* GradesWidgetExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -225,7 +213,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				1742A0082738A5FF00CD05D3 /* PBXTargetDependency */,
 			);
 			name = Gradebook;
 			productName = Gradebook;
@@ -429,14 +416,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		1742A0082738A5FF00CD05D3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 17429FF82738A5FD00CD05D3 /* GradesWidgetExtension */;
-			targetProxy = 1742A0072738A5FF00CD05D3 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
