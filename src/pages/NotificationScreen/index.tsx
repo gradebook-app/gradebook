@@ -24,7 +24,7 @@ const NotificationScreen : React.FC<NotificationScreenProps> = ({ navigation }) 
         navigation?.setOptions({ headerStyle: { 
             backgroundColor: theme.background,
         }})
-    });
+    }, []);
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>

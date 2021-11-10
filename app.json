@@ -21,13 +21,18 @@
       "userInterfaceStyle": "automatic",
       "infoPlist": {
         "NSFaceIDUsageDescription": "FaceID is used optionally to secure user Grades and information."
+      },
+      "bundleIdentifier": "com.mahitm.gradebook",
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-8555090951806711~1794567511"
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.mahitm.gradebook"
     },
     "web": {
       "favicon": "./assets/favicon.png"

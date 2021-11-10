@@ -3,6 +3,6 @@ About:
 An App to Display Genesis Parent Portal Data.
 This is an Open Source Project, any PRs are Welcomed.
 
-Set Worker Count:
+Create Symlink 
 
-heroku scale worker=10 -a gradebook-web-api
+ln -s $(which node) /usr/local/bin/node

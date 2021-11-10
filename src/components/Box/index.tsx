@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     space: {
-        height: 20,
+        height: 12.5,
         width: width,
         backgroundColor: "rgba(0, 0, 0, 0.0)",
     },

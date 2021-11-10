@@ -1,5 +1,5 @@
-import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+
+
 import React, { useMemo } from "react";
 import { StyleSheet, View, Text, Dimensions, Appearance, } from "react-native";
 import { useTheme } from "react-native-paper";

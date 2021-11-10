@@ -21,6 +21,7 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import BrandButton from '../../components/BrandButton';
 import { TouchableOpacity } from 'react-native';
 import { ISettings } from '../AccountScreen';
+import messaging from '@react-native-firebase/messaging'
 
 const { width, height } = Dimensions.get('window');
 
@@ -80,11 +81,25 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
                 navigation.setParams({ cachedMarkingPeriod });
 
                 try {
-                    const hasPermission = await hasNotificationPermission()
-                    if (hasPermission) {
-                        token = (await Notifications.getExpoPushTokenAsync()).data;
-                    };
-                } catch(e) {};
+                    const authStatus = await messaging().hasPermission();
+                    const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+                                    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+                    if (enabled) {
+                        token = await messaging().getToken();
+                    } else {
+                        try {
+                            const response = await messaging().requestPermission();
+                            const enabled = response === messaging.AuthorizationStatus.AUTHORIZED ||
+                                            response === messaging.AuthorizationStatus.PROVISIONAL;
+                            if (enabled) token = await messaging().getToken();
+                        } catch {
+                            console.log("error");
+                        };
+                    }
+                } catch(e) {
+                    console.log(e);
+                };
+
 
                 const data = JSON.parse(credentials);
                 dispatch(setLoginClient({ ...data, notificationToken: token }));

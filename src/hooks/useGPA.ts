@@ -40,7 +40,15 @@ export const useGPA = () => {
     };
 
     useEffect(() => {
-        getGPA().finally(() => setLoading(false));
+        let mounted = true; 
+
+        getGPA().finally(() => {
+            if (mounted) setLoading(false);
+        });
+
+        return () => {
+            mounted = false; 
+        };
     }, [ getGPA ]);
 
     return { reload, loading, gpa }

@@ -42,7 +42,14 @@ export const usePastGPA = () => {
     };
 
     useEffect(() => {
-        getPastGPA().finally(() => setLoading(false));
+        let mounted = true; 
+        getPastGPA().finally(() => {
+            if (mounted) setLoading(false);
+        });
+
+        return () => {
+            mounted = false; 
+        };
     }, [ getPastGPA ]);
 
     return { reload, loading, pastGPA }

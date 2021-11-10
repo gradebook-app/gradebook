@@ -37,7 +37,13 @@ export const useAccount = () => {
     };
 
     useEffect(() => {
-        getAccount().finally(() => setLoading(false));
+        let mounted = true; 
+        getAccount().finally(() => {
+            if (mounted) setLoading(false)
+        });
+        return () => {
+            mounted = false; 
+        };
     }, [ getAccount ]);
 
     return { reload, loading, account }

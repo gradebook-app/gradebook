@@ -1,4 +1,4 @@
-import { faBell, faFingerprint, faFlagUsa, faIdBadge, faKey, faLock, faPizzaSlice, faSchool } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faBoxOpen, faFingerprint, faFlagUsa, faIdBadge, faKey, faLock, faPhone, faPizzaSlice, faSchool, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Linking } from 'react-native';
@@ -42,37 +42,6 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
             .then(keys => AsyncStorage.multiRemove(keys))
     };
 
-    const [ cacheInjected, setCacheInjected ] = useState(false);
-    const [ settings, setSettings ] = useState<ISettings>({
-        biometricsEnabled: null,
-        savePassword: null,
-    });
-
-    const insertCache = useCallback(async () => {
-        if (cacheInjected) return; 
-
-        const cache = await AsyncStorage.getItem("@settings");
-        const cachedSettings = cache ? JSON.parse(cache) : null;
-        if (!cachedSettings) {
-            setCacheInjected(true);
-            return; 
-        } else {
-            setSettings(cachedSettings);
-        }
-    }, [ cacheInjected ]);
-
-    useEffect(() => {
-        insertCache();
-    }, [ insertCache ]);
-
-    const handleSettingsChange = (key:keyof ISettings) => async (value:any) => {
-        setSettings({ ...settings, [ key ]: value });
-
-        const cache = await AsyncStorage.getItem("@settings");
-        const updatedSettings = cache ? JSON.parse(cache) : {};
-        AsyncStorage.setItem("@settings", JSON.stringify({ ...updatedSettings, [ key ]: value }));
-    };
-
     const { account, loading, reload } = useAccount();
 
     const onRefresh = () => {
@@ -104,12 +73,21 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
         }
     }, [ accessToken ]);
 
-    const handleSavePassword = async (e:boolean) => {
-        handleSettingsChange('savePassword')(e);
-    };
 
     const handleNotificationSettings = () => {
         navigation.navigate("notifications");
+    };
+
+    const handleContactsSettings = () => {
+        navigation.navigate("contact");
+    };
+
+    const handleSecuritySettings = () => {
+        navigation.navigate("security");
+    };
+
+    const handlePrivacySettings = () => {
+        navigation.navigate("privacy-policy");
     };
 
     return (
@@ -165,25 +143,16 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                     </Box.Content>
                 </Box>
                 <Box.Space />
-                <Box style={{ flexDirection: 'column' }}>
-                    <Box.Content 
-                        iconColor={"#A70000"}
-                        icon={faFingerprint}
-                        title={"Enable Fingerprint or Face ID"}
-                    >
-                        <Box.Button active={settings.biometricsEnabled} handleChange={handleSettingsChange('biometricsEnabled')} />
-                    </Box.Content>
-                    <Box.Separator />
-                    <Box.Content
-                        title="Save Password on Login"
-                        iconColor={"#EAB500"}
-                        icon={faLock}
-                    >
-                        <Box.Button active={settings.savePassword} handleChange={handleSavePassword} />
-                    </Box.Content>
-                </Box>
-                <Box.Space />
-                <Box>
+                <Box style={{ flexDirection: "column" }}>
+                    <Box.Clickable onPress={handleSecuritySettings}>
+                        <Box.Content 
+                             title="Security"
+                             iconColor={"#EAB500"}
+                             icon={faLock}
+                        >
+                            <Box.Arrow onPress={handleSecuritySettings} />
+                        </Box.Content>
+                    </Box.Clickable>
                     <Box.Clickable onPress={handleNotificationSettings}>
                         <Box.Content
                                 title="Notifications"
@@ -194,6 +163,24 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                                     <Box.Arrow onPress={handleNotificationSettings}/>
                                 </>
                         </Box.Content>
+                    </Box.Clickable>
+                    <Box.Separator />
+                    <Box.Clickable onPress={handleContactsSettings}>
+                        <Box.Content
+                            iconColor={"#34E600"}
+                            icon={faPhone}
+                            title="Contact">
+                                <Box.Arrow onPress={handleContactsSettings} />
+                            </Box.Content>
+                    </Box.Clickable>
+                    <Box.Clickable onPress={handlePrivacySettings}>
+                            <Box.Content 
+                                title="Privacy Policy"
+                                iconColor={"#E66C00"}
+                                icon={faShieldAlt}
+                            >
+                                <Box.Arrow onPress={handlePrivacySettings} />
+                            </Box.Content>
                     </Box.Clickable>
                 </Box>
                 <BrandButton 
@@ -216,7 +203,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logOut: {
-        marginTop: 20,
+        marginTop: 15,
         marginBottom: 125,
     },
     account: {
@@ -226,7 +213,7 @@ const styles = StyleSheet.create({
     headerContainer: {
         width: width,
         padding: 25,
-        paddingTop: 15,
+        paddingTop: 10,
         paddingBottom: 5,
     },
     header: {
