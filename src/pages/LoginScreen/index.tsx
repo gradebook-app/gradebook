@@ -192,24 +192,24 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                 </View>
                 <ScrollView contentContainerStyle={{ paddingBottom: 110 }} style={styles.termsList}>
                     <Text style={[ styles.termItem, { color: theme.grey }]}>
-                        1. All data, including the client's password, is securely stored on Gradebook's servers 
+                        1. All data, including the client's password, is securely stored on Genesus's servers 
                         for providing clients with access to their grades. Passwords and other client data
-                        are not shared or sold, Gradebook respects everyone's privacy. Passwords are used to login to 
+                        are not shared or sold, Genesus respects everyone's privacy. Passwords are used to login to 
                         Genesis Parent Portal and periodically query client's current grades, assignments, and past grades. 
                         Additionally, passwords are used to query account details, grades, assignments, and past grades live every
-                        time a client uses Gradebook.
+                        time a client uses Genesus.
                     </Text>
                     <Text style={[ styles.termItem, { color: theme.grey }]}>
-                        2. By entering your credentials and clicking the "View Grades" button clients are giving Gradebook
+                        2. By entering your credentials and clicking the "View Grades" button clients are giving Genesus
                         the authority to query data from Genesis Parent Portal on behalf of the client. 
                     </Text>
                     <Text style={[ styles.termItem, { color: theme.grey }]}>
-                        3. Client passwords and other data are securely encrypted on Gradebook's database to maximize security.
+                        3. Client passwords and other data are securely encrypted on Genesus's database to maximize security.
                         Furthermore, client passwords are encrypted with AES in CBC mode with a 128-bit key for encryption; using PKCS7 padding. 
                     </Text>
                     <Text style={[ styles.termItem, { color: theme.grey }]}>
-                        4. Gradebook is not to be held responsible for any malicious activity regarding a client's Genesis Parent Portal account. 
-                        Upon signing up, it is the client's own risk of providing their credentials to Gradebook.
+                        4. Genesus is not to be held responsible for any malicious activity regarding a client's Genesis Parent Portal account. 
+                        Upon signing up, it is the client's own risk of providing their credentials to Genesus.
                     </Text>
                 </ScrollView>
             </View>
