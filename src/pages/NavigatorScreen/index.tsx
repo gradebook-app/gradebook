@@ -8,12 +8,12 @@ import { useTheme } from "react-native-paper";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import AccountScreen from "../AccountScreen";
 import { setNotificationToken } from "../../store/actions/user.actions";
-import { hasNotificationPermission } from "../../utils/notification";
 import * as Notifications from "expo-notifications";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootReducer } from "../../store/reducers";
 import { getUser } from "../../store/selectors";
-import { AppState, DynamicColorIOS, Settings } from "react-native";
+import { DynamicColorIOS } from "react-native";
+import messaging from "@react-native-firebase/messaging";
 
 type TabIconProps = {
     focused: boolean,
@@ -23,7 +23,7 @@ type TabIconProps = {
 
 const TabIcon : React.FC<TabIconProps> = ({ focused, iconSize, icon, ...props }) => {
     const size = iconSize || 25; 
-    const { colors, theme } : any = useTheme();
+    const { colors } : any = useTheme();
 
     const iconColor = focused ? colors.primary : "#DEDEDE";
 
@@ -60,27 +60,45 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
     //     }
     // });
 
+    const getPermission = async () => {
+        try {
+            await messaging().requestPermission();
+            const token = await getToken();
+            const storedToken = user?.notificationToken; 
+            if (!token || storedToken === token) return;
+            dispatch(setNotificationToken(token));
+        } catch (error) {}
+    }
+
+    const getToken = async () => {
+        const token = await messaging().getToken();
+        return token; 
+    }
+
     const handleNotificationUpdate = useCallback(async () => {
         try {
-            const hasPermission = await hasNotificationPermission()
+            const hasPermission = await messaging().hasPermission();
             if (hasPermission) {
-                const token = (await Notifications.getExpoPushTokenAsync()).data;
+                const token = await getToken();
                 const storedToken = user?.notificationToken; 
                 if (!token || storedToken === token) return;
                 dispatch(setNotificationToken(token));
-            };
+            } else {
+                getPermission();
+            }
         } catch(e) { return };
     }, [ user?.notificationToken ])
 
-
     useEffect(() => {
-        const subscription = Notifications.addPushTokenListener(handleNotificationUpdate);
-        return () => subscription.remove()
+        const subscription = messaging().onTokenRefresh(handleNotificationUpdate);
+        return subscription;
     }, []);
 
-    navigation?.setOptions({ headerStyle: { 
-        backgroundColor: theme.background,
-    }})
+    useEffect(() => {
+        navigation?.setOptions({ headerStyle: { 
+            backgroundColor: theme.background,
+        }});
+    }, []);
 
     const separatorBarColor = DynamicColorIOS({
         light: "rgba(0, 0, 0, 0.15)",

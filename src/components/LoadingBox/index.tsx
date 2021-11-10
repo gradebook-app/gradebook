@@ -163,4 +163,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default LoadingBox;
+export default React.memo(LoadingBox);

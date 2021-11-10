@@ -7,7 +7,6 @@ import { Provider as ReduxProvider } from "react-redux";
 import store from "./src/store";
 import AppNavigator from "./AppNavigator";
 
-
 const dynamicBackgroundColor = DynamicColorIOS({
   light: "#fff",
   dark: "#000",
@@ -70,8 +69,6 @@ const theme = {
     default: "#FAC51E",
   }
 };
-
-
 
 export default function App() {
   return (

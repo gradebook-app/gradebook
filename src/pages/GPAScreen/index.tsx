@@ -6,6 +6,7 @@ import { useGPA } from '../../hooks/useGPA';
 import { usePastGPA } from '../../hooks/usePastGPA';
 import Box from "../../components/Box";
 import { ScrollView } from 'react-native-gesture-handler';
+import BannerAd from '../../components/BannerAd';
 
 type GPAScreenProps = {
     navigation: any,
@@ -23,7 +24,7 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
         navigation?.setOptions({ headerStyle: { 
             backgroundColor: theme.background,
         }})
-    });
+    }, []);
 
     const roundGrade = (value:number | undefined) : number => {
         if (!value && value !== 0) return 0; 
@@ -133,6 +134,7 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                         Disclaimer: All GPA Calculations are estimated and may defer from your actual GPA. 
                     </Text>
                 </View>
+                {/* <BannerAd /> */}
            </ScrollView>
         </SafeAreaView>
     )

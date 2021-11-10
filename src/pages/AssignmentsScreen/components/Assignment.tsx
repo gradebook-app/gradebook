@@ -1,7 +1,7 @@
 import { faCommentDots } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import React, { ReactChild, useCallback, useEffect } from 'react';
-import { ScrollView, View, Text, StyleSheet, Dimensions } from "react-native";
+import React, { ReactChild, useCallback, } from 'react';
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from 'react-native-paper';
 import { useAppearanceTheme } from '../../../hooks/useAppearanceTheme';

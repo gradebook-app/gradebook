@@ -27,6 +27,7 @@ import { ESchoolDistricts } from '../../store/enums/school-districts.enum';
 import Blocker from '../../components/Blocker';
 import { hasNotificationPermission } from '../../utils/notification';
 import * as Notifications from "expo-notifications"
+import messaging from '@react-native-firebase/messaging'
 
 const { width, height } = Dimensions.get('window');
 
@@ -68,6 +69,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         }
     }, [ accessDenied ]);
 
+
     useEffect(handleAccessDenied, [ handleAccessDenied ]);
 
     const handleLogin = (useCallback(async () => {
@@ -84,12 +86,20 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         let notificationToken = null; 
 
         try {
-            const hasPermission = await hasNotificationPermission()
-            if (hasPermission) {
-                notificationToken = (await Notifications.getExpoPushTokenAsync()).data;
-            };
-        } catch(e) {};
-
+            const authStatus = await messaging().hasPermission();
+            const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+                            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+            if (enabled) {
+                notificationToken = await messaging().getToken();
+            } else {
+                try {
+                    await messaging().requestPermission();
+                    notificationToken = await messaging().getToken();
+                } catch {};
+            }
+        } catch(e) {
+            console.log(e);
+        };
 
         dispatch(setLoginClient({ ...values, notificationToken: notificationToken }));
     }, [ values ]))
@@ -198,7 +208,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                         Furthermore, client passwords are encrypted with AES in CBC mode with a 128-bit key for encryption; using PKCS7 padding. 
                     </Text>
                     <Text style={[ styles.termItem, { color: theme.grey }]}>
-                        4. Gradebook is not to be held reliable for any malicious activity regarding a client's Genesis Parent Portal account. 
+                        4. Gradebook is not to be held responsible for any malicious activity regarding a client's Genesis Parent Portal account. 
                         Upon signing up, it is the client's own risk of providing their credentials to Gradebook.
                     </Text>
                 </ScrollView>

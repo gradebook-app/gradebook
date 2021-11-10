@@ -23,8 +23,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "react-native-paper";
 import GPASlideshow from "./components/GPASlideshow";
 import { useGPA } from "../../hooks/useGPA";
-import * as Notifications from "expo-notifications";
 import { usePastGPA } from "../../hooks/usePastGPA";
+import messaging from '@react-native-firebase/messaging';
 
 const { width, height } = Dimensions.get('window');
 
@@ -51,19 +51,16 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
     const { reload:reloadGPA, loading:loadingGPA, gpa } = useGPA();
     const { pastGPA } = usePastGPA();
-    
-    const notificationListener = useRef<any | null>(null);
+
 
     useEffect(() => {
-        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+        const unsubscribe = messaging().onMessage(_ => {
             reload()
             reloadGPA();
         });
 
-        return () => {
-            Notifications.removeNotificationSubscription(notificationListener.current);
-        }
-    });
+        return unsubscribe;
+    }, []);
     
     const state = useSelector((state:IRootReducer) => state);
     const accessToken = getAccessToken(state);

@@ -16,8 +16,7 @@ import { IAssignment } from '../../store/interfaces/assignment.interface';
 import Blocker from '../../components/Blocker';
 import AssignmentSheet from './components/AssignmentSheet';
 import { useTheme } from 'react-native-paper';
-
-import NoDataSVG from "../../SVG/NoDataSVG";
+import messaging from "@react-native-firebase/messaging";
 import { useAppearanceTheme } from '../../hooks/useAppearanceTheme';
 const NoDataPNG = require("../../../assets/no-data.png");
 
@@ -46,8 +45,8 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
     useEffect(() => {
         navigation?.setOptions({ headerStyle: { 
             backgroundColor: theme.background,
-        }})
-    });
+        }});
+    }, []);
 
     const { courseId, sectionId } = course; 
 
@@ -86,6 +85,13 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
         )
     };
 
+    useEffect(() => {
+        const unsubscribe = messaging().onMessage(_ => {
+            reload()
+        });
+        return unsubscribe;
+    }, []);
+    
     const onRefresh = () => {
         reload();
     };

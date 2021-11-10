@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { useTheme } from 'react-native-paper';
 import { useGradeColor } from '../../../hooks/useGradeColor';
 import { IAssignment } from '../../../store/interfaces/assignment.interface';
