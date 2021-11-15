@@ -10,8 +10,25 @@ import SwiftUI
 import Intents
 
 struct WidgetData: Decodable {
-  let displayText: String
+  let userId: String
+  let pass: String
 }
+
+struct GradesResponse {
+  
+}
+
+/* func getGrades() {
+  let url = URL(string: "https://gradebook-web-api.herokuapp.com")!
+
+  let task = URLSession.shared.dataTask(with: url) { data, response, error in
+    if let data = data {
+        
+    } else if let error = error {
+      // Error in fetching data
+    }
+  }
+}*/
 
 
 struct Provider: IntentTimelineProvider {
@@ -29,13 +46,13 @@ struct Provider: IntentTimelineProvider {
         let userDefaults = UserDefaults.init(suiteName: "group.com.Gradebook.Gradebook")
       
         if userDefaults != nil {
-          if let grades = userDefaults!.value(forKey: "grades") as? String {
+          if let credentialsRaw = userDefaults!.value(forKey: "credentials") as? String {
               let decoder = JSONDecoder()
-              let data = grades.data(using: .utf8)
+              let credentials = credentialsRaw.data(using: .utf8)
             
-              if let parsedData = try? decoder.decode(WidgetData.self, from: data!) {
+              if let parsedData = try? decoder.decode(WidgetData.self, from: credentials!) {
                   let nextRefresh = Calendar.current.date(byAdding: .minute, value: 5, to: entryDate)!
-                let entry = SimpleEntry(date: nextRefresh, configuration: configuration, displayText: parsedData.displayText)
+                let entry = SimpleEntry(date: nextRefresh, configuration: configuration, displayText: "Grades Widget")
                   let timeline = Timeline(entries: [entry], policy: .atEnd)
                   
                   completion(timeline)
@@ -63,13 +80,26 @@ struct GradesWidgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
+      let columns: [GridItem] = [
+          GridItem(.flexible()),
+          GridItem(.flexible())
+      ]
+      
       LinearGradient(gradient: Gradient(colors: [.black, .black]), startPoint: .top, endPoint: .bottom)
         .edgesIgnoringSafeArea(.vertical)
         .overlay(
           VStack {
-            Text(entry.displayText)
-              .bold()
-              .foregroundColor(.white)
+           LazyVGrid(
+            columns: columns,
+            alignment: .leading,
+            spacing: 8,
+            pinnedViews: [.sectionHeaders, .sectionFooters]
+           ) {
+             ForEach(0..<8) { i in
+               Text("English: 96%")
+                 .font(.system(size: 15, weight: .bold, design: .default)).padding(5)
+             }
+           }
           }.padding(20)
         )
     }
@@ -85,6 +115,7 @@ struct GradesWidget: Widget {
         }
         .configurationDisplayName("My Widget")
         .description("This is an example widget.")
+        .supportedFamilies([ WidgetFamily.systemMedium ])
     }
 }
 
