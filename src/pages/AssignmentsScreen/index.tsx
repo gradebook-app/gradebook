@@ -134,7 +134,10 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                             {
                                 ungraded.map((assignment, index) => {
                                     return (
-                                        <Assignment onPress={handleOpenSheet} assignment={assignment} key={index}>
+                                        <Assignment 
+                                                onPress={handleOpenSheet} 
+                                                assignment={assignment} 
+                                                key={`${assignment.name}-${assignment.date}-${index}`}>
                                             <UngradedAssignment assignment={assignment}/>
                                         </Assignment>
                                     )
@@ -151,7 +154,10 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                             {
                                 graded.map((assignment, index) => {
                                     return (
-                                        <Assignment onPress={handleOpenSheet} assignment={assignment} key={index}>
+                                        <Assignment 
+                                                onPress={handleOpenSheet}
+                                                assignment={assignment} 
+                                                key={`${assignment.name}-${assignment.date}-${index}`}>
                                             <GradedAssignment assignment={assignment}/>
                                         </Assignment>
                                     )

@@ -48,7 +48,7 @@ const ContactScreen : React.FC<ContactScreenProps> = ({ navigation }) => {
                 </View>
                 <Box.Space />
                 <Text style={[styles.developer, { color: theme.grey }]}>
-                    Developed & Disigned by Mahit Mehta
+                    Developed & Designed by Mahit Mehta
                 </Text>
             </ScrollView>
         </SafeAreaView>

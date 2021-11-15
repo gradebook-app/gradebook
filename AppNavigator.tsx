@@ -14,16 +14,20 @@ import messaging from "@react-native-firebase/messaging";
 import SecurityScreen from "./src/pages/SecurityScreen";
 import PrivacyPolicyScreen from "./src/pages/PrivacyPolicyScreen";
 import notifee from '@notifee/react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
     const setAppGroupData = useCallback(async () => {
+      const credentialsRaw = await AsyncStorage.getItem("@credentials");
+      const { userId = null, pass = null } = credentialsRaw ? JSON.parse(credentialsRaw) : {};
+  
       const appGroupIdentifier = 'group.com.Gradebook.Gradebook';
       try {
         await SharedGroupPreferences.setItem(
-          "grades",
-          {"displayText": "Coming Soon!"},
+          "credentials",
+          { "userId": userId, "pass": pass },
           appGroupIdentifier,
         )
       } catch (e) {

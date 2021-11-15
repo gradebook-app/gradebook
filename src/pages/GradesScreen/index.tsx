@@ -28,6 +28,12 @@ import messaging from '@react-native-firebase/messaging';
 
 const { width, height } = Dimensions.get('window');
 
+const sheetHeight = (() => {
+    const minHeight = 350; 
+    const dynamicHeight = height * 0.45; 
+    return dynamicHeight < minHeight ? minHeight : dynamicHeight; 
+})();
+
 type GradesScreenProps = {
     navigation: any,
 }
@@ -156,7 +162,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
             <BottomSheet 
                 ref={selectionSheet}
                 initialSnap={1}
-                snapPoints={[350, 0]} 
+                snapPoints={[sheetHeight, 0]} 
                 borderRadius={25}
                 renderContent={renderMPSelector}
                 onCloseEnd={handleSelectorBack}
@@ -183,7 +189,7 @@ const styles = StyleSheet.create({
         paddingBottom: 100,
     },
     selectContainer: {
-        height: 350,
+        height: sheetHeight,
         width: width,
         backgroundColor: "#fff",
     }
