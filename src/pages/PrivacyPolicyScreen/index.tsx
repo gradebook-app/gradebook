@@ -1,4 +1,4 @@
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faShieldAlt, faUserShield } from '@fortawesome/free-solid-svg-icons';
 import React, { useEffect } from 'react';
 import { Dimensions, Linking, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
@@ -19,14 +19,28 @@ const PrivacyPolicyScreen : React.FC<PrivacyPolicyScreenProps> = ({ navigation }
         }})
     }, []);
 
+    const handlePrivacyPolicy = () => {
+        Linking.openURL("https://gradebook.mahitm.com/privacy");
+    };
+
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.headerContainer}>
                 <Text style={[ styles.header, { color: theme.text }]}>Privacy Policy</Text>
             </View>
             <ScrollView contentContainerStyle={styles.scrollview}>
-                <Box.Space />
-                <View style={styles.policyContainer}>
+                <Box>
+                    <Box.Clickable onPress={handlePrivacyPolicy}>
+                        <Box.Content 
+                            icon={faShieldAlt}
+                            iconColor={"orange"}
+                            title="View Privacy Policy">
+                                <Box.Arrow onPress={handlePrivacyPolicy} />
+                        </Box.Content>
+                    </Box.Clickable>
+                </Box>
+                {/* <Box.Space /> */}
+                {/* <View style={styles.policyContainer}>
                     <Text style={[ styles.subHeader, { color: theme.text }]}>
                         Introduction
                     </Text>
@@ -170,7 +184,7 @@ const PrivacyPolicyScreen : React.FC<PrivacyPolicyScreenProps> = ({ navigation }
                         circumstances. To request to review, update, or delete your personal information, please submit 
                         a request form by contacting us at genesus@mahitm.com.
                     </Text>
-                </View>
+                </View> */}
             </ScrollView>
         </SafeAreaView>
     )

@@ -54,75 +54,73 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     };
 
     const handleAuth = useCallback(async () => {
-        NetInfo.fetch().then(async _ => {
-            if (isAccessToken) {
-                navigation.navigate("navigator");
-                return;
-            };
+        if (isAccessToken) {
+            navigation.navigate("navigator");
+            return;
+        };
 
-            if (accessDenied) {
-                navigation.navigate("login")
-                dispatch(setAccessDenied(false));
-                return; 
-            }
-            
-            const credentials = await AsyncStorage.getItem("@credentials");
+        if (accessDenied) {
+            navigation.navigate("login")
+            dispatch(setAccessDenied(false));
+            return; 
+        }
         
-            if (loginError && credentials) {
-                navigation.navigate("navigator");
-                dispatch(setLoginError(false))
-                return false; 
+        const credentials = await AsyncStorage.getItem("@credentials");
+    
+        if (loginError && credentials) {
+            navigation.navigate("navigator");
+            dispatch(setLoginError(false))
+            return false; 
+        };
+
+        let token = null
+
+        const cachedSettings = await AsyncStorage.getItem("@settings");
+        const settings:ISettings | null = cachedSettings ? JSON.parse(cachedSettings) : null;
+
+        if (settings) {
+            const biometricsEnabled = settings.biometricsEnabled;
+            if (biometricsEnabled) {
+                setIsBiometricsEnabled(true);
+                const response = await LocalAuthentication.authenticateAsync({
+                    promptMessage: "Enter Passcode to View Grades"
+                    })
+                if (!response.success) return; 
+            };
+        }
+
+        if (credentials && settings?.savePassword) {
+            const cachedMarkingPeriod = await AsyncStorage.getItem("@markingPeriod");
+            navigation.setParams({ cachedMarkingPeriod });
+
+            try {
+                const authStatus = await messaging().hasPermission();
+                const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+                                authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+                if (enabled) {
+                    token = await messaging().getToken();
+                } else {
+                    try {
+                        const response = await messaging().requestPermission();
+                        const enabled = response === messaging.AuthorizationStatus.AUTHORIZED ||
+                                        response === messaging.AuthorizationStatus.PROVISIONAL;
+                        if (enabled) token = await messaging().getToken();
+                    } catch {
+                        console.log("error");
+                    };
+                }
+            } catch(e) {
+                console.log(e);
             };
 
-            let token = null
 
-            const cachedSettings = await AsyncStorage.getItem("@settings");
-            const settings:ISettings | null = cachedSettings ? JSON.parse(cachedSettings) : null;
-
-            if (settings) {
-                const biometricsEnabled = settings.biometricsEnabled;
-                if (biometricsEnabled) {
-                    setIsBiometricsEnabled(true);
-                    const response = await LocalAuthentication.authenticateAsync({
-                        promptMessage: "Enter Passcode to View Grades"
-                        })
-                    if (!response.success) return; 
-                };
-            }
-
-            if (credentials && settings?.savePassword) {
-                const cachedMarkingPeriod = await AsyncStorage.getItem("@markingPeriod");
-                navigation.setParams({ cachedMarkingPeriod });
-
-                try {
-                    const authStatus = await messaging().hasPermission();
-                    const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-                                    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-                    if (enabled) {
-                        token = await messaging().getToken();
-                    } else {
-                        try {
-                            const response = await messaging().requestPermission();
-                            const enabled = response === messaging.AuthorizationStatus.AUTHORIZED ||
-                                            response === messaging.AuthorizationStatus.PROVISIONAL;
-                            if (enabled) token = await messaging().getToken();
-                        } catch {
-                            console.log("error");
-                        };
-                    }
-                } catch(e) {
-                    console.log(e);
-                };
-
-
-                const data = JSON.parse(credentials);
-                dispatch(setLoginClient({ ...data, notificationToken: token }));
-            } else {
-                setIsBiometricsEnabled(false);
-                navigation.navigate("login")
-            }
-        })
-    }, [ isAccessToken, NetInfo, accessDenied, loginError ]);
+            const data = JSON.parse(credentials);
+            dispatch(setLoginClient({ ...data, notificationToken: token }));
+        } else {
+            setIsBiometricsEnabled(false);
+            navigation.navigate("login")
+        }
+    }, [ isAccessToken, accessDenied, loginError ]);
 
     const [ visible, setVisible ] = useState(false);
 

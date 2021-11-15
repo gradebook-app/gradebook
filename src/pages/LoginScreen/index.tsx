@@ -1,7 +1,7 @@
 import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useTheme } from 'react-native-paper';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { 
     Dimensions, 
     SafeAreaView, 
@@ -30,6 +30,12 @@ import * as Notifications from "expo-notifications"
 import messaging from '@react-native-firebase/messaging'
 
 const { width, height } = Dimensions.get('window');
+
+const sheetHeight = (() => {
+    const minHeight = 500; 
+    const dynamicHeight = height * 0.45; 
+    return dynamicHeight < minHeight ? minHeight : dynamicHeight; 
+})();
 
 interface IFormValues {
     userId: string,
@@ -277,7 +283,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
             <BottomSheet
                 ref={termsSheet}
                 initialSnap={1}
-                snapPoints={[500, 0]}
+                snapPoints={[sheetHeight, 0]}
                 borderRadius={25}
                 onCloseEnd={handleTermsClose}
                 renderContent={renderTermsSheet}
@@ -285,7 +291,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
             <BottomSheet
                 ref={schoolDistrictSheet}
                 initialSnap={1}
-                snapPoints={[500, 0]}
+                snapPoints={[sheetHeight, 0]}
                 borderRadius={25}
                 onCloseEnd={handleSchoolDistrictClose}
                 renderContent={renderSchoolDistrictSheet}
@@ -322,7 +328,7 @@ const styles = StyleSheet.create({
     },
     schoolDistrictSheet: {
         width: width,
-        height: 500,
+        height: sheetHeight,
         padding: 15,
     },
     sheetHeader: {
