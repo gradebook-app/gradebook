@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
-import { useTheme } from "react-native-paper";
+import { useTheme } from "../../hooks/useTheme";
 import { LineChart, Grid, YAxis } from "react-native-svg-charts";
 
 const { width, height } = Dimensions.get('window');
@@ -12,7 +12,7 @@ type GradeChartProps = {
 }
 
 const GradeChart : React.FC<GradeChartProps> = ({ data = [], stroke, yAxis }) => {
-    const { colors, theme  } : any = useTheme();
+    const { palette, theme  }  = useTheme();
 
     return  (
         <View style={styles.graphContainer}>
@@ -31,7 +31,7 @@ const GradeChart : React.FC<GradeChartProps> = ({ data = [], stroke, yAxis }) =>
                     style={{ height: 300, width: width * 0.8 }}
                     data={data}
                     svg={{ 
-                        stroke: stroke || colors.primary, 
+                        stroke: stroke || palette.primary, 
                         strokeWidth: 3
                     }}
                     contentInset={{ top: 20, bottom: 20, left: 5, right: 5, }}

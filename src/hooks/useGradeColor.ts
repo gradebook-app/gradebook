@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useTheme } from "react-native-paper";
+import { useTheme } from "../hooks/useTheme";
 
 export const useGradeColor = (percent:number) => {
     const { gradeColors } : any = useTheme();

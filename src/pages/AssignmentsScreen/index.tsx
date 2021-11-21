@@ -15,9 +15,10 @@ import BottomSheet from "reanimated-bottom-sheet";
 import { IAssignment } from '../../store/interfaces/assignment.interface';
 import Blocker from '../../components/Blocker';
 import AssignmentSheet from './components/AssignmentSheet';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '../../hooks/useTheme';
 import messaging from "@react-native-firebase/messaging";
 import { useAppearanceTheme } from '../../hooks/useAppearanceTheme';
+import NoDataSVG from '../../SVG/NoDataSVG';
 const NoDataPNG = require("../../../assets/no-data.png");
 
 const { width, height } = Dimensions.get('window');
@@ -40,7 +41,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
         route.name == "navigator"
     ));
 
-    const { theme } : any = useTheme();
+    const { theme } = useTheme();
 
     useEffect(() => {
         navigation?.setOptions({ headerStyle: { 
@@ -172,7 +173,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                         <View style={styles.noDataContainer}>
                             { isDark ? 
                                 <></> : 
-                                <Image style={styles.noDataImage} source={NoDataPNG} />
+                                <NoDataSVG width={width * 0.8}/>
                             }
                             {/* <NoDataSVG width={width * 0.8} /> */}
                             <Text style={[ styles.noDataCaption, { color: theme.text }]}>No Assignments.</Text>
@@ -268,6 +269,7 @@ const styles = StyleSheet.create({
     },
     noDataCaption: {
         fontSize: 17.5,
+        marginTop: 15,
         color: "rgba(0, 0, 0, 0.5)",
     },
 });

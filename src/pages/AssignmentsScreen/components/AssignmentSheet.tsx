@@ -1,12 +1,11 @@
 
 
 import React, { useMemo } from "react";
-import { StyleSheet, View, Text, Dimensions, Appearance, } from "react-native";
-import { useTheme } from "react-native-paper";
+import { StyleSheet, View, Text, Dimensions, } from "react-native";
+import { useTheme } from "../../../hooks/useTheme";
 import { useAppearanceTheme } from "../../../hooks/useAppearanceTheme";
 import { useCategoryColor } from "../../../hooks/useCategoryColor";
 import { useGradeColor } from "../../../hooks/useGradeColor";
-import InputField from "../../../components/InputField";
 import { IAssignment } from "../../../store/interfaces/assignment.interface";
 import moment from "moment";
 
@@ -14,10 +13,10 @@ type AssignmentSheetProps = {
     assignment?: IAssignment | null,
 }
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
-    const { theme } : any = useTheme();
+    const { theme } = useTheme();
 
     const { isDark } = useAppearanceTheme();
 
@@ -63,14 +62,16 @@ const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
             <Text style={[styles.points, { color: theme.text }]}>{ points ?? "" }</Text>
             <View style={styles.commentContainer}>
                 <Text style={[ styles.commentHeader, { color: theme.grey }]}>Teacher Comment:</Text>
-                <InputField 
+                <View 
                     style={[ styles.comment, { 
                         backgroundColor: isDark ? 
                             theme.secondary : "rgba(0, 0, 0, 0.05)"
                     }]} 
-                    editable={false} 
-                    value={assignment?.comment || "No Comment"}
-                />
+                >
+                    <Text style={[ styles.commentText, { color: theme.text }]}>
+                        { assignment?.comment || "No Comment" }
+                    </Text>
+                </View>
             </View>
         </View>
     )
@@ -90,6 +91,10 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     comment: { 
+        marginVertical: 10,
+        paddingVertical: 15,
+        paddingHorizontal: 10,
+        borderRadius: 5,
         backgroundColor: "rgba(0, 0, 0, 0.05)",
         color: "rgba(0, 0, 0, 0.5)"
     },
@@ -99,6 +104,9 @@ const styles = StyleSheet.create({
     commentContainer: {
         marginTop: 'auto',
         marginBottom: 75,
+    },
+    commentText: {
+
     },
     commentHeader: {
         fontSize: 15,

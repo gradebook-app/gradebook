@@ -9,7 +9,7 @@ import {
     Animated,
     Easing,
 } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '../../hooks/useTheme';
 import { loadingConfig } from './constant';
 
 const { width, height } = Dimensions.get('window');
@@ -20,13 +20,13 @@ type SlideProps = {
 }
 
 const Slide : React.FC<SlideProps> = ({ icon, slideTranslate }) => {
-    const { colors } = useTheme();
+    const { palette } = useTheme();
 
     return (
         <Animated.View style={[styles.doc, { transform: [{ translateX: slideTranslate }]}]}>
             <FontAwesomeIcon 
                 size={65} 
-                color={colors.primary} 
+                color={palette.primary} 
                 icon={icon} 
             />
         </Animated.View>
@@ -40,7 +40,7 @@ type LoadingScreenProps = {
 
 
 const LoadingBox: React.FC<LoadingScreenProps> = ({ loading = false }) => {
-    const { theme } : any = useTheme();
+    const { theme } = useTheme();
 
     const slides = loadingConfig.slide.slides;
 

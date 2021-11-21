@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import React, { ReactChild, useCallback, } from 'react';
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '../../../hooks/useTheme';
 import { useAppearanceTheme } from '../../../hooks/useAppearanceTheme';
 import { IAssignment } from '../../../store/interfaces/assignment.interface';
 
@@ -20,7 +20,7 @@ const Assignment : React.FC<AssignmentProp> = ({ assignment, children, onPress }
         onPress(assignment);
     }, []);
 
-    const { theme } : any = useTheme();
+    const { theme } = useTheme();
     const { isDark } : any = useAppearanceTheme();
 
     return (
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 17.5,
         fontWeight: '500',
-        maxWidth: 250,
+        maxWidth: 225,
         overflow: 'hidden',
     },
     date: {

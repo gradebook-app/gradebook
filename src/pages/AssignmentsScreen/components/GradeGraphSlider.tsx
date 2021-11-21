@@ -1,13 +1,12 @@
-import React, { useMemo, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, View, Text, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import React, { useMemo } from 'react';
+import { Dimensions, StyleSheet, View, Text } from 'react-native';
+import { useTheme } from '../../../hooks/useTheme';
 import GradeChart from '../../../components/GradeChart';
-import { useAppearanceTheme } from '../../../hooks/useAppearanceTheme';
 import { useCategoryColor } from '../../../hooks/useCategoryColor';
 import { IAssignment } from '../../../store/interfaces/assignment.interface';
 import Slider from "../../../components/Slider";
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 type GradeGraphSliderProps = {
     assignments: IAssignment[],
@@ -24,7 +23,7 @@ const GradeSlide : React.FC<GradeSlideProps> = ({ category, value }) => {
             .filter((value) => !!value?.grade?.percentage)
             .map((value) => (value.grade.percentage || 0)).reverse();
     }, []);
-    const { theme } : any = useTheme();
+    const { theme } = useTheme();
 
     const formattedCategory = useMemo(() => {
         return `${category.substring(0, 1).toUpperCase()}${category.substring(1)}` 

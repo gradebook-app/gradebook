@@ -6,7 +6,7 @@ import {
     View, 
     StyleSheet,
 } from "react-native";
-import { useTheme } from "react-native-paper";
+import { useTheme } from "../../hooks/useTheme";
 import { useAppearanceTheme } from "../../hooks/useAppearanceTheme";
 
 type SliderProps = {
@@ -30,7 +30,7 @@ const Slider : React.FC<SliderProps> = ({ children, caption }) => {
     
     const { isDark } = useAppearanceTheme();
 
-    const { colors, theme } : any = useTheme();
+    const { palette, theme } = useTheme();
 
     
     return (
@@ -55,7 +55,7 @@ const Slider : React.FC<SliderProps> = ({ children, caption }) => {
                                 style={[ 
                                     styles.dot, 
                                     index === slideNumber ?  
-                                    { backgroundColor: colors.primary } : 
+                                    { backgroundColor: palette.primary } : 
                                     { backgroundColor: isDark ? theme.grey : "rgba(0, 0, 0, 0.1)"} 
                                 ]}
                             ></View>

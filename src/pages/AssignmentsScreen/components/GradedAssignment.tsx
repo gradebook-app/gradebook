@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from "react-native";
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '../../../hooks/useTheme';
 import { useGradeColor } from '../../../hooks/useGradeColor';
 import { IAssignment } from '../../../store/interfaces/assignment.interface';
 
@@ -12,7 +12,7 @@ type GradedAssignmentProp = {
 
 const GradedAssignment : React.FC<GradedAssignmentProp> = ({ assignment }) => {
     const gradeColor = useGradeColor(assignment?.grade?.percentage || 0);
-    const { theme } : any = useTheme();
+    const { theme } = useTheme();
 
     return (
         <View>

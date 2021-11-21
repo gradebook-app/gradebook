@@ -1,7 +1,7 @@
 import { faFingerprint, faLock } from '@fortawesome/free-solid-svg-icons';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '../../hooks/useTheme';
 import Box from "../../components/Box";
 import { ISettings } from '../AccountScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';

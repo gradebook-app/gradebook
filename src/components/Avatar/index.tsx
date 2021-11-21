@@ -2,7 +2,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useMemo } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
-import { useTheme } from "react-native-paper";
+import { useTheme } from "../../hooks/useTheme";
 
 type AvatarProps = {
     url?: string | null,

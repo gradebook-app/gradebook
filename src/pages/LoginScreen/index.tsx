@@ -1,6 +1,6 @@
 import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '../../hooks/useTheme';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { 
     Dimensions, 
@@ -15,7 +15,7 @@ import LoadingBox from '../../components/LoadingBox';
 import InputField from '../../components/InputField';
 import { setLoginClient } from '../../store/actions/auth.actions';
 import { IRootReducer } from '../../store/reducers';
-import { getAccessToken, getStateNotificationToken, getUser, isAccessDenied, isLoading } from '../../store/selectors';
+import { getAccessToken, isAccessDenied, isLoading } from '../../store/selectors';
 import BottomSheet from "reanimated-bottom-sheet";
 import PasswordField from '../../components/PasswordField';
 
@@ -25,8 +25,6 @@ import { Picker } from '@react-native-picker/picker';
 import { schoolDistrictsMapped } from '../../utils/mapping';
 import { ESchoolDistricts } from '../../store/enums/school-districts.enum';
 import Blocker from '../../components/Blocker';
-import { hasNotificationPermission } from '../../utils/notification';
-import * as Notifications from "expo-notifications"
 import messaging from '@react-native-firebase/messaging'
 
 const { width, height } = Dimensions.get('window');
@@ -58,7 +56,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
     const isAccessToken = !!getAccessToken(state);
     const accessDenied = isAccessDenied(state);
 
-    const { theme } : any = useTheme();
+    const { theme } = useTheme();
 
     const [ values, setValues ] = useState<IFormValues>({
         userId: "",

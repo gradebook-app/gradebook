@@ -1,4 +1,4 @@
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '../../hooks/useTheme';
 import React, { ReactChild } from 'react';
 import { 
     TouchableOpacity, 
@@ -18,13 +18,13 @@ type BrandButtonProps = {
 }
 
 const BrandButton : React.FC<BrandButtonProps & ButtonProps> = ({ style, title, onPress, children, ...props }) => {
-    const { colors } = useTheme();
+    const { palette } = useTheme();
 
     return (
         <TouchableOpacity 
             onPress={onPress}
             style={[ styles.container, {
-                backgroundColor: colors.primary,
+                backgroundColor: palette.primary,
                 display: 'flex',
                 flexDirection: 'row',
             }, style ]}>
