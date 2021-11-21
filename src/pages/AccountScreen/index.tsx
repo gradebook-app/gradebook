@@ -1,8 +1,8 @@
-import { faBell, faBoxOpen, faFingerprint, faFlagUsa, faIdBadge, faKey, faLock, faPhone, faPizzaSlice, faSchool, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faFlagUsa, faIdBadge, faKey, faLock, faPhone, faPizzaSlice, faSchool, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Linking } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl } from 'react-native';
+import { useTheme } from '../../hooks/useTheme';
 import { useDispatch, useSelector } from 'react-redux';
 import BrandButton from '../../components/BrandButton';
 import { setLogoutClient } from '../../store/actions/auth.actions';
@@ -13,7 +13,6 @@ import { useAccount } from '../../hooks/useAccount';
 import { getAccessToken, getUser } from '../../store/selectors';
 import { genesisConfig } from '../../constants/genesis';
 import jwt_decode from "jwt-decode";
-import { hasNotificationPermission } from '../../utils/notification';
 
 type AccountScreenProps = {
     navigation: any,
@@ -28,7 +27,7 @@ export interface ISettings {
 
 const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
     const dispatch = useDispatch();
-    const { theme } : any = useTheme();
+    const { theme } = useTheme();
 
     const state = useSelector((state:IRootReducer) => state);
     const accessToken = getAccessToken(state);

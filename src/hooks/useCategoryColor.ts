@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { useTheme } from "react-native-paper";
+import { useTheme } from "./useTheme";
 
 export const useCategoryColor = (category:string) => {
-    const { categoryColors } : any = useTheme();
+    const { categoryColors } = useTheme();
 
     const categoryColor = useMemo(() => {
         const string = category.toLowerCase();

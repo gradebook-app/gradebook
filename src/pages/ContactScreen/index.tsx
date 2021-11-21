@@ -1,7 +1,7 @@
-import { faEnvelope, faHammer } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import React, { useEffect } from 'react';
 import { Dimensions, Linking, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '../../hooks/useTheme';
 import Box from "../../components/Box";
 
 const { width, height } = Dimensions.get('window');
@@ -11,7 +11,7 @@ type ContactScreenProps = {
 }
 
 const ContactScreen : React.FC<ContactScreenProps> = ({ navigation }) => {
-    const { theme } : any = useTheme();
+    const { theme } = useTheme();
 
     useEffect(() => {
         navigation?.setOptions({ headerStyle: { 

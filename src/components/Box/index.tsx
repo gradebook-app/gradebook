@@ -15,7 +15,7 @@ import {
     GestureResponderEvent,
 } from "react-native";
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '../../hooks/useTheme';
 
 const { width } = Dimensions.get('window');
 
@@ -66,7 +66,7 @@ type IBoxChilds = {
 
 
 const Box : React.FC<BoxProps> & IBoxChilds = ({ children, style, title }) => {
-    const { theme, colors } : any = useTheme();
+    const { theme } = useTheme();
 
     return (
         <View>
@@ -87,14 +87,14 @@ Box.Clickable = ({ children, onPress }) => {
 }
 
 Box.Content = ({ icon, iconColor, title, children, showIcon = true } : IBoxContentProps) => {
-    const { theme, colors } : any = useTheme();
+    const { theme, palette } = useTheme();
 
     return (
         <View style={ styles.contentContainer }>
             <View style={[ styles.descriptionContainer ]}>
                 { showIcon && (
                     <View 
-                        style={[ styles.iconContainer, { backgroundColor: iconColor ? iconColor : colors.primary }]}>
+                        style={[ styles.iconContainer, { backgroundColor: iconColor ? iconColor : palette.primary }]}>
                         { icon && <FontAwesomeIcon color={"#fff"} icon={icon} /> }
                     </View>
                 )}
@@ -106,12 +106,12 @@ Box.Content = ({ icon, iconColor, title, children, showIcon = true } : IBoxConte
 }
 
 Box.Button = ({ active, handleChange }) => {
-    const { colors, theme } : any = useTheme();
+    const { palette, theme } = useTheme();
 
     return (
         <View style={ styles.buttonContainer }>
             <Switch
-                trackColor={{ false: theme.secondary, true: colors.primary }}
+                trackColor={{ false: theme.secondary, true: palette.primary }}
                 thumbColor={!!active ? "#f4f3f4" : "#f4f3f4"}
                 ios_backgroundColor={theme.secondary}
                 onValueChange={handleChange}
@@ -122,7 +122,7 @@ Box.Button = ({ active, handleChange }) => {
 }
 
 Box.Value = ({ value }) => {
-    const { theme } : any = useTheme();
+    const { theme } = useTheme();
 
     return (
         <View style={ styles.valueContainer }>

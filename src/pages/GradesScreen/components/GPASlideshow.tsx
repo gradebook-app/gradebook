@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Dimensions } from "react-native";
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '../../../hooks/useTheme';
 import GradeChart from '../../../components/GradeChart';
 import { IGPA } from '../../../hooks/useGPA';
 import Slider from "../../../components/Slider";
@@ -17,11 +17,10 @@ type GPASlideProps = {
     gpaProgression: number[],
 }
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const GPASlide : React.FC<GPASlideProps> = ({ header, gpa, gpaProgression = [] }) => {
-    const { theme } : any = useTheme();
-
+    const { theme } = useTheme();
 
     const roundedGPA = useMemo(() => {
         if (!gpa) return gpa;

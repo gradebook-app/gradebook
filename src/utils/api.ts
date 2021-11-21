@@ -3,10 +3,9 @@ import config from "../../config";
 import { getAccessToken } from "../store/selectors";
 import { LOGIN_CLIENT } from "../constants/endpoints/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { hasNotificationPermission } from "./notification";
-import * as Notifications from "expo-notifications"
 import { setUser } from "../store/actions/user.actions";
 import { setSetAccessToken } from "../store/actions/auth.actions";
+import messaging from '@react-native-firebase/messaging'
 
 function retrieveAccessToken() {
     const state = store.getState()
@@ -28,9 +27,11 @@ const revalidateClient = async () => {
     const credentials = await AsyncStorage.getItem("@credentials");
     let token = null; 
     try {
-        const hasPermission = await hasNotificationPermission()
-        if (hasPermission) {
-            token = (await Notifications.getExpoPushTokenAsync()).data;
+        const authStatus = await messaging().hasPermission();
+        const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+                        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        if (enabled) {
+            token = await messaging().getToken();
         };
     } catch(e) {};
 

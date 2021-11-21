@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo } from 'react';
 import { SafeAreaView, View, StyleSheet, Dimensions, Text, RefreshControl } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '../../hooks/useTheme';
 import LoadingBox from '../../components/LoadingBox';
 import { useGPA } from '../../hooks/useGPA';
 import { usePastGPA } from '../../hooks/usePastGPA';
 import Box from "../../components/Box";
 import { ScrollView } from 'react-native-gesture-handler';
 import BannerAd from '../../components/BannerAd';
+import FadeIn from '../../components/FadeIn';
 
 type GPAScreenProps = {
     navigation: any,
@@ -15,7 +16,7 @@ type GPAScreenProps = {
 const { width, height } = Dimensions.get('window');
 
 const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
-    const { theme } : any = useTheme();
+    const { theme } = useTheme();
 
     const { loading:loadingGPA, gpa, reload } = useGPA();
     const { loading:loadingPastGPA, pastGPA } = usePastGPA();
@@ -75,7 +76,7 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                 {
                     pastGPA.map((eachPastGPA, index) => {
                         return (
-                            <View style={styles.gpaContainer} key={index}>
+                            <FadeIn key={index} style={styles.gpaContainer} show={true}>
                                 <Box title={`Grade ${eachPastGPA.gradeLevel} | ${eachPastGPA.year}`} style={{ flexDirection: 'column' }}>
                                     <Box.Content 
                                         showIcon={false}
@@ -88,14 +89,14 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                                         showIcon={false}
                                         title="Weighted GPA"
                                     >
-                                         <Box.Value value={roundGrade(eachPastGPA.weightedGPA) || "N/A"} />
+                                        <Box.Value value={roundGrade(eachPastGPA.weightedGPA) || "N/A"} />
                                     </Box.Content>
                                 </Box>
-                            </View>
+                            </FadeIn>
                         )
                     })
                 }
-                <View style={styles.gpaContainer}>
+                <FadeIn show={true} style={styles.gpaContainer}>
                     <Box title={`Current School Year`} style={{ flexDirection: 'column' }}>
                         <Box.Content 
                             showIcon={false}
@@ -111,8 +112,8 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                                 <Box.Value value={roundGrade(gpa?.weightedGPA) || "N/A"} />
                         </Box.Content>
                     </Box>
-                </View>
-                <View style={styles.gpaContainer}>
+                </FadeIn>
+                <FadeIn show={true} style={styles.gpaContainer}>
                     <Box title={`Total GPA`} style={{ flexDirection: 'column' }}>
                         <Box.Content 
                             showIcon={false}
@@ -128,10 +129,10 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                                 <Box.Value value={roundGrade(highschoolGPAWeighted) || "N/A"} />
                         </Box.Content>
                     </Box>
-                </View>
+                </FadeIn>
                 <View style={styles.disclaimerContainer}>
                     <Text style={[ styles.disclaimer, { color: theme.grey }]}>
-                        Disclaimer: All GPA Calculations are estimated and may defer from your actual GPA. 
+                        Disclaimer: All GPA Calculations are estimated and may differ from your actual GPA. 
                     </Text>
                 </View>
                 {/* <BannerAd /> */}

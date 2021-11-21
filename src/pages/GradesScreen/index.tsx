@@ -20,7 +20,7 @@ import BottomSheet from "reanimated-bottom-sheet";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import Blocker from "../../components/Blocker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTheme } from "react-native-paper";
+import { useTheme } from "../../hooks/useTheme";
 import GPASlideshow from "./components/GPASlideshow";
 import { useGPA } from "../../hooks/useGPA";
 import { usePastGPA } from "../../hooks/usePastGPA";
@@ -79,6 +79,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
     const setMarkingPeriod = useCallback(() => {
         AsyncStorage.setItem("@markingPeriod", currentMarkingPeriod);
+        setSelectedValue(currentMarkingPeriod);
     }, [ currentMarkingPeriod ]);
 
     useEffect(setMarkingPeriod, [ setMarkingPeriod ]);
@@ -98,7 +99,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         reloadGPA();
     };
 
-    const { theme } : any = useTheme();
+    const { theme }  = useTheme();
 
     const handleGPAScreen = () => {
         navigation.navigate("gpa");

@@ -1,6 +1,6 @@
 import React, { ReactChild } from 'react';
 import { View, StyleSheet, Dimensions, TextInput, TextInputProps, Keyboard } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '../../hooks/useTheme';
 
 const { width, height } = Dimensions.get('window');
 

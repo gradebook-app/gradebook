@@ -1,6 +1,6 @@
 import React from 'react';
-import { ScrollView, View, Text, StyleSheet, Dimensions } from "react-native";
-import { useTheme } from 'react-native-paper';
+import {  View, Text, StyleSheet, Dimensions } from "react-native";
+import { useTheme } from '../../../hooks/useTheme';
 import { IAssignment } from '../../../store/interfaces/assignment.interface';
 
 const { width, height } = Dimensions.get('window');
@@ -10,7 +10,7 @@ type UngradedAssignmentProp = {
 }
 
 const UngradedAssignment : React.FC<UngradedAssignmentProp> = ({ assignment }) => {
-    const { theme } : any = useTheme();
+    const { theme } = useTheme();
 
     return (
         <View>

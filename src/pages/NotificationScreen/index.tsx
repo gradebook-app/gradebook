@@ -1,7 +1,7 @@
 import { faCheckSquare, faCog } from '@fortawesome/free-solid-svg-icons';
 import React, { useEffect } from 'react';
 import { Dimensions, Linking, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from "../../hooks/useTheme";
 import { useSelector } from 'react-redux';
 import Box from "../../components/Box";
 import { IRootReducer } from '../../store/reducers';
@@ -14,7 +14,7 @@ type NotificationScreenProps = {
 }
 
 const NotificationScreen : React.FC<NotificationScreenProps> = ({ navigation }) => {
-    const { theme } : any = useTheme();
+    const { theme } = useTheme();
 
     const state = useSelector((state:IRootReducer) => state);
     const user = getUser(state);

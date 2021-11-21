@@ -1,8 +1,8 @@
 import { faBook, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import NetInfo from '@react-native-community/netinfo';
-import React, { ReactChild, useCallback, useEffect, useState } from 'react';
+// import NetInfo from '@react-native-community/netinfo';
+import React, { useCallback, useEffect, useState } from 'react';
 import { 
     Dimensions, 
     SafeAreaView, 
@@ -12,20 +12,17 @@ import {
     ActivityIndicator,
     Image,
 } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { useTheme } from '../../hooks/useTheme';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAccessDenied, setLoginClient, setLoginError, setLogoutClient } from '../../store/actions/auth.actions';
 import { IRootReducer } from '../../store/reducers';
-import { getAccessToken, getUser, isAccessDenied, isLoading, isLoginError } from '../../store/selectors';
-import { hasNotificationPermission } from '../../utils/notification';
-import * as Notifications from "expo-notifications"
+import { getAccessToken, isAccessDenied, isLoading, isLoginError } from '../../store/selectors';
 import * as LocalAuthentication from 'expo-local-authentication';
 import BrandButton from '../../components/BrandButton';
 import { TouchableOpacity } from 'react-native';
 import { ISettings } from '../AccountScreen';
 import messaging from '@react-native-firebase/messaging'
 import FadeIn from '../../components/FadeIn';
-import { ScrollView } from 'react-native-gesture-handler';
 
 const GradebookIcon = require("../../../assets/gradebook-logo.png");
 
@@ -43,7 +40,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     const loginError = isLoginError(state);
     const [ isBiometricsEnabled, setIsBiometricsEnabled ] = useState(false);
 
-    const { theme, colors } : any = useTheme();
+    const { theme, palette } = useTheme();
     const loading = isLoading(state);
 
     const handleLogOut = async () => {
@@ -153,7 +150,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
                     { isBiometricsEnabled ? (
                         <>
                             <BrandButton 
-                                style={[{ backgroundColor: colors.primary } ]}
+                                style={[{ backgroundColor: palette.primary } ]}
                                 color="#fff" 
                                 title="Login" 
                                 onPress={handleAuth}
