@@ -29,7 +29,7 @@ class WebService {
     let url = URL(string: "http://localhost:5000/grades/widgetGrades")!
     let session = URLSession.shared
     
-    var request = URLRequest(url: url)
+    var request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData)
     request.httpMethod = "POST"
 
 
@@ -71,28 +71,30 @@ struct Provider: IntentTimelineProvider {
 
         let entryDate = Date()
         let userDefaults = UserDefaults.init(suiteName: "group.com.Gradebook.Gradebook")
-        print("hello 1")
+        print("heljjlo 1")
         if userDefaults != nil {
           if let credentialsRaw = userDefaults!.value(forKey: "credentials") as? String {
               let decoder = JSONDecoder()
               let credentials = credentialsRaw.data(using: .utf8)
               print("hello")
+          
               if let parsedData = try? decoder.decode(WidgetData.self, from: credentials!) {
-                 
-                 // WebService.getGrades {(grades, error) in
+                print(parsedData.pass) 
+                print(parsedData.userId)
+                WebService.getGrades {(grades, error) in
                     let nextRefresh = Calendar.current.date(byAdding: .minute, value: 5, to: entryDate)!
                     let entry = SimpleEntry(date: nextRefresh, configuration: configuration, displayText: "Grades Widget")
                     let timeline = Timeline(entries: [entry], policy: .atEnd)
                     
                     completion(timeline)
-                 // }
+                }
               } else {
                   print("Could not parse data!!!!!!!!!!!!!")
               }
           } else {
               let nextRefresh = Calendar.current.date(byAdding: .minute, value: 5, to: entryDate)!
-              let entry = SimpleEntry(date: nextRefresh, configuration: configuration, displayText: "Coming Soon")
-              let timeline = Timeline(entries: [entry], policy: .atEnd)
+            let entry = SimpleEntry(date: nextRefresh, configuration: configuration, displayText: "Coming Soon")
+            let timeline = Timeline(entries: [entry], policy: .atEnd)
             print("hello 4")
 
               completion(timeline)
@@ -116,7 +118,7 @@ struct GradesWidgetEntryView : View {
           GridItem(.flexible())
       ]
       
-      LinearGradient(gradient: Gradient(colors: [.black, .black]), startPoint: .top, endPoint: .bottom)
+      LinearGradient(gradient: Gradient(colors: [.blue, .blue]), startPoint: .top, endPoint: .bottom)
         .edgesIgnoringSafeArea(.vertical)
         .overlay(
           VStack {
@@ -127,7 +129,7 @@ struct GradesWidgetEntryView : View {
             pinnedViews: [.sectionHeaders, .sectionFooters]
            ) {
              ForEach(0..<8) { i in
-               Text("English: 87%")
+               Text("English: 68%")
                  .font(.system(size: 15, weight: .bold, design: .default)).padding(5)
              }
            }
