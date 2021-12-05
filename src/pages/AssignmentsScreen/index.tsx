@@ -69,7 +69,6 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
     const assignmentSheet = useRef<any | null>(null);
 
     const [ selectedAssignment, setSelectedAssignment ] = useState<IAssignment | null>(null); 
-
     const handleOpenSheet = useCallback((assignment:IAssignment) => {
         setSelectedAssignment(assignment);
         assignmentSheet.current.snapTo(0);

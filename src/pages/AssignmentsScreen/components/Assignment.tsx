@@ -18,7 +18,7 @@ type AssignmentProp = {
 const Assignment : React.FC<AssignmentProp> = ({ assignment, children, onPress }) => {
     const handlePress = useCallback(() => {
         onPress(assignment);
-    }, []);
+    }, [ assignment ]);
 
     const { theme } = useTheme();
     const { isDark } : any = useAppearanceTheme();

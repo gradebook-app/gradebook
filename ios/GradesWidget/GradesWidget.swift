@@ -26,7 +26,7 @@ struct GradesQueryBody: Codable {
 class WebService {
   static func getGrades(completion:@escaping (GradesQuery?, Error?) -> Void) {
    // let productionURL = "https://gradebook-web-api.herokuapp.com/"
-    let url = URL(string: "http://localhost:5000/grades/widgetGrades")!
+    let url = URL(string: "http://127.0.0.1:5000/grades/widgetGrades")!
     let session = URLSession.shared
     
     var request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData)
@@ -118,7 +118,7 @@ struct GradesWidgetEntryView : View {
           GridItem(.flexible())
       ]
       
-      LinearGradient(gradient: Gradient(colors: [.blue, .blue]), startPoint: .top, endPoint: .bottom)
+      LinearGradient(gradient: Gradient(colors: [.black, .black]), startPoint: .top, endPoint: .bottom)
         .edgesIgnoringSafeArea(.vertical)
         .overlay(
           VStack {
@@ -130,7 +130,7 @@ struct GradesWidgetEntryView : View {
            ) {
              ForEach(0..<8) { i in
                Text("English: 68%")
-                 .font(.system(size: 15, weight: .bold, design: .default)).padding(5)
+                 .font(.system(size: 15, weight: .bold, design: .default)).foregroundColor(Color(red: 1.0, green: 1.0, blue: 1.0, opacity: 1.0)).padding(5)
              }
            }
           }.padding(20)
@@ -157,6 +157,6 @@ struct GradesWidget_Previews: PreviewProvider {
       GradesWidgetEntryView(entry: SimpleEntry(date: Date(), configuration: ConfigurationIntent(), displayText: "Demo 1"))
         .environment(\.sizeCategory, .medium)
         .previewDevice("iPhone 13 Pro")
-            .previewContext(WidgetPreviewContext(family: .systemSmall))
+            .previewContext(WidgetPreviewContext(family: .systemMedium))
     }
 }

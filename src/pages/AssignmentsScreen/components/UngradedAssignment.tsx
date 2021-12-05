@@ -1,9 +1,7 @@
-import React from 'react';
-import {  View, Text, StyleSheet, Dimensions } from "react-native";
+import React, { useMemo } from 'react';
+import {  View, Text, StyleSheet } from "react-native";
 import { useTheme } from '../../../hooks/useTheme';
 import { IAssignment } from '../../../store/interfaces/assignment.interface';
-
-const { width, height } = Dimensions.get('window');
 
 type UngradedAssignmentProp = {
     assignment: IAssignment,
@@ -12,14 +10,35 @@ type UngradedAssignmentProp = {
 const UngradedAssignment : React.FC<UngradedAssignmentProp> = ({ assignment }) => {
     const { theme } = useTheme();
 
+    const message = useMemo(() => {
+        const raw = assignment.message; 
+        const filtered = raw?.replace("Assignment", '');
+        return filtered;
+    }, [ assignment ]);
+
     return (
-        <View>
-            <Text style={{ color: theme.grey }}>Ungraded</Text>
+        <View style={styles.container}>
+            <Text style={{ color: theme.grey, textAlign: 'right' }}>Ungraded</Text>
+            { !!message && (
+                <Text
+                    numberOfLines={1} 
+                    style={[ styles.message, { color: theme.grey }]}
+                >{ message }</Text>
+            )}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: "space-between"
+    },
+    message: {
+        width: 75,
+        textAlign: 'right',
+    }
 });
 
 export default UngradedAssignment;

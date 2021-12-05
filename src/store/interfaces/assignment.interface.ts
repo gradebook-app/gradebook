@@ -10,4 +10,5 @@ export interface IAssignment {
     course: string,
     date: string,
     comment: string,
+    message?: string,
 }

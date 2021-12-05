@@ -17,7 +17,6 @@ const { width } = Dimensions.get('window');
 
 const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
     const { theme } = useTheme();
-
     const { isDark } = useAppearanceTheme();
 
     const assignmentColor = useCategoryColor(assignment?.category || "");
@@ -45,7 +44,7 @@ const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
 
     const points = useMemo(() => {
         const points = assignment?.grade.points;
-        if (!points) return null;
+        if (!points) return assignment?.message || null;
         return `Scored: ${points}`;
     }, [ assignment ]);
 
@@ -56,9 +55,13 @@ const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
                 <Text style={[ styles.grade, { color: gradeColor } ]}>{ gradeLabel }</Text>
             </View>
             <Text style={[ styles.date, { color: theme.grey }]}>{ date ?? "" }</Text>
-            <View style={[styles.categoryContainer, { backgroundColor: assignmentColor }]}>
-                <Text style={[{ color: "#fff" }]}>{ assignment?.category }</Text>
-            </View>
+            {
+                assignment?.category && (
+                    <View style={[styles.categoryContainer, { backgroundColor: assignmentColor }]}>
+                        <Text style={[{ color: "#fff" }]}>{ assignment?.category }</Text>
+                    </View>
+                )
+            }
             <Text style={[styles.points, { color: theme.text }]}>{ points ?? "" }</Text>
             <View style={styles.commentContainer}>
                 <Text style={[ styles.commentHeader, { color: theme.grey }]}>Teacher Comment:</Text>

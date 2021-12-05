@@ -53,15 +53,17 @@ const revalidateClient = async () => {
     }
 }
 
-export const get = async (endpoint:string) => {
+export const get = async (endpoint:string, controller?:AbortController,) => {
     const accessToken = retrieveAccessToken();
 
-    let defaultOptions = {
+    let defaultOptions:RequestInit = {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${accessToken}`
         }
     };
+
+    if (!!controller) defaultOptions = { signal: controller.signal, ...defaultOptions }; 
 
     const url = constructURL(endpoint);
 
@@ -74,7 +76,7 @@ export const get = async (endpoint:string) => {
             if (e === 'expired') {
                 const hasAccess = await revalidateClient();
                 if (hasAccess) {
-                    defaultOptions.headers.Authorization = `Bearer ${retrieveAccessToken()}`;
+                    (defaultOptions?.headers as any).Authorization = `Bearer ${retrieveAccessToken()}`;
                     return await fetch(url, defaultOptions).then(res => res.json()).catch(e => {
                         return null;
                     });
@@ -83,17 +85,19 @@ export const get = async (endpoint:string) => {
         });
 }
 
-export const post = async (endpoint:string, body?:any) => {
+export const post = async <Body, >(endpoint:string, body?:any, controller?:AbortController) => {
     const accessToken = retrieveAccessToken();
 
-    let defaultOptions = {
+    let defaultOptions:RequestInit = {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${accessToken}`
         },
-        body: JSON.stringify(body || {}),
+        body: JSON.stringify((body || {}) as Body),
     };
+
+    if (!!controller) defaultOptions = { signal: controller.signal, ...defaultOptions }; 
 
     const url = constructURL(endpoint);
 
@@ -104,11 +108,11 @@ export const post = async (endpoint:string, body?:any) => {
                 const initialResponse = res.json();
                 resolve(initialResponse);
             })
-            .catch(async e => {
+            .catch(async (e:string) => {
                 if (e === 'expired') {
                     const hasAccess = await revalidateClient();
                     if (hasAccess) { 
-                        defaultOptions.headers.Authorization = `Bearer ${retrieveAccessToken()}`;
+                        (defaultOptions?.headers as any).Authorization= `Bearer ${retrieveAccessToken()}`;
                         const retry = await fetch(url, defaultOptions).then(res => res.json()).catch(e => {
                             return null;
                         });
