@@ -1,15 +1,15 @@
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, Dimensions } from "react-native";
-import { useTheme } from '../../../hooks/useTheme';
-import GradeChart from '../../../components/GradeChart';
-import { IGPA } from '../../../hooks/useGPA';
-import Slider from "../../../components/Slider";
-import { useSelector } from 'react-redux';
-import { IRootReducer } from '../../../store/reducers';
-import { getUser } from '../../../store/selectors';
-import Box from "../../../components/Box";
-import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
-import { IGPAPast } from '../../../hooks/usePastGPA';
+import React, { useMemo } from "react"
+import { View, Text, StyleSheet, Dimensions } from "react-native"
+import { useTheme } from "../../../hooks/useTheme"
+import GradeChart from "../../../components/GradeChart"
+import { IGPA } from "../../../hooks/useGPA"
+import Slider from "../../../components/Slider"
+import { useSelector } from "react-redux"
+import { IRootReducer } from "../../../store/reducers"
+import { getUser } from "../../../store/selectors"
+import Box from "../../../components/Box"
+import { faGraduationCap } from "@fortawesome/free-solid-svg-icons"
+import { IGPAPast } from "../../../hooks/usePastGPA"
 
 type GPASlideProps = {
     header: string,
@@ -17,24 +17,24 @@ type GPASlideProps = {
     gpaProgression: number[],
 }
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window")
 
 const GPASlide : React.FC<GPASlideProps> = ({ header, gpa, gpaProgression = [] }) => {
-    const { theme } = useTheme();
+    const { theme } = useTheme()
 
     const roundedGPA = useMemo(() => {
-        if (!gpa) return gpa;
-        return Math.round(gpa * Math.pow(10, 4)) / Math.pow(10, 4);
-    }, [ gpa ]);
+        if (!gpa) return gpa
+        return Math.round(gpa * Math.pow(10, 4)) / Math.pow(10, 4)
+    }, [ gpa ])
 
     const gpaHistory = useMemo(() => {
-        if (!roundedGPA) return gpaProgression; 
-        const response = [ ...gpaProgression, roundedGPA ];
+        if (!roundedGPA) return gpaProgression 
+        const response = [ ...gpaProgression, roundedGPA ]
         if (response.length == 1) {
             response.push(roundedGPA)
         }
-        return response; 
-    }, [ roundedGPA, gpaProgression ]);
+        return response 
+    }, [ roundedGPA, gpaProgression ])
 
     return (
         <View style={[ styles.slideContainer ]}>
@@ -54,67 +54,67 @@ type GPASlideshowProps = {
 }
 
 const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA, handleGPAScreen }) => {
-    const state = useSelector((state:IRootReducer) => state);
-    const user = getUser(state);
+    const state = useSelector((state:IRootReducer) => state)
+    const user = getUser(state)
 
     const roundGrade = (value:number | undefined) : number => {
-        if (!value && value !== 0) return 0; 
-        return Math.round(value * Math.pow(10, 4)) / Math.pow(10, 4);
+        if (!value && value !== 0) return 0 
+        return Math.round(value * Math.pow(10, 4)) / Math.pow(10, 4)
     }
 
     const unweightedProgression = useMemo(() => {
         return user?.gpaHistory?.map(history => {
-            return roundGrade(history.unweightedGPA);
+            return roundGrade(history.unweightedGPA)
         }) || []
-    }, [ user?.gpaHistory ]);
+    }, [ user?.gpaHistory ])
 
     const weightedProgression = useMemo(() => {
         return user?.gpaHistory?.map(history => {
-            return roundGrade(history.weightedGPA);
+            return roundGrade(history.weightedGPA)
         }) || []
-    }, [ user?.gpaHistory ]);
+    }, [ user?.gpaHistory ])
 
     const pastGPAUnweighted = useMemo(() => {
         let total = 0 
-        pastGPA.forEach((eachGPA) => { total += eachGPA.unweightedGPA });
+        pastGPA.forEach((eachGPA) => { total += eachGPA.unweightedGPA })
         const totalGPAs = pastGPA.length
-        if (!totalGPAs) return 0; 
-        return roundGrade(total / totalGPAs);
-    }, [ pastGPA ]);
+        if (!totalGPAs) return 0 
+        return roundGrade(total / totalGPAs)
+    }, [ pastGPA ])
 
     const pastGPAWeighted = useMemo(() => {
-        let total = 0;
-        pastGPA.forEach((eachGPA) => { total += eachGPA.weightedGPA });
-        const totalGPAs = pastGPA.length;
-        if (!totalGPAs) return 0; 
-        return roundGrade(total / totalGPAs);
-    }, [ pastGPA ]);
+        let total = 0
+        pastGPA.forEach((eachGPA) => { total += eachGPA.weightedGPA })
+        const totalGPAs = pastGPA.length
+        if (!totalGPAs) return 0 
+        return roundGrade(total / totalGPAs)
+    }, [ pastGPA ])
 
     const highschoolGPAUnweighted = useMemo(() => {
-        const total = pastGPAUnweighted + (gpa.unweightedGPA || 0);
-        return (total / (pastGPAUnweighted ? 2 : 1));
-    }, [ pastGPAUnweighted, gpa ]);
+        const total = pastGPAUnweighted + (gpa.unweightedGPA || 0)
+        return (total / (pastGPAUnweighted ? 2 : 1))
+    }, [ pastGPAUnweighted, gpa ])
 
     const highschoolGPAWeighted = useMemo(() => {
-        const total = pastGPAWeighted + (gpa.weightedGPA || 0);
-        return (total / (pastGPAWeighted ? 2 : 1));
-    }, [ pastGPAWeighted, gpa ]);
+        const total = pastGPAWeighted + (gpa.weightedGPA || 0)
+        return (total / (pastGPAWeighted ? 2 : 1))
+    }, [ pastGPAWeighted, gpa ])
 
     const highschoolGPAUnweightedProgression = useMemo(() => {
         return unweightedProgression.map(value => {
-            return (value + pastGPAUnweighted) / (pastGPAUnweighted ? 2 : 1);
-        });
-    }, [ unweightedProgression, pastGPAUnweighted ]);
+            return (value + pastGPAUnweighted) / (pastGPAUnweighted ? 2 : 1)
+        })
+    }, [ unweightedProgression, pastGPAUnweighted ])
 
     const highschoolGPAWeightedProgression = useMemo(() => {
         return weightedProgression.map(value => {
-            return (value + pastGPAWeighted) / (pastGPAWeighted ? 2 : 1);
-        });
-    }, [ weightedProgression, pastGPAWeighted ]);
+            return (value + pastGPAWeighted) / (pastGPAWeighted ? 2 : 1)
+        })
+    }, [ weightedProgression, pastGPAWeighted ])
 
     const handleMoreAboutGPA = () => {
-        handleGPAScreen();
-    };
+        handleGPAScreen()
+    }
 
     const renderCaption = () => {
         return (
@@ -145,27 +145,27 @@ const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA, handleGPAScr
 const styles = StyleSheet.create({
     slideContainer: {
         width: width,
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
     },
     slideHeaderContainer: {
         width: width,
-        display: 'flex',
-        flexDirection: 'row',
+        display: "flex",
+        flexDirection: "row",
         justifyContent: "space-between",
         padding: 5,
         paddingHorizontal: 20,
         marginVertical: 5,
-        alignItems: 'flex-end',
+        alignItems: "flex-end",
     },
     slideHeaderMain: {
-        fontWeight: '700',
+        fontWeight: "700",
         fontSize: 25,
     },
     slideHeader: {},
     detail: {
         marginBottom: 10,
     }
-});
+})
 
-export default GPASlideshow;
+export default GPASlideshow

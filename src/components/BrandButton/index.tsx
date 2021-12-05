@@ -1,5 +1,5 @@
-import { useTheme } from '../../hooks/useTheme';
-import React, { ReactChild } from 'react';
+import { useTheme } from "../../hooks/useTheme"
+import React, { ReactChild } from "react"
 import { 
     TouchableOpacity, 
     Button,
@@ -8,9 +8,9 @@ import {
     Dimensions,
     StyleProp,
     ViewStyle,
-} from 'react-native';
+} from "react-native"
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window")
 
 type BrandButtonProps = {
     style?: StyleProp<ViewStyle>,
@@ -18,15 +18,15 @@ type BrandButtonProps = {
 }
 
 const BrandButton : React.FC<BrandButtonProps & ButtonProps> = ({ style, title, onPress, children, ...props }) => {
-    const { palette } = useTheme();
+    const { palette } = useTheme()
 
     return (
         <TouchableOpacity 
             onPress={onPress}
             style={[ styles.container, {
                 backgroundColor: palette.primary,
-                display: 'flex',
-                flexDirection: 'row',
+                display: "flex",
+                flexDirection: "row",
             }, style ]}>
             <Button 
                 { ...props }
@@ -44,10 +44,10 @@ const styles = StyleSheet.create({
         height: 55,
         marginHorizontal: 10,
         borderRadius: 5,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
     }
-});
+})
 
-export default BrandButton; 
+export default BrandButton 

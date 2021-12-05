@@ -1,23 +1,23 @@
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import React, { useEffect } from 'react';
-import { Dimensions, Linking, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useTheme } from '../../hooks/useTheme';
-import Box from "../../components/Box";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons"
+import React, { useEffect } from "react"
+import { Dimensions, Linking, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native"
+import { useTheme } from "../../hooks/useTheme"
+import Box from "../../components/Box"
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window")
 
 type ContactScreenProps = {
     navigation: any,
 }
 
 const ContactScreen : React.FC<ContactScreenProps> = ({ navigation }) => {
-    const { theme } = useTheme();
+    const { theme } = useTheme()
 
     useEffect(() => {
         navigation?.setOptions({ headerStyle: { 
             backgroundColor: theme.background,
         }})
-    }, []);
+    }, [])
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
@@ -27,7 +27,7 @@ const ContactScreen : React.FC<ContactScreenProps> = ({ navigation }) => {
                 </View>
                 <Box.Space />
                 <Box>
-                    <Box.Clickable onPress={() => Linking.openURL('mailto:genesus@mahitm.com')} >
+                    <Box.Clickable onPress={() => Linking.openURL("mailto:genesus@mahitm.com")} >
                         <Box.Content 
                             icon={faEnvelope}
                             iconColor={"#0092E6"}
@@ -35,7 +35,7 @@ const ContactScreen : React.FC<ContactScreenProps> = ({ navigation }) => {
                         >
                             <>
                                 <Box.Value value="genesus@mahitm.com"/>
-                                <Box.Arrow onPress={() => Linking.openURL('mailto:genesus@mahitm.com')} />
+                                <Box.Arrow onPress={() => Linking.openURL("mailto:genesus@mahitm.com")} />
                             </>
                         </Box.Content>
                     </Box.Clickable>
@@ -67,12 +67,12 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
     },
     header: {
-        fontWeight: '700',
+        fontWeight: "700",
         fontSize: 30,
     },
     scrollview: {
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         minHeight: height - 150,
     },
     captionContainer: {
@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
         padding: 25,
     },
     developer: {
-        marginTop: 'auto',
+        marginTop: "auto",
     }
-});
+})
 
-export default ContactScreen;
+export default ContactScreen

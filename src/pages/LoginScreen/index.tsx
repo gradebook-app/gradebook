@@ -1,39 +1,39 @@
-import { faBinoculars } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { useTheme } from '../../hooks/useTheme';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { faBinoculars } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
+import { useTheme } from "../../hooks/useTheme"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { 
     Dimensions, 
     SafeAreaView, 
     StyleSheet, 
     Button,
     View, Text, KeyboardAvoidingView, TouchableOpacity, ScrollView
-} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import BrandButton from '../../components/BrandButton';
-import LoadingBox from '../../components/LoadingBox';
-import InputField from '../../components/InputField';
-import { setLoginClient } from '../../store/actions/auth.actions';
-import { IRootReducer } from '../../store/reducers';
-import { getAccessToken, isAccessDenied, isLoading } from '../../store/selectors';
-import BottomSheet from "reanimated-bottom-sheet";
-import PasswordField from '../../components/PasswordField';
+} from "react-native"
+import { useDispatch, useSelector } from "react-redux"
+import BrandButton from "../../components/BrandButton"
+import LoadingBox from "../../components/LoadingBox"
+import InputField from "../../components/InputField"
+import { setLoginClient } from "../../store/actions/auth.actions"
+import { IRootReducer } from "../../store/reducers"
+import { getAccessToken, isAccessDenied, isLoading } from "../../store/selectors"
+import BottomSheet from "reanimated-bottom-sheet"
+import PasswordField from "../../components/PasswordField"
 
-import EducationSVG from "../../SVG/EducationSVG";
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { Picker } from '@react-native-picker/picker';
-import { schoolDistrictsMapped } from '../../utils/mapping';
-import { ESchoolDistricts } from '../../store/enums/school-districts.enum';
-import Blocker from '../../components/Blocker';
-import messaging from '@react-native-firebase/messaging'
+import EducationSVG from "../../SVG/EducationSVG"
+import { TouchableWithoutFeedback } from "react-native-gesture-handler"
+import { Picker } from "@react-native-picker/picker"
+import { schoolDistrictsMapped } from "../../utils/mapping"
+import { ESchoolDistricts } from "../../store/enums/school-districts.enum"
+import Blocker from "../../components/Blocker"
+import messaging from "@react-native-firebase/messaging"
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window")
 
 const sheetHeight = (() => {
-    const minHeight = 500; 
-    const dynamicHeight = height * 0.45; 
-    return dynamicHeight < minHeight ? minHeight : dynamicHeight; 
-})();
+    const minHeight = 500 
+    const dynamicHeight = height * 0.45 
+    return dynamicHeight < minHeight ? minHeight : dynamicHeight 
+})()
 
 interface IFormValues {
     userId: string,
@@ -49,14 +49,14 @@ type LoginScreenProps = {
 }
 
 const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
 
-    const state = useSelector((state:IRootReducer) => state);
-    const loading = isLoading(state);
-    const isAccessToken = !!getAccessToken(state);
-    const accessDenied = isAccessDenied(state);
+    const state = useSelector((state:IRootReducer) => state)
+    const loading = isLoading(state)
+    const isAccessToken = !!getAccessToken(state)
+    const accessDenied = isAccessDenied(state)
 
-    const { theme } = useTheme();
+    const { theme } = useTheme()
 
     const [ values, setValues ] = useState<IFormValues>({
         userId: "",
@@ -64,87 +64,87 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         passError: false,
         userIdError: false,
         errorMessage: "",
-    });
+    })
 
     const handleAccessDenied = useCallback(() => {
         if (accessDenied) {
-            const message = "Password or Email is not Valid.";
-            handleValueChange('errorMessage')(message);
+            const message = "Password or Email is not Valid."
+            handleValueChange("errorMessage")(message)
         }
-    }, [ accessDenied ]);
+    }, [ accessDenied ])
 
 
-    useEffect(handleAccessDenied, [ handleAccessDenied ]);
+    useEffect(handleAccessDenied, [ handleAccessDenied ])
 
     const handleLogin = (useCallback(async () => {
         if (!values.pass) {
-            handleValueChange("passError")(true);
-            return; 
+            handleValueChange("passError")(true)
+            return 
         } else if (!values.userId) {
-            handleValueChange("userIdError")(true);
-            return; 
+            handleValueChange("userIdError")(true)
+            return 
         } else if (!values.schoolDistrict) {
-            return; 
+            return 
         }
                                              
-        let notificationToken = null; 
+        let notificationToken = null 
 
         try {
-            const authStatus = await messaging().hasPermission();
+            const authStatus = await messaging().hasPermission()
             const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-                            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+                            authStatus === messaging.AuthorizationStatus.PROVISIONAL
             if (enabled) {
-                notificationToken = await messaging().getToken();
+                notificationToken = await messaging().getToken()
             } else {
                 try {
-                    await messaging().requestPermission();
-                    notificationToken = await messaging().getToken();
-                } catch {};
+                    await messaging().requestPermission()
+                    notificationToken = await messaging().getToken()
+                } catch {}
             }
         } catch(e) {
-            console.log(e);
-        };
+            console.log(e)
+        }
 
-        dispatch(setLoginClient({ ...values, notificationToken: notificationToken }));
+        dispatch(setLoginClient({ ...values, notificationToken: notificationToken }))
     }, [ values ]))
     
     const handleNavigate = useCallback(() => {
         if (isAccessToken) {
-            navigation.navigate('navigator');
+            navigation.navigate("navigator")
         }
-    }, [ isAccessToken ]);
+    }, [ isAccessToken ])
 
-    useEffect(handleNavigate, [ handleNavigate ]);
+    useEffect(handleNavigate, [ handleNavigate ])
 
     const handleValueChange = (type:keyof IFormValues) => (text:any) => { 
-        setValues({ ...values, errorMessage: "", [ type ]: text });
-    };
+        setValues({ ...values, errorMessage: "", [ type ]: text })
+    }
 
-    const [ sheetOpen, setSheetOpen ] = useState(false);
-    const [ termsSheetOpen, setTermsSheetOpen ] = useState(false);
+    const [ sheetOpen, setSheetOpen ] = useState(false)
+    const [ termsSheetOpen, setTermsSheetOpen ] = useState(false)
 
-    const schoolDistrictSheet = useRef<any | null>(null);
-    const termsSheet = useRef<any | null>(null);
+    const schoolDistrictSheet = useRef<any | null>(null)
+    const termsSheet = useRef<any | null>(null)
 
     const handleSchoolDistrictOpen = () => {
-        setSheetOpen(true);
-        schoolDistrictSheet.current.snapTo(0);
-    };
+        setSheetOpen(true)
+        schoolDistrictSheet.current.snapTo(0)
+    }
 
     const handleSchoolDistrictClose = () => {
-        setSheetOpen(false);
-        schoolDistrictSheet.current.snapTo(1);
+        setSheetOpen(false)
+        schoolDistrictSheet.current.snapTo(1)
     }
 
     const handleTermsOpen = () => {
-        setTermsSheetOpen(true);
-        termsSheet.current.snapTo(0);
-    };  
+        setTermsSheetOpen(true)
+        termsSheet.current.snapTo(0)
+    }  
 
     const handleTermsClose = () => {
-        setTermsSheetOpen(false);
-        termsSheet.current.snapTo(1);
-    };
+        setTermsSheetOpen(false)
+        termsSheet.current.snapTo(1)
+    }
 
     const renderSchoolDistrictSheet = () => {
         return (
@@ -152,14 +152,14 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                 <View style={{ 
                     flexDirection: "row", 
                     justifyContent: "space-between",
-                    alignItems: 'center',
-                    display: 'flex',
+                    alignItems: "center",
+                    display: "flex",
                 }}>
                     <Text style={[ styles.sheetHeader, { color: theme.text }]}>Select School District</Text>
                     <Button title="Done" onPress={handleSchoolDistrictClose} />
                 </View>
                 <Picker 
-                    onValueChange={(itemValue) => handleValueChange('schoolDistrict')(itemValue)}
+                    onValueChange={(itemValue) => handleValueChange("schoolDistrict")(itemValue)}
                     selectedValue={values.schoolDistrict}
                 >
                     <Picker.Item 
@@ -188,8 +188,8 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                 <View style={{ 
                     flexDirection: "row", 
                     justifyContent: "space-between",
-                    alignItems: 'center',
-                    display: 'flex',
+                    alignItems: "center",
+                    display: "flex",
                 }}>
                     <Text style={[ styles.sheetHeader, { color: theme.text }]}>Terms & Conditions</Text>
                     <Button title="Accept" onPress={handleTermsClose} />
@@ -218,18 +218,18 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                 </ScrollView>
             </View>
         )
-    };  
+    }  
 
     const handleSheetClose = () => {
-        handleSchoolDistrictClose();
-        handleTermsClose();
+        handleSchoolDistrictClose()
+        handleTermsClose()
     }
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <LoadingBox loading={loading}/>
             <Blocker onPress={handleSheetClose} block={sheetOpen || termsSheetOpen}/>
-            <KeyboardAvoidingView behavior={'padding'}>
+            <KeyboardAvoidingView behavior={"padding"}>
                 <View style={ styles.imageContainer }>
                     {/* <Image style={styles.image} source={EducationPNG} /> */}
                     <EducationSVG width={width * 0.85}/>
@@ -244,18 +244,18 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                     </TouchableWithoutFeedback>
                     <InputField 
                         value={values.userId}
-                        returnKeyType={'done'}
-                        autoCompleteType={'off'}
-                        onChangeText={handleValueChange('userId')}
+                        returnKeyType={"done"}
+                        autoCompleteType={"off"}
+                        onChangeText={handleValueChange("userId")}
                         placeholder="Email"
                         onSubmitEditing={handleLogin}
                     /> 
                     <PasswordField 
                         value={values.pass}
-                        returnKeyLabel={'Login'}
-                        returnKeyType={'done'}
+                        returnKeyLabel={"Login"}
+                        returnKeyType={"done"}
                         placeholder="Password"
-                        onChangeText={handleValueChange('pass')}
+                        onChangeText={handleValueChange("pass")}
                         onSubmitEditing={handleLogin}
                     />
                     <View style={ styles.errorContainer }>
@@ -302,15 +302,15 @@ const styles = StyleSheet.create({
     container: {
         height: height,
         width: width,
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
     },
     form: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
     },
     button: {
         marginTop: 25,
@@ -321,8 +321,8 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         width: width,
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
     },
     schoolDistrictSheet: {
         width: width,
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
         padding: 15,
     },
     sheetHeader: {
-        fontWeight: '600',
+        fontWeight: "600",
         fontSize: 25,
     },
     errorContainer: {
@@ -358,6 +358,6 @@ const styles = StyleSheet.create({
     termItem: {
         marginBottom: 15,
     }
-}); 
+}) 
 
-export default LoginScreen;
+export default LoginScreen

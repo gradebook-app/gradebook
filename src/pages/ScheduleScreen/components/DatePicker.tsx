@@ -1,17 +1,15 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from "react"
 import { 
     StyleSheet, 
     View, 
     Text, 
     Dimensions, 
-    NativeSyntheticEvent, 
-    NativeScrollEvent, 
     TouchableWithoutFeedback,
-} from "react-native";
-import moment from "moment";
-import { useTheme } from '../../../hooks/useTheme';
-import Timeline from "react-native-snap-carousel";
-import * as Haptics from 'expo-haptics';
+} from "react-native"
+import moment from "moment"
+import { useTheme } from "../../../hooks/useTheme"
+import Timeline from "react-native-snap-carousel"
+import * as Haptics from "expo-haptics"
 
 type IWeekDayProps = {
     start: string,
@@ -21,18 +19,20 @@ type IWeekDayProps = {
 }
 
 const WeekDay: React.FC<IWeekDayProps> = ({ start, index, dateSelected, handleSelect }) => {
-    const { theme, palette } = useTheme();
+    const { theme, palette } = useTheme()
 
-    const day = moment(start).add(index, 'day').format();
-    const weekday = moment(day).format('ddd').toUpperCase();
-    const monthDay = moment(day).format('D');
-    const selected = useMemo(() => moment(dateSelected).isSame(day, 'day'), [ dateSelected ]);
+    const day = moment(start).add(index, "day").format()
+    const weekday = moment(day).format("ddd").toUpperCase()
+    const monthDay = moment(day).format("D")
+    const selected = useMemo(() => moment(dateSelected).isSame(day, "day"), [ dateSelected ])
     const highlightToday = false // useMemo(() => moment().isSame(day, 'day') && !selected, []);
 
     const handlePress = () => {
         try { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium) }
-        catch (e) {};
-        handleSelect(day);
+        catch (e) {
+            console.log(e);
+        }
+        handleSelect(day)
     }
 
     return (
@@ -63,17 +63,17 @@ type WeekTimelineProps = {
     handleSelect: (e:string) => void,
 }
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window")
 
 const WeekTimeline : React.FC<WeekTimelineProps> = ({ week: { start, end }, dateSelected, handleSelect }) => {
     const days = useMemo(() => {
-        const dayCount = Math.round(moment.duration(moment(end).diff(start)).asDays());
-        return dayCount;
-    }, [ start, end ]);
+        const dayCount = Math.round(moment.duration(moment(end).diff(start)).asDays())
+        return dayCount
+    }, [ start, end ])
 
-    const { theme } = useTheme();
+    const { theme } = useTheme()
 
-    const handleSelectDate = (e:string) => handleSelect(e); 
+    const handleSelectDate = (e:string) => handleSelect(e) 
 
     return (
         <View style={[ styles.timeline, { backgroundColor: theme.background }]}>
@@ -84,7 +84,7 @@ const WeekTimeline : React.FC<WeekTimelineProps> = ({ week: { start, end }, date
             }
         </View>
     )
-};
+}
 
 type DatePickerProps = {
     handleDateChange: (e:any) => void,
@@ -96,51 +96,51 @@ const DatePicker : React.FC<DatePickerProps> = ({ handleDateChange, dateSelected
         start: string,
         end: string,
     }>({
-        start: moment().startOf('week').format(),
-        end: moment().endOf('week').format(),
-    });
+        start: moment().startOf("week").format(),
+        end: moment().endOf("week").format(),
+    })
 
     // const currentDate = useMemo(() => moment().format("L"),[]);
     // const [ today, setToday ] = useState<string>(currentDate);
 
     const renderWeekTimeline = ({ item, index } : { item: any, index: number }) => {
         return <WeekTimeline handleSelect={handleDateChange} dateSelected={dateSelected} key={index} week={item}/>
-    };
+    }
     
-    const schedules = useRef<any | null>(null);
-    const CLONES_NUMBER = 2; 
+    const schedules = useRef<any | null>(null)
+    const CLONES_NUMBER = 2 
 
     const handleSnap = (nextIndex:number) => {
         // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
-        let index = schedules.current.currentIndex;
-        let swipeDirection:"right" | "left"; 
-        if (nextIndex === 0 && index === CLONES_NUMBER) swipeDirection = "right";
-        else if (nextIndex === CLONES_NUMBER && index === 0) swipeDirection = "left";
-        else swipeDirection = nextIndex < index ? "left" : "right";
+        const index = schedules.current.currentIndex
+        let swipeDirection:"right" | "left" 
+        if (nextIndex === 0 && index === CLONES_NUMBER) swipeDirection = "right"
+        else if (nextIndex === CLONES_NUMBER && index === 0) swipeDirection = "left"
+        else swipeDirection = nextIndex < index ? "left" : "right"
 
-        const updatedStart = swipeDirection === 'right' ?
-                            moment(currentWeek.start).add(1, 'week').format() :
-                            moment(currentWeek.start).subtract(1, 'week').format()
-        const updatedEnd = swipeDirection === 'right' ?
-                            moment(currentWeek.end).add(1, 'week').format() :
-                            moment(currentWeek.end).subtract(1, 'week').format()
+        const updatedStart = swipeDirection === "right" ?
+            moment(currentWeek.start).add(1, "week").format() :
+            moment(currentWeek.start).subtract(1, "week").format()
+        const updatedEnd = swipeDirection === "right" ?
+            moment(currentWeek.end).add(1, "week").format() :
+            moment(currentWeek.end).subtract(1, "week").format()
 
         setCurrentWeek({
             start: updatedStart,
             end: updatedEnd
         })
 
-        if (swipeDirection === 'left') handleDateChange(moment(dateSelected).subtract(1, 'week').format());
-        else handleDateChange(moment(dateSelected).add(1, 'week').format());
-    };
+        if (swipeDirection === "left") handleDateChange(moment(dateSelected).subtract(1, "week").format())
+        else handleDateChange(moment(dateSelected).add(1, "week").format())
+    }
 
     return (
         <View style={styles.container}>
             <Timeline 
                 loop={true}
                 ref={schedules}
-                layout={'default'}
+                layout={"default"}
                 loopClonesPerSide={CLONES_NUMBER}
                 data={[ currentWeek, currentWeek, currentWeek ]}
                 itemWidth={width}
@@ -150,20 +150,20 @@ const DatePicker : React.FC<DatePickerProps> = ({ handleDateChange, dateSelected
             />
         </View>
     )
-};
+}
 
 const styles = StyleSheet.create({
     container: {
         marginTop: 25,
     },
     timeline: {
-        display: 'flex',
-        flexDirection: 'row',
+        display: "flex",
+        flexDirection: "row",
         width: width,
         paddingRight: 45,
         height: 65,
-        alignItems: 'center',
-        justifyContent: 'space-around',
+        alignItems: "center",
+        justifyContent: "space-around",
     },
     weekday: {
         marginBottom: 2.5,
@@ -172,8 +172,8 @@ const styles = StyleSheet.create({
     date: {
         zIndex: 1,
         marginLeft: 15,
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         paddingHorizontal: 5,
         paddingVertical: 10,
         borderRadius: 5,
@@ -185,12 +185,12 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 0, }
     },
     monthDay: {
-        fontWeight: '500',
+        fontWeight: "500",
     },
     scrollView: {
-        display: 'flex',
-        flexDirection: 'row',
+        display: "flex",
+        flexDirection: "row",
     },
-});
+})
 
-export default DatePicker; 
+export default DatePicker 

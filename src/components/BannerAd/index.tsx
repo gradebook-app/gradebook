@@ -1,16 +1,16 @@
-import React from "react";
-import { StyleSheet, View, Platform, Text } from "react-native";
-import { AdMobBanner } from "expo-ads-admob";
+import React from "react"
+import { StyleSheet, View, Platform, Text } from "react-native"
+import { AdMobBanner } from "expo-ads-admob"
 
 const BannerAd = () => {
     const unitID = Platform.select({
         ios: "ca-app-pub-8555090951806711/5353704421",
         android: "",
-     });
+    })
  
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            { Platform.OS === 'ios' ? (
+            { Platform.OS === "ios" ? (
                 <AdMobBanner 
                     adUnitID={unitID}
                     bannerSize="mediumRectangle"
@@ -24,4 +24,4 @@ const BannerAd = () => {
     )
 }
 
-export default BannerAd;
+export default BannerAd

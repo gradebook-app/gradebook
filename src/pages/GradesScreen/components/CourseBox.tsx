@@ -1,28 +1,28 @@
-import { useTheme } from '../../../hooks/useTheme';
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, Text } from "react-native";
-import { ICourse } from '../../../store/interfaces/course.interface';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useGradeColor } from '../../../hooks/useGradeColor';
-import FadeIn from '../../../components/FadeIn';
+import { useTheme } from "../../../hooks/useTheme"
+import React, { useEffect, useState } from "react"
+import { View, StyleSheet, Dimensions, Text } from "react-native"
+import { ICourse } from "../../../store/interfaces/course.interface"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import { useGradeColor } from "../../../hooks/useGradeColor"
+import FadeIn from "../../../components/FadeIn"
 
 type CourseBoxProps = {
     course: ICourse,
     handleCourse: (e:ICourse) => void 
 }
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window")
 
 const CourseBox : React.FC<CourseBoxProps> = ({ course, handleCourse }) => {
-    const gradeColor = useGradeColor(course.grade.percentage);
-    const { theme } = useTheme();
-    const [ show, setShow ] = useState(false);
+    const gradeColor = useGradeColor(course.grade.percentage)
+    const { theme } = useTheme()
+    const [ show, setShow ] = useState(false)
 
-    useEffect(() => setShow(true), []);
+    useEffect(() => setShow(true), [])
 
     const handlePress = () => {
-        handleCourse(course);
-    };
+        handleCourse(course)
+    }
 
     return (
         <FadeIn show={show}>
@@ -56,9 +56,9 @@ const styles = StyleSheet.create({
         marginVertical: 7.5,
         shadowOffset: { width: 0, height: 0 },
         padding: 15,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
     },
     teacher: {
         marginTop: 7.5,
@@ -66,9 +66,9 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 17.5,
-        fontWeight: '500',
+        fontWeight: "500",
         maxWidth: 200,
-        overflow: 'hidden',
+        overflow: "hidden",
     },
     gradeContainer: {
         marginLeft: "auto",
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default React.memo(CourseBox); 
+export default React.memo(CourseBox) 

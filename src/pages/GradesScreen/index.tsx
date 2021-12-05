@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { 
     Dimensions, 
     SafeAreaView, 
@@ -8,31 +8,31 @@ import {
     RefreshControl,
     Text,
     Button
-} from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import { useSelector } from "react-redux";
-import { useGrades } from "../../hooks/useGrades";
-import { ICourse } from "../../store/interfaces/course.interface";
-import { IRootReducer } from "../../store/reducers";
-import { getAccessToken } from "../../store/selectors";
-import CourseBox from "./components/CourseBox";
-import BottomSheet from "reanimated-bottom-sheet";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import Blocker from "../../components/Blocker";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTheme } from "../../hooks/useTheme";
-import GPASlideshow from "./components/GPASlideshow";
-import { useGPA } from "../../hooks/useGPA";
-import { usePastGPA } from "../../hooks/usePastGPA";
-import messaging from '@react-native-firebase/messaging';
+} from "react-native"
+import { Picker } from "@react-native-picker/picker"
+import { useSelector } from "react-redux"
+import { useGrades } from "../../hooks/useGrades"
+import { ICourse } from "../../store/interfaces/course.interface"
+import { IRootReducer } from "../../store/reducers"
+import { getAccessToken } from "../../store/selectors"
+import CourseBox from "./components/CourseBox"
+import BottomSheet from "reanimated-bottom-sheet"
+import { TouchableWithoutFeedback } from "react-native-gesture-handler"
+import Blocker from "../../components/Blocker"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useTheme } from "../../hooks/useTheme"
+import GPASlideshow from "./components/GPASlideshow"
+import { useGPA } from "../../hooks/useGPA"
+import { usePastGPA } from "../../hooks/usePastGPA"
+import messaging from "@react-native-firebase/messaging"
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window")
 
 const sheetHeight = (() => {
-    const minHeight = 350; 
-    const dynamicHeight = height * 0.45; 
-    return dynamicHeight < minHeight ? minHeight : dynamicHeight; 
-})();
+    const minHeight = 350 
+    const dynamicHeight = height * 0.45 
+    return dynamicHeight < minHeight ? minHeight : dynamicHeight 
+})()
 
 type GradesScreenProps = {
     navigation: any,
@@ -46,64 +46,64 @@ interface INavigationParams {
 
 const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     const { params: { cachedMarkingPeriod = null  } = {} as any} : INavigationParams = 
-        navigation?.getState()?.routes?.find((route:any) => (route.name == "loading"));
+        navigation?.getState()?.routes?.find((route:any) => (route.name == "loading"))
 
-    const [selectedValue, setSelectedValue] = useState(cachedMarkingPeriod ?? "");
-    const [ adjustedMarkingPeriod, setAdjustedMarkingPeriod ] = useState(cachedMarkingPeriod ?? "");
+    const [selectedValue, setSelectedValue] = useState(cachedMarkingPeriod ?? "")
+    const [ adjustedMarkingPeriod, setAdjustedMarkingPeriod ] = useState(cachedMarkingPeriod ?? "")
 
     const { courses, markingPeriods, currentMarkingPeriod, loading, reload } = useGrades({
         markingPeriod: adjustedMarkingPeriod
-    });
+    })
 
-    const { reload:reloadGPA, loading:loadingGPA, gpa } = useGPA();
-    const { pastGPA } = usePastGPA();
+    const { reload:reloadGPA, loading:loadingGPA, gpa } = useGPA()
+    const { pastGPA } = usePastGPA()
 
 
     useEffect(() => {
         const unsubscribe = messaging().onMessage(_ => {
             reload()
-            reloadGPA();
-        });
+            reloadGPA()
+        })
 
-        return unsubscribe;
-    }, []);
+        return unsubscribe
+    }, [])
     
-    const state = useSelector((state:IRootReducer) => state);
-    const accessToken = getAccessToken(state);
-    const isAccessToken = !!accessToken;
+    const state = useSelector((state:IRootReducer) => state)
+    const accessToken = getAccessToken(state)
+    const isAccessToken = !!accessToken
 
     const handleCourse = (course:ICourse) => {
-        navigation.setParams({ course, markingPeriod: currentMarkingPeriod });
-        navigation.navigate('assignments');
-    };
+        navigation.setParams({ course, markingPeriod: currentMarkingPeriod })
+        navigation.navigate("assignments")
+    }
 
     const setMarkingPeriod = useCallback(() => {
-        AsyncStorage.setItem("@markingPeriod", currentMarkingPeriod);
-        setSelectedValue(currentMarkingPeriod);
-    }, [ currentMarkingPeriod ]);
+        AsyncStorage.setItem("@markingPeriod", currentMarkingPeriod)
+        setSelectedValue(currentMarkingPeriod)
+    }, [ currentMarkingPeriod ])
 
-    useEffect(setMarkingPeriod, [ setMarkingPeriod ]);
+    useEffect(setMarkingPeriod, [ setMarkingPeriod ])
 
-    const selectionSheet = React.useRef<null | any>(null);
+    const selectionSheet = React.useRef<null | any>(null)
 
     const handleAuth = useCallback(() => {
-        if (!accessToken) return; 
-        reload();
-        reloadGPA();
-    }, [ isAccessToken ]);
+        if (!accessToken) return 
+        reload()
+        reloadGPA()
+    }, [ isAccessToken ])
 
-    useEffect(handleAuth, [ handleAuth ]);
+    useEffect(handleAuth, [ handleAuth ])
 
     const onRefresh = () => {
-        reload();
-        reloadGPA();
-    };
+        reload()
+        reloadGPA()
+    }
 
-    const { theme }  = useTheme();
+    const { theme }  = useTheme()
 
     const handleGPAScreen = () => {
-        navigation.navigate("gpa");
-    };
+        navigation.navigate("gpa")
+    }
 
     const renderMPSelector = () => {
         return (
@@ -121,18 +121,18 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         )
     }
 
-    const [ showSelector, setShowSelector ] = useState(false);
+    const [ showSelector, setShowSelector ] = useState(false)
 
     const handleSelectorBack = () => {
-        setShowSelector(false);
-        selectionSheet.current.snapTo(1);
+        setShowSelector(false)
+        selectionSheet.current.snapTo(1)
 
-        setAdjustedMarkingPeriod(selectedValue);
+        setAdjustedMarkingPeriod(selectedValue)
     }
 
     const handleSelectionMenuPress = () => {
-        setShowSelector(true);
-        selectionSheet.current.snapTo(0);
+        setShowSelector(true)
+        selectionSheet.current.snapTo(0)
     }
 
     return (
@@ -141,12 +141,12 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                 contentContainerStyle={styles.courses}
                 refreshControl={
                     <RefreshControl
-                    refreshing={loading || loadingGPA}
-                    onRefresh={onRefresh}
+                        refreshing={loading || loadingGPA}
+                        onRefresh={onRefresh}
                     />
                 }>
-               <TouchableWithoutFeedback onPress={handleSelectionMenuPress}>
-                   <Button title={selectedValue} onPress={handleSelectionMenuPress} />
+                <TouchableWithoutFeedback onPress={handleSelectionMenuPress}>
+                    <Button title={selectedValue} onPress={handleSelectionMenuPress} />
                 </TouchableWithoutFeedback>
                 <GPASlideshow handleGPAScreen={handleGPAScreen} pastGPA={pastGPA} gpa={gpa} />
                 { courses.map((course, index) => {
@@ -174,7 +174,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     markingPeriod: {
-        fontWeight: '500',
+        fontWeight: "500",
         fontSize: 25,
         marginTop: 25,
         marginLeft: 25,
@@ -185,8 +185,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     courses: {
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         paddingBottom: 100,
     },
     selectContainer: {
@@ -195,4 +195,4 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     }
 })
-export default React.memo(GradesScreen); 
+export default React.memo(GradesScreen) 

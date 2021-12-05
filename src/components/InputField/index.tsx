@@ -1,8 +1,8 @@
-import React, { ReactChild } from 'react';
-import { View, StyleSheet, Dimensions, TextInput, TextInputProps, Keyboard } from 'react-native';
-import { useTheme } from '../../hooks/useTheme';
+import React, { ReactChild } from "react"
+import { View, StyleSheet, Dimensions, TextInput, TextInputProps, Keyboard } from "react-native"
+import { useTheme } from "../../hooks/useTheme"
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window")
 
 interface InputFieldProps {
     style?: any,
@@ -12,19 +12,19 @@ interface InputFieldProps {
 const InputField : React.FC<InputFieldProps & TextInputProps> = 
     ({ style, children, ...props }) => {
 
-    const { theme } : any = useTheme();
+        const { theme } : any = useTheme()
 
-    return (
-        <View style={[ styles.container, { backgroundColor: theme.secondary }, style ]}>
-            <TextInput 
-                onBlur={() => Keyboard.dismiss}
-                style={[ styles.input, { color: theme.text }]}
-                { ...props }
-            />
-            { children }
-        </View>
-    )
-}
+        return (
+            <View style={[ styles.container, { backgroundColor: theme.secondary }, style ]}>
+                <TextInput 
+                    onBlur={() => Keyboard.dismiss}
+                    style={[ styles.input, { color: theme.text }]}
+                    { ...props }
+                />
+                { children }
+            </View>
+        )
+    }
 
 const styles = StyleSheet.create({
     container: {
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
         height: 55,
         maxWidth: 500,
         borderRadius: 5,
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowRadius: 5,
         shadowOpacity: 0.075,
         shadowOffset: { width: 0, height: 0 },
@@ -45,6 +45,6 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         fontSize: 16,
     }
-});
+})
 
-export default InputField; 
+export default InputField 

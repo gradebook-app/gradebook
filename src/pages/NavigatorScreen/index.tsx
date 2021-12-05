@@ -1,20 +1,20 @@
-import "react-native-gesture-handler";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React, { useCallback, useEffect } from 'react';
-import GradesScreen from "../GradesScreen";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faBook, faCalendarAlt, faUser } from "@fortawesome/free-solid-svg-icons";
-import { useTheme } from "../../hooks/useTheme";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import AccountScreen from "../AccountScreen";
-import { setNotificationToken } from "../../store/actions/user.actions";
-import { useDispatch, useSelector } from "react-redux";
-import { IRootReducer } from "../../store/reducers";
-import { getUser } from "../../store/selectors";
-import { DynamicColorIOS } from "react-native";
-import messaging from "@react-native-firebase/messaging";
-import ScheduleScreen from "../ScheduleScreen";
-import * as Haptics from 'expo-haptics';
+import "react-native-gesture-handler"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import React, { useCallback, useEffect } from "react"
+import GradesScreen from "../GradesScreen"
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
+import { faBook, faCalendarAlt, faUser } from "@fortawesome/free-solid-svg-icons"
+import { useTheme } from "../../hooks/useTheme"
+import { IconProp } from "@fortawesome/fontawesome-svg-core"
+import AccountScreen from "../AccountScreen"
+import { setNotificationToken } from "../../store/actions/user.actions"
+import { useDispatch, useSelector } from "react-redux"
+import { IRootReducer } from "../../store/reducers"
+import { getUser } from "../../store/selectors"
+import { DynamicColorIOS } from "react-native"
+import messaging from "@react-native-firebase/messaging"
+import ScheduleScreen from "../ScheduleScreen"
+import * as Haptics from "expo-haptics"
 
 type TabIconProps = {
     focused: boolean,
@@ -23,10 +23,10 @@ type TabIconProps = {
 }
 
 const TabIcon : React.FC<TabIconProps> = ({ focused, iconSize, icon, ...props }) => {
-    const size = iconSize || 25; 
-    const { palette } = useTheme();
+    const size = iconSize || 25 
+    const { palette } = useTheme()
 
-    const iconColor = focused ? palette.primary : "#DEDEDE";
+    const iconColor = focused ? palette.primary : "#DEDEDE"
 
     return (
         <FontAwesomeIcon 
@@ -43,12 +43,12 @@ type INavigatorScreenProps = {
 }
 
 const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...props }) => {
-    const Tabs = createBottomTabNavigator();
+    const Tabs = createBottomTabNavigator()
 
-    const { theme } = useTheme();
-    const state = useSelector((state:IRootReducer) => state);
-    const dispatch = useDispatch();
-    const user = getUser(state);
+    const { theme } = useTheme()
+    const state = useSelector((state:IRootReducer) => state)
+    const dispatch = useDispatch()
+    const user = getUser(state)
 
     // const handleAppStateUpdate = () => {
     //     console.log("focused");
@@ -63,70 +63,70 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
 
     const getPermission = async () => {
         try {
-            await messaging().requestPermission();
-            const token = await getToken();
-            const storedToken = user?.notificationToken; 
-            if (!token || storedToken === token) return;
-            dispatch(setNotificationToken(token));
+            await messaging().requestPermission()
+            const token = await getToken()
+            const storedToken = user?.notificationToken 
+            if (!token || storedToken === token) return
+            dispatch(setNotificationToken(token))
         } catch (error) {}
     }
 
     const getToken = async () => {
-        const token = await messaging().getToken();
-        return token; 
+        const token = await messaging().getToken()
+        return token 
     }
 
     const handleNotificationUpdate = useCallback(async () => {
         try {
-            const hasPermission = await messaging().hasPermission();
+            const hasPermission = await messaging().hasPermission()
             if (hasPermission) {
-                const token = await getToken();
-                const storedToken = user?.notificationToken; 
-                if (!token || storedToken === token) return;
-                dispatch(setNotificationToken(token));
+                const token = await getToken()
+                const storedToken = user?.notificationToken 
+                if (!token || storedToken === token) return
+                dispatch(setNotificationToken(token))
             } else {
-                getPermission();
+                getPermission()
             }
-        } catch(e) { return };
+        } catch(e) { return }
     }, [ user?.notificationToken ])
 
     useEffect(() => {
-        const subscription = messaging().onTokenRefresh(handleNotificationUpdate);
-        return subscription;
-    }, []);
+        const subscription = messaging().onTokenRefresh(handleNotificationUpdate)
+        return subscription
+    }, [])
 
     useEffect(() => {
         navigation?.setOptions({ headerStyle: { 
             backgroundColor: theme.background,
-        }});
-    }, []);
+        }})
+    }, [])
 
     const separatorBarColor = DynamicColorIOS({
         light: "rgba(0, 0, 0, 0.15)",
         dark: "rgba(255, 255, 255, 0.1)",
-    });
+    })
 
     return (
         <Tabs.Navigator 
             initialRouteName="Grades"
             screenListeners={{tabPress: () => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
             }}}
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused }) => {
                     switch(route.name) {
-                        case "Grades": {
-                            return <TabIcon icon={faBook} focused={focused} />
-                        }
-                        case "Schedule": {
-                            return <TabIcon icon={faCalendarAlt} focused={focused} />
-                        }
-                        case "Account": {
-                            return <TabIcon icon={faUser} focused={focused} />
-                        }
-                        default: {
-                            return; 
-                        }
+                    case "Grades": {
+                        return <TabIcon icon={faBook} focused={focused} />
+                    }
+                    case "Schedule": {
+                        return <TabIcon icon={faCalendarAlt} focused={focused} />
+                    }
+                    case "Account": {
+                        return <TabIcon icon={faUser} focused={focused} />
+                    }
+                    default: {
+                        return 
+                    }
                     }
                 },
                 tabBarStyle: {
@@ -134,12 +134,12 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                     borderTopColor: separatorBarColor,
                 },
                 headerShown: false,
-                tabBarLabel: '',
+                tabBarLabel: "",
                 tabBarIconStyle: {
                     marginTop: 15,
                 },
-                })}
-            >
+            })}
+        >
             <Tabs.Screen 
                 name="Grades" 
                 children={() => <GradesScreen navigation={navigation} { ...props } />}
@@ -148,7 +148,7 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 name="Schedule" 
                 children={() => <ScheduleScreen navigation={navigation} { ...props } />}
             />
-             <Tabs.Screen 
+            <Tabs.Screen 
                 name="Account" 
                 children={() => <AccountScreen navigation={navigation} { ...props } />}
             />
@@ -158,4 +158,4 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
 
 
 
-export default NavigatorScreen;
+export default NavigatorScreen

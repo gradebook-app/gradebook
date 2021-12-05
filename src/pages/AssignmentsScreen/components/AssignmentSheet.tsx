@@ -1,52 +1,52 @@
 
 
-import React, { useMemo } from "react";
-import { StyleSheet, View, Text, Dimensions, } from "react-native";
-import { useTheme } from "../../../hooks/useTheme";
-import { useAppearanceTheme } from "../../../hooks/useAppearanceTheme";
-import { useCategoryColor } from "../../../hooks/useCategoryColor";
-import { useGradeColor } from "../../../hooks/useGradeColor";
-import { IAssignment } from "../../../store/interfaces/assignment.interface";
-import moment from "moment";
+import React, { useMemo } from "react"
+import { StyleSheet, View, Text, Dimensions, } from "react-native"
+import { useTheme } from "../../../hooks/useTheme"
+import { useAppearanceTheme } from "../../../hooks/useAppearanceTheme"
+import { useCategoryColor } from "../../../hooks/useCategoryColor"
+import { useGradeColor } from "../../../hooks/useGradeColor"
+import { IAssignment } from "../../../store/interfaces/assignment.interface"
+import moment from "moment"
 
 type AssignmentSheetProps = {
     assignment?: IAssignment | null,
 }
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window")
 
 const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
-    const { theme } = useTheme();
-    const { isDark } = useAppearanceTheme();
+    const { theme } = useTheme()
+    const { isDark } = useAppearanceTheme()
 
-    const assignmentColor = useCategoryColor(assignment?.category || "");
-    const gradeColor = useGradeColor(assignment?.grade.percentage || 0);
+    const assignmentColor = useCategoryColor(assignment?.category || "")
+    const gradeColor = useGradeColor(assignment?.grade.percentage || 0)
     const gradeLabel = useMemo(() => {
-        const grade = assignment?.grade.percentage; 
+        const grade = assignment?.grade.percentage 
         return grade ? `${grade}%` : "" 
-    }, [ assignment ]);
+    }, [ assignment ])
 
     const date = useMemo(() => {
-       try {
-        const assignmentDate = assignment?.date;
-        if (!assignmentDate) return null; 
-        let [ month, day ] = assignmentDate.split(/\s/g)[1].split("/"); 
-        if (day.length == 1) day = `0${day}`;
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-        const currentMonth = currentDate.getMonth() + 1; 
-        const year = currentMonth >= parseInt(month) ? currentYear: currentYear - 1;
-        if (month.length == 1) month = `0${month}`;
-        const formattedDate = moment(`${year}-${month}-${day}`).format('dddd, MMMM Do, YYYY');
-        return formattedDate;
-       } catch { return null }
-    }, [ assignment ]);
+        try {
+            const assignmentDate = assignment?.date
+            if (!assignmentDate) return null 
+            let [ month, day ] = assignmentDate.split(/\s/g)[1].split("/") 
+            if (day.length == 1) day = `0${day}`
+            const currentDate = new Date()
+            const currentYear = currentDate.getFullYear()
+            const currentMonth = currentDate.getMonth() + 1 
+            const year = currentMonth >= parseInt(month) ? currentYear: currentYear - 1
+            if (month.length == 1) month = `0${month}`
+            const formattedDate = moment(`${year}-${month}-${day}`).format("dddd, MMMM Do, YYYY")
+            return formattedDate
+        } catch { return null }
+    }, [ assignment ])
 
     const points = useMemo(() => {
-        const points = assignment?.grade.points;
-        if (!points) return assignment?.message || null;
-        return `Scored: ${points}`;
-    }, [ assignment ]);
+        const points = assignment?.grade.points
+        if (!points) return assignment?.message || null
+        return `Scored: ${points}`
+    }, [ assignment ])
 
     return (
         <View style={[ styles.assignmentSheet, { backgroundColor: theme.background } ]}>
@@ -78,7 +78,7 @@ const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
             </View>
         </View>
     )
-};
+}
 
 const styles = StyleSheet.create({
     assignmentSheet: {
@@ -86,12 +86,12 @@ const styles = StyleSheet.create({
         height: 400,
         backgroundColor: "#fff",
         padding: 20,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
     },
     header: {
         fontSize: 25,
-        fontWeight: '600',
+        fontWeight: "600",
     },
     comment: { 
         marginVertical: 10,
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10
     },
     commentContainer: {
-        marginTop: 'auto',
+        marginTop: "auto",
         marginBottom: 75,
     },
     commentText: {
@@ -117,24 +117,24 @@ const styles = StyleSheet.create({
     },
     categoryContainer: {
         marginVertical: 10,
-        alignSelf: 'flex-start',
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'row',
-        alignItems: 'center',
+        alignSelf: "flex-start",
+        display: "flex",
+        justifyContent: "center",
+        flexDirection: "row",
+        alignItems: "center",
         padding: 5,
         borderRadius: 5,
     },
     grade: {
         marginHorizontal: 10,
         fontSize: 17.5,
-        fontWeight: '500',
+        fontWeight: "500",
     },
     headerContainer: {
-        display: 'flex',
-        flexDirection:'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection:"row",
+        justifyContent: "space-between",
+        alignItems: "center",
     },
     date: {
         marginVertical: 5,
@@ -143,8 +143,8 @@ const styles = StyleSheet.create({
     points: {
         marginVertical: 10,
         fontSize: 20,
-        fontWeight: '700',
+        fontWeight: "700",
     }
 })
 
-export default React.memo(AssignmentSheet); 
+export default React.memo(AssignmentSheet) 

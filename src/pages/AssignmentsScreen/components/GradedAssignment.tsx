@@ -1,18 +1,18 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from "react-native";
-import { useTheme } from '../../../hooks/useTheme';
-import { useGradeColor } from '../../../hooks/useGradeColor';
-import { IAssignment } from '../../../store/interfaces/assignment.interface';
+import React from "react"
+import { View, Text, StyleSheet, Dimensions } from "react-native"
+import { useTheme } from "../../../hooks/useTheme"
+import { useGradeColor } from "../../../hooks/useGradeColor"
+import { IAssignment } from "../../../store/interfaces/assignment.interface"
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window")
 
 type GradedAssignmentProp = {
     assignment: IAssignment,
 }
 
 const GradedAssignment : React.FC<GradedAssignmentProp> = ({ assignment }) => {
-    const gradeColor = useGradeColor(assignment?.grade?.percentage || 0);
-    const { theme } = useTheme();
+    const gradeColor = useGradeColor(assignment?.grade?.percentage || 0)
+    const { theme } = useTheme()
 
     return (
         <View>
@@ -32,6 +32,6 @@ const styles = StyleSheet.create({
         fontSize: 15,
         textAlign: "right",
     }
-});
+})
 
-export default GradedAssignment;
+export default GradedAssignment

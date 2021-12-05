@@ -1,46 +1,46 @@
-import moment from 'moment';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, SafeAreaView, Text, ScrollView, Dimensions, RefreshControl, View } from 'react-native';
-import { useSelector } from 'react-redux';
-import FadeIn from '../../components/FadeIn';
-import { useSchedule } from '../../hooks/useSchedule';
-import { useTheme } from "../../hooks/useTheme";
-import { IRootReducer } from '../../store/reducers';
-import { getAccessToken } from '../../store/selectors';
-import DatePicker from './components/DatePicker';
-import ScheduleTable from './components/ScheduleTable';
-import Timeline from "react-native-snap-carousel";
-import { ISchedule } from '../../store/interfaces/schedule.interface';
-import * as Haptics from "expo-haptics";
+import moment from "moment"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { StyleSheet, SafeAreaView, Text, ScrollView, Dimensions, RefreshControl, View } from "react-native"
+import { useSelector } from "react-redux"
+import FadeIn from "../../components/FadeIn"
+import { useSchedule } from "../../hooks/useSchedule"
+import { useTheme } from "../../hooks/useTheme"
+import { IRootReducer } from "../../store/reducers"
+import { getAccessToken } from "../../store/selectors"
+import DatePicker from "./components/DatePicker"
+import ScheduleTable from "./components/ScheduleTable"
+import Timeline from "react-native-snap-carousel"
+import { ISchedule } from "../../store/interfaces/schedule.interface"
+import * as Haptics from "expo-haptics"
 
 interface IScheduleScreenProps {
     navigation: any,
 }
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window")
 
 const ScheduleScreen : React.FC<IScheduleScreenProps> = ({ navigation }) => {
-    const { theme } = useTheme();
+    const { theme } = useTheme()
 
-    const state = useSelector((state:IRootReducer) => state);
-    const accessToken = getAccessToken(state);
-    const isAccessToken = !!accessToken;
+    const state = useSelector((state:IRootReducer) => state)
+    const accessToken = getAccessToken(state)
+    const isAccessToken = !!accessToken
 
-    const [ dateSelected, setDateSelected ] = useState(moment().format());
-    const { reload, loading, schedule, fetching } = useSchedule({ dateSelected });
+    const [ dateSelected, setDateSelected ] = useState(moment().format())
+    const { reload, loading, schedule, fetching } = useSchedule({ dateSelected })
 
-    const schedules = useRef<any | null>();
+    const schedules = useRef<any | null>()
 
 
     const handleDateChange = (e:string) => {
-        if (moment(e).isSame(dateSelected, 'day')) return; 
-        setDateSelected(e);
-        const isNext = moment(e).isAfter(dateSelected); 
+        if (moment(e).isSame(dateSelected, "day")) return 
+        setDateSelected(e)
+        const isNext = moment(e).isAfter(dateSelected) 
         // if (isNext) schedules.current.snapToNext();
         // else schedules.current.snapToPrev();
     }
 
-    const CLONES_NUMBER = 2; 
+    const CLONES_NUMBER = 2 
 
     const handleNextSnap = (nextIndex:number) => {
         //Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -53,18 +53,18 @@ const ScheduleScreen : React.FC<IScheduleScreenProps> = ({ navigation }) => {
         // if (swipeDirection === 'right')
         //     setDateSelected(moment(dateSelected).add(1, 'day').format());
         // else setDateSelected(moment(dateSelected).subtract(1, 'day').format());
-    };
+    }
 
     const handleAuth = useCallback(() => {
-        if (!accessToken) return; 
-        reload();
-    }, [ isAccessToken ]);
+        if (!accessToken) return 
+        reload()
+    }, [ isAccessToken ])
 
-    useEffect(handleAuth, [ handleAuth ]);
+    useEffect(handleAuth, [ handleAuth ])
 
     const onRefresh = () => {
-        reload();
-    };  
+        reload()
+    }  
    
     const renderSchedule = ({ item, index } : { item: ISchedule, index:number }) => {
         return (
@@ -73,8 +73,8 @@ const ScheduleScreen : React.FC<IScheduleScreenProps> = ({ navigation }) => {
     }
 
     const dateFormatted = useMemo(() => {
-        return moment(dateSelected).format("MMM DD, YYYY");
-    }, [ dateSelected ]);
+        return moment(dateSelected).format("MMM DD, YYYY")
+    }, [ dateSelected ])
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
@@ -92,7 +92,7 @@ const ScheduleScreen : React.FC<IScheduleScreenProps> = ({ navigation }) => {
                 </View>
                 <DatePicker dateSelected={dateSelected} handleDateChange={handleDateChange}/>
                 <ScheduleTable fetching={fetching} schedule={schedule} />
-                    {/* <Timeline  
+                {/* <Timeline  
                         loop={true}
                         loopClonesPerSide={CLONES_NUMBER}
                         onBeforeSnapToItem={handleNextSnap}
@@ -113,24 +113,24 @@ const styles = StyleSheet.create({
         width: width,
     },
     title: {
-        fontWeight: '700',
+        fontWeight: "700",
         fontSize: 30,
     },
     scrollView: {
         padding: 15,
         height: height - 125,
-        display: 'flex',
+        display: "flex",
     },
     header: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
     },
     date: {
         fontSize: 20,
-        fontWeight: '500',
+        fontWeight: "500",
     }
-});
+})
 
-export default ScheduleScreen; 
+export default ScheduleScreen 

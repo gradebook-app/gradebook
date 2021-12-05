@@ -1,5 +1,5 @@
-import React, { ReactChild, useCallback, useEffect, useRef } from 'react';
-import { Animated, StyleProp, ViewStyle } from 'react-native';
+import React, { ReactChild, useCallback, useEffect, useRef } from "react"
+import { Animated, StyleProp, ViewStyle } from "react-native"
 
 type FadeInProps = {
     children: ReactChild,
@@ -8,7 +8,7 @@ type FadeInProps = {
 }
 
 const FadeIn : React.FC<FadeInProps> = ({ show = false, children, style }) => {
-    const containerOpacity = useRef(new Animated.Value(0)).current; 
+    const containerOpacity = useRef(new Animated.Value(0)).current 
 
     const handleOpacity = useCallback(() => {
         Animated.timing(
@@ -18,10 +18,10 @@ const FadeIn : React.FC<FadeInProps> = ({ show = false, children, style }) => {
                 duration: 250,
                 useNativeDriver: true,
             }
-        ).start();
-    }, [ show ]);
+        ).start()
+    }, [ show ])
 
-    useEffect(handleOpacity, [ handleOpacity ]);
+    useEffect(handleOpacity, [ handleOpacity ])
 
     return (
         <Animated.View style={[ { opacity: containerOpacity }, style ]}>
@@ -30,4 +30,4 @@ const FadeIn : React.FC<FadeInProps> = ({ show = false, children, style }) => {
     )
 }
 
-export default FadeIn; 
+export default FadeIn 
