@@ -12,15 +12,17 @@ const FadeIn : React.FC<FadeInProps> = ({ show = false, children, style, delay =
     const containerOpacity = useRef(new Animated.Value(0)).current; 
 
     const handleOpacity = useCallback(() => {
-        Animated.timing(
-            containerOpacity, 
-            {   
-                delay: delay ?? 0,
-                toValue: show ? 1 : 0,
-                duration: 250,
-                useNativeDriver: true,
-            }
-        ).start();
+        Animated.sequence([
+            Animated.delay(delay ?? 0),
+            Animated.timing(
+                containerOpacity, 
+                {   
+                    toValue: show ? 1 : 0,
+                    duration: 200,
+                    useNativeDriver: true,
+                }
+            )
+        ]).start();
     }, [ show ]);
 
     useEffect(handleOpacity, [ handleOpacity ]);

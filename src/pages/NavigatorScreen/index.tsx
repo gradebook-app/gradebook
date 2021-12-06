@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import GradesScreen from "../GradesScreen";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBook, faCalendarAlt, faUser } from "@fortawesome/free-solid-svg-icons";
@@ -15,6 +15,7 @@ import { DynamicColorIOS } from "react-native";
 import messaging from "@react-native-firebase/messaging";
 import ScheduleScreen from "../ScheduleScreen";
 import * as Haptics from "expo-haptics";
+import Alert from "../../components/Alert";
 
 type TabIconProps = {
     focused: boolean,
@@ -106,7 +107,14 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
         dark: "rgba(255, 255, 255, 0.1)",
     });
 
+    const [ showAlert, setShowAlert ] = useState(true);
+
+    const handleDismissAlert = () => {
+        setShowAlert(false);
+    };
+
     return (
+        <>
         <Tabs.Navigator 
             initialRouteName="Grades"
             screenListeners={{tabPress: () => {
@@ -153,6 +161,18 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 children={() => <AccountScreen navigation={navigation} { ...props } />}
             />
         </Tabs.Navigator>
+            <Alert 
+            delay={showAlert ? 500 : 0}
+            visible={showAlert}
+            title="🥳 Version 1.2"
+            description="Version 1.2 introduces many improvements to the UX and bug fixes.
+                        A new feature included in this update is viewing future assignment points.
+                        Additionally, Version 1.2 introduces Ads to the application. In order to provide students with
+                        our services we display Ads by default. If you wish to reduce Ads and not support the application you
+                        can disable them in settings."
+            buttons={[{ title: "Continue", onPress: handleDismissAlert}]}
+        />
+        </>
     );
 };  
 

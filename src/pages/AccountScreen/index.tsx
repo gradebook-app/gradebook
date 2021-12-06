@@ -1,4 +1,4 @@
-import { faBell, faFlagUsa, faIdBadge, faKey, faLock, faPhone, faPizzaSlice, faSchool, faShieldAlt } from "@fortawesome/free-solid-svg-icons";
+import { faFlagUsa, faIdBadge, faKey, faPizzaSlice, faSchool, faUserCog, faPhone, faShieldAlt } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl } from "react-native";
@@ -13,6 +13,7 @@ import { useAccount } from "../../hooks/useAccount";
 import { getAccessToken, getUser } from "../../store/selectors";
 import { genesisConfig } from "../../constants/genesis";
 import jwt_decode from "jwt-decode";
+import { getUserId } from "../../store/selectors/user.selectors";
 
 type AccountScreenProps = {
     navigation: any,
@@ -20,10 +21,6 @@ type AccountScreenProps = {
 
 const { width, height } = Dimensions.get("window");
 
-export interface ISettings {
-    biometricsEnabled: boolean | null,
-    savePassword: boolean | null,
-}
 
 const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -33,10 +30,11 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
     const accessToken = getAccessToken(state);
     const isAccessToken = !!accessToken; 
     const user = getUser(state);
+    const userId = getUserId(state);
 
     const handleLogOut = async () => {
         navigation.navigate("login");
-        dispatch(setLogoutClient());
+        dispatch(setLogoutClient({ userId }));
         await AsyncStorage.getAllKeys()
             .then(keys => AsyncStorage.multiRemove(keys));
     };
@@ -62,6 +60,8 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
         return url; 
     }, [ user, account ]);
 
+    console.log(user);
+
     const avatarCookie = useMemo(() => {
         try {
             const tokenData:any = jwt_decode(accessToken || "");
@@ -72,17 +72,12 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
         }
     }, [ accessToken ]);
 
-
-    const handleNotificationSettings = () => {
-        navigation.navigate("notifications");
+    const handleOptions = () => {
+        navigation.navigate("options");
     };
 
     const handleContactsSettings = () => {
         navigation.navigate("contact");
-    };
-
-    const handleSecuritySettings = () => {
-        navigation.navigate("security");
     };
 
     const handlePrivacySettings = () => {
@@ -103,6 +98,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                     contentContainerStyle={{
                         display: "flex",
                         alignItems: "center",
+                        height: height - 150,
                     }}>
                     <View style={styles.headerContainer}>
                         <Text style={[ styles.header, { color: theme.text }]}>Account</Text>
@@ -143,46 +139,34 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                     </Box>
                     <Box.Space />
                     <Box style={{ flexDirection: "column" }}>
-                        <Box.Clickable onPress={handleSecuritySettings}>
-                            <Box.Content 
-                                title="Security"
-                                iconColor={"#EAB500"}
-                                icon={faLock}
-                            >
-                                <Box.Arrow onPress={handleSecuritySettings} />
-                            </Box.Content>
-                        </Box.Clickable>
-                        <Box.Separator />
-                        <Box.Clickable onPress={handleNotificationSettings}>
-                            <Box.Content
-                                title="Notifications"
-                                iconColor={"#DD4503"}
-                                icon={faBell}
-                            >
-                                <>
-                                    <Box.Arrow onPress={handleNotificationSettings}/>
-                                </>
-                            </Box.Content>
+                        <Box.Clickable onPress={handleOptions}>
+                                <Box.Content 
+                                    title="Options"
+                                    iconColor={"#DD4503"}
+                                    icon={faUserCog}
+                                >
+                                    <Box.Arrow onPress={handleOptions} />
+                                </Box.Content>
                         </Box.Clickable>
                         <Box.Separator />
                         <Box.Clickable onPress={handleContactsSettings}>
-                            <Box.Content
-                                iconColor={"#34E600"}
-                                icon={faPhone}
-                                title="Contact">
-                                <Box.Arrow onPress={handleContactsSettings} />
-                            </Box.Content>
-                        </Box.Clickable>
-                        <Box.Separator />
-                        <Box.Clickable onPress={handlePrivacySettings}>
-                            <Box.Content 
-                                title="Privacy Policy"
-                                iconColor={"#E66C00"}
-                                icon={faShieldAlt}
-                            >
-                                <Box.Arrow onPress={handlePrivacySettings} />
-                            </Box.Content>
-                        </Box.Clickable>
+                        <Box.Content
+                            iconColor={"#34E600"}
+                            icon={faPhone}
+                            title="Contact">
+                            <Box.Arrow onPress={handleContactsSettings} />
+                        </Box.Content>
+                    </Box.Clickable>
+                    <Box.Separator />
+                    <Box.Clickable onPress={handlePrivacySettings}>
+                        <Box.Content 
+                            title="Privacy Policy"
+                            iconColor={"#E66C00"}
+                            icon={faShieldAlt}
+                        >
+                            <Box.Arrow onPress={handlePrivacySettings} />
+                        </Box.Content>
+                    </Box.Clickable>
                     </Box>
                     <BrandButton 
                         style={styles.logOut}
@@ -204,8 +188,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     logOut: {
-        marginTop: 15,
-        marginBottom: 125,
+        marginTop: 'auto',
     },
     account: {
         display: "flex",
@@ -224,7 +207,6 @@ const styles = StyleSheet.create({
     scrollView: {
         width: width,
         height: height,
-        display: "flex",
     },
     userSection: {
         display: "flex",

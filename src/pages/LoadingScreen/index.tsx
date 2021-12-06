@@ -1,4 +1,4 @@
-import { faBook, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // import NetInfo from '@react-native-community/netinfo';
@@ -16,13 +16,14 @@ import { useTheme } from "../../hooks/useTheme";
 import { useDispatch, useSelector } from "react-redux";
 import { setAccessDenied, setLoginClient, setLoginError, setLogoutClient } from "../../store/actions/auth.actions";
 import { IRootReducer } from "../../store/reducers";
-import { getAccessToken, isAccessDenied, isLoading, isLoginError } from "../../store/selectors";
+import { getAccessToken, getUser, isAccessDenied, isLoading, isLoginError } from "../../store/selectors";
 import * as LocalAuthentication from "expo-local-authentication";
 import BrandButton from "../../components/BrandButton";
 import { TouchableOpacity } from "react-native";
-import { ISettings } from "../AccountScreen";
 import messaging from "@react-native-firebase/messaging";
 import FadeIn from "../../components/FadeIn";
+import { getSettings } from "../../store/selectors/settings.selectors";
+import { getUserId } from "../../store/selectors/user.selectors";
 
 const GradebookIcon = require("../../../assets/gradebook-logo.png");
 
@@ -35,9 +36,13 @@ type LoadingScreenProps = {
 const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     const dispatch = useDispatch();
     const state = useSelector((state:IRootReducer) => state);
+
     const isAccessToken = !!getAccessToken(state);
     const accessDenied = isAccessDenied(state);
     const loginError = isLoginError(state);
+    const settings = getSettings(state);
+    const userId = getUserId(state);
+
     const [ isBiometricsEnabled, setIsBiometricsEnabled ] = useState(false);
 
     const { theme, palette } = useTheme();
@@ -45,16 +50,17 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
 
     const handleLogOut = async () => {
         navigation.navigate("login");
-        dispatch(setLogoutClient());
+        dispatch(setLogoutClient({ userId }));
         await AsyncStorage.getAllKeys()
-            .then(keys => AsyncStorage.multiRemove(keys));
+             .then(keys => AsyncStorage.multiRemove(keys));
     };
 
+    const navigateToNavigator = useCallback(() => {
+       if (isAccessToken) navigation.navigate("navigator");
+    }, [ isAccessToken ]);
+
     const handleAuth = useCallback(async () => {
-        if (isAccessToken) {
-            navigation.navigate("navigator");
-            return;
-        }
+        if (isAccessToken) return; 
 
         if (accessDenied) {
             navigation.navigate("login");
@@ -71,9 +77,6 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
         }
 
         let token = null;
-
-        const cachedSettings = await AsyncStorage.getItem("@settings");
-        const settings:ISettings | null = cachedSettings ? JSON.parse(cachedSettings) : null;
 
         if (settings) {
             const biometricsEnabled = settings.biometricsEnabled;
@@ -117,7 +120,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
             setIsBiometricsEnabled(false);
             navigation.navigate("login");
         }
-    }, [ isAccessToken, accessDenied, loginError ]);
+    }, [ isAccessToken, accessDenied, loginError, settings ]);
 
     const [ visible, setVisible ] = useState(false);
 
@@ -128,6 +131,10 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     useEffect(() => {
         handleAuth();
     }, [ handleAuth ]);
+
+    useEffect(() => {
+        navigateToNavigator()
+    }, [ navigateToNavigator ]);
 
     return (
         <SafeAreaView style={[ styles.container, {  backgroundColor: theme.background }]}>

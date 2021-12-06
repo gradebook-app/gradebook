@@ -16,11 +16,12 @@ type AlertProps = {
     description: string,
     buttons?: IAlertButton[],
     visible: boolean,
+    delay?: number,
 };
 
 const { width, height } = Dimensions.get('screen');
 
-const Alert : React.FC<AlertProps> = ({ title, description, buttons, visible }) => {
+const Alert : React.FC<AlertProps> = ({ title, description, buttons, visible, delay = 0 }) => {
     const { theme } = useTheme();
 
     const [ isComponentMounted, setIsComponentMounted ] = useState(false);
@@ -33,7 +34,7 @@ const Alert : React.FC<AlertProps> = ({ title, description, buttons, visible }) 
     return (
         <View pointerEvents={isComponentMounted && visible ? 'auto' : 'none'} style={styles.container}>
             <Blocker block={isComponentMounted && visible} />
-            <FadeIn delay={0.5} show={visible && isComponentMounted} style={[ styles.alert, { backgroundColor: theme.background }]}>
+            <FadeIn delay={delay} show={visible && isComponentMounted} style={[ styles.alert, { backgroundColor: theme.background }]}>
                 <>
                     <Text style={[ styles.header, { color: theme.text }]}>{ title }</Text>
                     <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 200,}}>

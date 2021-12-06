@@ -10,9 +10,9 @@ export const setLoginClient = ({ userId, pass, schoolDistrict, notificationToken
     }
 });
 
-export const setLogoutClient = () : ILogoutClient => ({
+export const setLogoutClient = (payload: { userId: string }) : ILogoutClient => ({
     type: EAuthActions.LOGOUT_CLIENT,
-    payload: null,
+    payload,
 });
 
 export const setAccessDenied= (denied:boolean) : ISetAccessDenied => ({
