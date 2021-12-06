@@ -60,8 +60,6 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
         return url; 
     }, [ user, account ]);
 
-    console.log(user);
-
     const avatarCookie = useMemo(() => {
         try {
             const tokenData:any = jwt_decode(accessToken || "");

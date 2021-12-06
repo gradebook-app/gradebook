@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     },
     courseViewContainer: {
         shadowColor: "rgba(0, 0, 0, 0.25)",
-        shadowOpacity: 0.25,
+        shadowOpacity: 0.35,
         shadowRadius: 5,
         shadowOffset: { width: 0, height: 0},
         marginVertical: 5,
