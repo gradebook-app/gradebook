@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { SvgXml } from "react-native-svg";
 
 type UnavailableSVGProps = {
@@ -12,7 +12,7 @@ const UnavailableSVG: React.FC<UnavailableSVGProps> = ({ width }) => {
 
     return (
         <SvgXml xml={xml} height={width} width={width}/>
-    )
-}
+    );
+};
 
 export default UnavailableSVG;

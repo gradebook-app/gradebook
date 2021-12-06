@@ -40,26 +40,26 @@ export interface ITheme {
 const dynamicBackgroundColor = DynamicColorIOS({
     light: "#fff",
     dark: "#000",
-  });
+});
   
 const dynamicSecondaryColor = DynamicColorIOS({
-light: "#fff",
-dark: "#111111",
+    light: "#fff",
+    dark: "#111111",
 });
 
 const dynamicTextColor = DynamicColorIOS({
-light: "#000",
-dark: "#fff",
+    light: "#000",
+    dark: "#fff",
 });
 
 const dynamicGreyColor = DynamicColorIOS({
-light: "rgba(0, 0, 0, 0.5)",
-dark: "rgba(255, 255, 255, 0.5)",
+    light: "rgba(0, 0, 0, 0.5)",
+    dark: "rgba(255, 255, 255, 0.5)",
 });
 
 const dynamicIconColor = DynamicColorIOS({
-light: "rgba(0, 0, 0, 0.15)",
-dark: "rgba(255, 255, 255, 0.35)",
+    light: "rgba(0, 0, 0, 0.15)",
+    dark: "rgba(255, 255, 255, 0.35)",
 });
 
 const themePalette = {
@@ -80,7 +80,7 @@ const gradeColors = {
     dPlus: "#9B6E00",
     d: "#9B6E00",
     f: "#CE0000"
-}
+};
 
 const categoryColors = {
     test: "#C500F0",
@@ -92,12 +92,12 @@ const categoryColors = {
     research: "#FF9104",
     essay: "#002774",
     default: "#FAC51E",
-}
+};
 
 const theme:ITheme = {
     palette: {
-        primary: '#a2d2ff',
-        secondary: '#43A4FF',
+        primary: "#a2d2ff",
+        secondary: "#43A4FF",
     }, 
     theme:themePalette,
     gradeColors,

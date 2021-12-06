@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react";
 import { GET_ACCOUNT } from "../constants/endpoints/user";
 import { IAccount } from "../store/interfaces/account.interface";
 import * as api from "../utils/api";
@@ -9,7 +9,7 @@ export const useAccount = () => {
     const [ account, setAccount ] = useState<IAccount>({});
 
     const setCache = async () => {
-        const cache = await AsyncStorage.getItem(`@account`);
+        const cache = await AsyncStorage.getItem("@account");
         if (cache) {
             const cachedDataParsed = JSON.parse(cache);
             if (
@@ -27,7 +27,7 @@ export const useAccount = () => {
         
         if (response && Object.keys(response).length) {
             setAccount(response);
-            AsyncStorage.setItem(`@account`, JSON.stringify(response));
+            AsyncStorage.setItem("@account", JSON.stringify(response));
         }
     }, []);
 
@@ -39,12 +39,12 @@ export const useAccount = () => {
     useEffect(() => {
         let mounted = true; 
         getAccount().finally(() => {
-            if (mounted) setLoading(false)
+            if (mounted) setLoading(false);
         });
         return () => {
             mounted = false; 
         };
     }, [ getAccount ]);
 
-    return { reload, loading, account }
-}
+    return { reload, loading, account };
+};

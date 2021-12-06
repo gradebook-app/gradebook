@@ -10,22 +10,22 @@ export interface IUserReducer {
 const initialState = {
     accessToken: null,
     notificationToken: null,
-}
+};
 
 const userReducer = (state:IUserReducer=initialState, action:any) => {
     switch(action.type) {
-        case EUserActions.SET_USER: {
-            return { ...state, user: action.payload }
-        }
-
-        case EUserActions.SET_NOTIFICATION_TOKEN: {
-            return { ...state, notificationToken: action.payload }
-        }
-
-        default: {
-            return state; 
-        }
+    case EUserActions.SET_USER: {
+        return { ...state, user: action.payload };
     }
-}
+
+    case EUserActions.SET_NOTIFICATION_TOKEN: {
+        return { ...state, notificationToken: action.payload };
+    }
+
+    default: {
+        return state; 
+    }
+    }
+};
 
 export { userReducer };

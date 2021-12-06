@@ -3,9 +3,9 @@ import {
     applyMiddleware, 
 } from "redux";
 
-import createSagaMiddleware from 'redux-saga';
+import createSagaMiddleware from "redux-saga";
 import rootSaga from "./saga";
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { composeWithDevTools } from "redux-devtools-extension";
 import { reducers } from "./reducers";
 
 

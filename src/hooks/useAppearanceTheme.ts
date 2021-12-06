@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react";
 import { Appearance } from "react-native";
 
 
 export const useAppearanceTheme = () => {
-    const [ isDark, setIsDark ] = useState<boolean>(Appearance.getColorScheme() === 'dark');
+    const [ isDark, setIsDark ] = useState<boolean>(Appearance.getColorScheme() === "dark");
 
     const listener = (_:any) => {
-        setIsDark(Appearance.getColorScheme() === 'dark');
+        setIsDark(Appearance.getColorScheme() === "dark");
     };
 
     useEffect(() => {
@@ -15,4 +15,4 @@ export const useAppearanceTheme = () => {
     }, []);
 
     return { isDark };
-}
+};

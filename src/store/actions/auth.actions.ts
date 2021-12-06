@@ -8,22 +8,22 @@ export const setLoginClient = ({ userId, pass, schoolDistrict, notificationToken
         schoolDistrict,
         notificationToken
     }
-})
+});
 
 export const setLogoutClient = () : ILogoutClient => ({
     type: EAuthActions.LOGOUT_CLIENT,
     payload: null,
-})
+});
 
 export const setAccessDenied= (denied:boolean) : ISetAccessDenied => ({
     type: EAuthActions.SET_ACCESS_DENIED,
     payload: denied,
-})
+});
 
 export const setSetAccessToken = (accessToken: string | null) : ISetAccessToken => ({
     type: EAuthActions.SET_ACCESS_TOKEN,
     payload: accessToken,
-})
+});
 
 export const setLoginError = (error:boolean) : ISetLoginError => ({
     type: EAuthActions.LOGIN_ERROR,

@@ -230,5 +230,7 @@
 	<string>Automatic</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>We Track you to provide personalized Ads.</string>
 </dict>
 </plist>

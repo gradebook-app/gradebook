@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React, { useCallback, useEffect } from 'react';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React, { useCallback, useEffect } from "react";
 import GradesScreen from "../GradesScreen";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBook, faCalendarAlt, faUser } from "@fortawesome/free-solid-svg-icons";
@@ -14,7 +14,7 @@ import { getUser } from "../../store/selectors";
 import { DynamicColorIOS } from "react-native";
 import messaging from "@react-native-firebase/messaging";
 import ScheduleScreen from "../ScheduleScreen";
-import * as Haptics from 'expo-haptics';
+import * as Haptics from "expo-haptics";
 
 type TabIconProps = {
     focused: boolean,
@@ -35,8 +35,8 @@ const TabIcon : React.FC<TabIconProps> = ({ focused, iconSize, icon, ...props })
             icon={icon} 
             { ...props } 
         />
-    )
-}
+    );
+};
 
 type INavigatorScreenProps = {
     navigation: any,
@@ -69,12 +69,12 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
             if (!token || storedToken === token) return;
             dispatch(setNotificationToken(token));
         } catch (error) {}
-    }
+    };
 
     const getToken = async () => {
         const token = await messaging().getToken();
         return token; 
-    }
+    };
 
     const handleNotificationUpdate = useCallback(async () => {
         try {
@@ -87,8 +87,8 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
             } else {
                 getPermission();
             }
-        } catch(e) { return };
-    }, [ user?.notificationToken ])
+        } catch(e) { return; }
+    }, [ user?.notificationToken ]);
 
     useEffect(() => {
         const subscription = messaging().onTokenRefresh(handleNotificationUpdate);
@@ -115,18 +115,18 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused }) => {
                     switch(route.name) {
-                        case "Grades": {
-                            return <TabIcon icon={faBook} focused={focused} />
-                        }
-                        case "Schedule": {
-                            return <TabIcon icon={faCalendarAlt} focused={focused} />
-                        }
-                        case "Account": {
-                            return <TabIcon icon={faUser} focused={focused} />
-                        }
-                        default: {
-                            return; 
-                        }
+                    case "Grades": {
+                        return <TabIcon icon={faBook} focused={focused} />;
+                    }
+                    case "Schedule": {
+                        return <TabIcon icon={faCalendarAlt} focused={focused} />;
+                    }
+                    case "Account": {
+                        return <TabIcon icon={faUser} focused={focused} />;
+                    }
+                    default: {
+                        return; 
+                    }
                     }
                 },
                 tabBarStyle: {
@@ -134,12 +134,12 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                     borderTopColor: separatorBarColor,
                 },
                 headerShown: false,
-                tabBarLabel: '',
+                tabBarLabel: "",
                 tabBarIconStyle: {
                     marginTop: 15,
                 },
-                })}
-            >
+            })}
+        >
             <Tabs.Screen 
                 name="Grades" 
                 children={() => <GradesScreen navigation={navigation} { ...props } />}
@@ -148,13 +148,13 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 name="Schedule" 
                 children={() => <ScheduleScreen navigation={navigation} { ...props } />}
             />
-             <Tabs.Screen 
+            <Tabs.Screen 
                 name="Account" 
                 children={() => <AccountScreen navigation={navigation} { ...props } />}
             />
         </Tabs.Navigator>
-    )
-}  
+    );
+};  
 
 
 

@@ -1,27 +1,27 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View, Text, Image, RefreshControl } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useAssigments } from '../../hooks/useAssignments';
-import Assignment from './components/Assignment';
-import GradedAssignment from './components/GradedAssignment';
-import UngradedAssignment from './components/UngradedAssignment';
-import { LineChart, Grid } from 'react-native-svg-charts'
-import GradeChart from '../../components/GradeChart';
-import { ICourse } from '../../store/interfaces/course.interface';
-import { useGradeColor } from '../../hooks/useGradeColor';
-import GradeGraphSlider from './components/GradeGraphSlider';
-import LoadingBox from '../../components/LoadingBox';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Dimensions, SafeAreaView, StyleSheet, View, Text, Image, RefreshControl } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { useAssigments } from "../../hooks/useAssignments";
+import Assignment from "./components/Assignment";
+import GradedAssignment from "./components/GradedAssignment";
+import UngradedAssignment from "./components/UngradedAssignment";
+import { LineChart, Grid } from "react-native-svg-charts";
+import GradeChart from "../../components/GradeChart";
+import { ICourse } from "../../store/interfaces/course.interface";
+import { useGradeColor } from "../../hooks/useGradeColor";
+import GradeGraphSlider from "./components/GradeGraphSlider";
+import LoadingBox from "../../components/LoadingBox";
 import BottomSheet from "reanimated-bottom-sheet";
-import { IAssignment } from '../../store/interfaces/assignment.interface';
-import Blocker from '../../components/Blocker';
-import AssignmentSheet from './components/AssignmentSheet';
-import { useTheme } from '../../hooks/useTheme';
+import { IAssignment } from "../../store/interfaces/assignment.interface";
+import Blocker from "../../components/Blocker";
+import AssignmentSheet from "./components/AssignmentSheet";
+import { useTheme } from "../../hooks/useTheme";
 import messaging from "@react-native-firebase/messaging";
-import { useAppearanceTheme } from '../../hooks/useAppearanceTheme';
-import NoDataSVG from '../../SVG/NoDataSVG';
+import { useAppearanceTheme } from "../../hooks/useAppearanceTheme";
+import NoDataSVG from "../../SVG/NoDataSVG";
 const NoDataPNG = require("../../../assets/no-data.png");
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 type AssignmentsScreenProps = {
     navigation: any,
@@ -69,7 +69,6 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
     const assignmentSheet = useRef<any | null>(null);
 
     const [ selectedAssignment, setSelectedAssignment ] = useState<IAssignment | null>(null); 
-
     const handleOpenSheet = useCallback((assignment:IAssignment) => {
         setSelectedAssignment(assignment);
         assignmentSheet.current.snapTo(0);
@@ -83,12 +82,12 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
     const renderAssignmentSheet = () => {
         return (
             <AssignmentSheet assignment={selectedAssignment} />
-        )
+        );
     };
 
     useEffect(() => {
         const unsubscribe = messaging().onMessage(_ => {
-            reload()
+            reload();
         });
         return unsubscribe;
     }, []);
@@ -104,21 +103,21 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
             <Blocker block={!!selectedAssignment} onPress={handleCloseSheet} />
             <LoadingBox loading={loading && !assignments.length} />
             <View style={ styles.classHeader }>
-                    <View>
-                        <Text 
-                            numberOfLines={1}
-                            style={[ styles.className, { color: theme.text } ]}>
-                                { course?.name || "" }
-                        </Text>
-                        <Text style={[ styles.teacher, { color: theme.grey} ]}>{ course?.teacher || "" }</Text>
-                    </View>
-                    <View>
-                        <Text style={[ styles.grade, { color: gradeColor }]}>
-                            { course.grade.percentage ?`${course.grade.percentage}% ` : "N/A" }
-                            { `${course.grade.letter || ""}` }
-                        </Text>
-                    </View>
+                <View>
+                    <Text 
+                        numberOfLines={1}
+                        style={[ styles.className, { color: theme.text } ]}>
+                        { course?.name || "" }
+                    </Text>
+                    <Text style={[ styles.teacher, { color: theme.grey} ]}>{ course?.teacher || "" }</Text>
                 </View>
+                <View>
+                    <Text style={[ styles.grade, { color: gradeColor }]}>
+                        { course.grade.percentage ?`${course.grade.percentage}% ` : "N/A" }
+                        { `${course.grade.letter || ""}` }
+                    </Text>
+                </View>
+            </View>
             <ScrollView 
                 refreshControl={
                     <RefreshControl
@@ -136,12 +135,12 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                                 ungraded.map((assignment, index) => {
                                     return (
                                         <Assignment 
-                                                onPress={handleOpenSheet} 
-                                                assignment={assignment} 
-                                                key={`${assignment.name}-${assignment.date}-${index}`}>
+                                            onPress={handleOpenSheet} 
+                                            assignment={assignment} 
+                                            key={`${assignment.name}-${assignment.date}-${index}`}>
                                             <UngradedAssignment assignment={assignment}/>
                                         </Assignment>
-                                    )
+                                    );
                                 })
                             }
                         </ScrollView>
@@ -152,18 +151,18 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                         <View style={[ styles.assignments, {  backgroundColor: theme.secondary }]}>
                             {/* <Text style={ styles.header }>Graded Assignments</Text> */}
                             <ScrollView contentContainerStyle={[ styles.assignmentsContainer, styles.graded]}>
-                            {
-                                graded.map((assignment, index) => {
-                                    return (
-                                        <Assignment 
+                                {
+                                    graded.map((assignment, index) => {
+                                        return (
+                                            <Assignment 
                                                 onPress={handleOpenSheet}
                                                 assignment={assignment} 
                                                 key={`${assignment.name}-${assignment.date}-${index}`}>
-                                            <GradedAssignment assignment={assignment}/>
-                                        </Assignment>
-                                    )
-                                })
-                            }
+                                                <GradedAssignment assignment={assignment}/>
+                                            </Assignment>
+                                        );
+                                    })
+                                }
                             </ScrollView>
                         </View>
                     ) : <></>
@@ -190,26 +189,26 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                 onCloseEnd={handleCloseSheet}
             />
         </SafeAreaView>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         width: width,
         height: height,
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         padding: 0,
     },
     classHeader: {
         width: width * 0.9,
         marginVertical: 15,
-        display: 'flex',
-        justifyContent: 'space-between',
-        flexDirection: 'row',
+        display: "flex",
+        justifyContent: "space-between",
+        flexDirection: "row",
     },
     className: {
-        fontWeight: '700',
+        fontWeight: "700",
         fontSize: 25,
         maxWidth: width * 0.7,
     },
@@ -219,8 +218,8 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         width: width,
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         paddingBottom: 100,
     },
     assignments: {
@@ -239,13 +238,13 @@ const styles = StyleSheet.create({
     },
     header: {
         fontSize: 17.5,
-        fontWeight: '500',
+        fontWeight: "500",
         marginVertical: 10,
         marginHorizontal: 10,
     },
     assignmentsContainer: {
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         overflow: "hidden",
         minHeight: 260,
     },
@@ -254,13 +253,13 @@ const styles = StyleSheet.create({
     },
     grade: {
         fontSize: 17.5,
-        fontWeight: '500',
+        fontWeight: "500",
         marginTop: 5,
     },
     noDataContainer: {
         width: width * 0.9,
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         marginTop: 50,
     },
     noDataImage: {
@@ -274,4 +273,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default React.memo(AssignmentsScreen)
+export default React.memo(AssignmentsScreen);

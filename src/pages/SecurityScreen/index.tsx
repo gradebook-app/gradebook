@@ -1,12 +1,12 @@
-import { faFingerprint, faLock } from '@fortawesome/free-solid-svg-icons';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useTheme } from '../../hooks/useTheme';
+import { faFingerprint, faLock } from "@fortawesome/free-solid-svg-icons";
+import React, { useCallback, useEffect, useState } from "react";
+import { Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useTheme } from "../../hooks/useTheme";
 import Box from "../../components/Box";
-import { ISettings } from '../AccountScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ISettings } from "../AccountScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 type SecurityScreenProps = {
     navigation: any,
@@ -18,7 +18,7 @@ const SecurityScreen : React.FC<SecurityScreenProps> = ({ navigation }) => {
     useEffect(() => {
         navigation?.setOptions({ headerStyle: { 
             backgroundColor: theme.background,
-        }})
+        }});
     }, []);
     
     const [ cacheInjected, setCacheInjected ] = useState(false);
@@ -54,7 +54,7 @@ const SecurityScreen : React.FC<SecurityScreenProps> = ({ navigation }) => {
     };
 
     const handleSavePassword = async (e:boolean) => {
-        handleSettingsChange('savePassword')(e);
+        handleSettingsChange("savePassword")(e);
     };
 
     return (
@@ -64,13 +64,13 @@ const SecurityScreen : React.FC<SecurityScreenProps> = ({ navigation }) => {
                     <Text style={[ styles.header, { color: theme.text }]}>Security</Text>
                 </View>
                 <Box.Space />
-                <Box style={{ flexDirection: 'column' }}>
+                <Box style={{ flexDirection: "column" }}>
                     <Box.Content 
                         iconColor={"#A70000"}
                         icon={faFingerprint}
                         title={"Enable Fingerprint or Face ID"}
                     >
-                        <Box.Button active={settings.biometricsEnabled} handleChange={handleSettingsChange('biometricsEnabled')} />
+                        <Box.Button active={settings.biometricsEnabled} handleChange={handleSettingsChange("biometricsEnabled")} />
                     </Box.Content>
                     <Box.Separator />
                     <Box.Content
@@ -83,8 +83,8 @@ const SecurityScreen : React.FC<SecurityScreenProps> = ({ navigation }) => {
                 </Box>
             </ScrollView>
         </SafeAreaView>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -98,12 +98,12 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
     },
     header: {
-        fontWeight: '700',
+        fontWeight: "700",
         fontSize: 30,
     },
     scrollview: {
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
     },
     captionContainer: {
         width: width,

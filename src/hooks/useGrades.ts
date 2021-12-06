@@ -44,22 +44,22 @@ export const useGrades = ({ markingPeriod } : { markingPeriod: string }) => {
         const { courses = [], markingPeriods = [], currentMarkingPeriod = ""} = response;
 
         if (courses.length) {
-            const responseData = { courses, markingPeriods, currentMarkingPeriod }
+            const responseData = { courses, markingPeriods, currentMarkingPeriod };
             setData(responseData);
-             AsyncStorage.setItem(`@courses-${currentMarkingPeriod}`, JSON.stringify(responseData));
-        };
-    }, [ markingPeriod ])
+            AsyncStorage.setItem(`@courses-${currentMarkingPeriod}`, JSON.stringify(responseData));
+        }
+    }, [ markingPeriod ]);
 
     const reload = () => {
-        setLoading(true)
+        setLoading(true);
         getGrades().finally(() => {
             setLoading(false);
         });     
-    }
+    };
 
     useEffect(() => {
-        getGrades()
+        getGrades();
     }, [ getGrades ]);
 
-    return { ...data, loading, reload }
-}
+    return { ...data, loading, reload };
+};

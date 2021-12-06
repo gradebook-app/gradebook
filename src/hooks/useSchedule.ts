@@ -37,21 +37,21 @@ export const useSchedule = ({ dateSelected }:IUseSchedule) => {
             setSchedule(response);
             // AsyncStorage.setItem(`@assignments-${courseId}-${sectionId}-${markingPeriod}`, JSON.stringify({ assignments: data }));
         } else setSchedule({});
-    }, [ dateParameter ])
+    }, [ dateParameter ]);
 
     const reload = () => {
-        setLoading(true)
+        setLoading(true);
         getSchedule().finally(() => {
             setLoading(false);
         });     
-    }
+    };
 
     useEffect(() => {
         setFetching(true);
         getSchedule().finally(() => {
             setFetching(false);
-        })
+        });
     }, [ getSchedule ]);
 
-    return { schedule, reload, loading, fetching }
-}
+    return { schedule, reload, loading, fetching };
+};

@@ -1,4 +1,4 @@
-import * as Notifications from "expo-notifications"
+import * as Notifications from "expo-notifications";
 import { Alert } from "react-native";
 
 export const hasNotificationPermission = async () => {
@@ -19,5 +19,5 @@ export const hasNotificationPermission = async () => {
                 return false; 
             }
         }
-    } catch (e) { return false }
-}
+    } catch (e) { return false; }
+};

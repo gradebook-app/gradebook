@@ -6,7 +6,7 @@ const rootSaga = function*() {
     yield all([
         userSaga(),
         authSaga(),
-    ])
-}
+    ]);
+};
 
 export default rootSaga; 

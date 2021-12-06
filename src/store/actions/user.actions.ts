@@ -8,4 +8,4 @@ export const setUser = (payload:any) : ISetUser => ({
 export const setNotificationToken = (payload:string | null) : ISetNotificationToken => ({
     type: EUserActions.SET_NOTIFICATION_TOKEN,
     payload,
-})
+});
