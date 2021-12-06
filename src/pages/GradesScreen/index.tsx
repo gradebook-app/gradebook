@@ -26,7 +26,6 @@ import { useGPA } from "../../hooks/useGPA";
 import { usePastGPA } from "../../hooks/usePastGPA";
 import messaging from "@react-native-firebase/messaging";
 import BannerAd from "../../components/BannerAd";
-import Alert from "../../components/Alert";
 
 const { width, height } = Dimensions.get("window");
 
@@ -137,12 +136,6 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         selectionSheet.current.snapTo(0);
     };
 
-    const [ showAlert, setShowAlert ] = useState(true);
-
-    const handleDismissAlert = () => {
-        setShowAlert(false);
-    };
-
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <ScrollView 
@@ -177,16 +170,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                 renderContent={renderMPSelector}
                 onCloseEnd={handleSelectorBack}
             />
-            <Alert 
-                visible={showAlert}
-                title="🥳 Version 1.2"
-                description="Version 1.2 introduces many improvements to the UX and bug fixes.
-                            A new feature included in this update is viewing future assignment points.
-                            Additionally, Version 1.2 introduces Ads to the application. In order to provide students with
-                            our services we display Ads by default. If you wish to reduce Ads and not support the application you
-                            can disable them in settings."
-                buttons={[{ title: "Continue", onPress: handleDismissAlert}]}
-            />
+           
         </SafeAreaView>
     );
 };

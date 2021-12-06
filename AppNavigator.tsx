@@ -15,6 +15,8 @@ import SecurityScreen from "./src/pages/SecurityScreen";
 import PrivacyPolicyScreen from "./src/pages/PrivacyPolicyScreen";
 import notifee from "@notifee/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import OptionsScreen from "./src/pages/OptionsScreen";
+import AdsSettingsScreen from "./src/pages/AdsSettingsScreen";
 
 const Stack = createStackNavigator();
 
@@ -99,7 +101,7 @@ const AppNavigator = () => {
                         headerShown: true, 
                         headerTitle: "", 
                         gestureEnabled: true,
-                        headerBackTitle: "Account",
+                        headerBackTitle: "Options",
                     }}
                 />
                 <Stack.Screen
@@ -119,7 +121,7 @@ const AppNavigator = () => {
                         headerShown: true, 
                         headerTitle: "", 
                         gestureEnabled: true,
-                        headerBackTitle: "Account",
+                        headerBackTitle: "Options",
                     }}
                 />
                 <Stack.Screen
@@ -130,6 +132,26 @@ const AppNavigator = () => {
                         headerTitle: "", 
                         gestureEnabled: true,
                         headerBackTitle: "Account",
+                    }}
+                />
+                 <Stack.Screen
+                    name="options"
+                    component={OptionsScreen}
+                    options={{ 
+                        headerShown: true, 
+                        headerTitle: "", 
+                        gestureEnabled: true,
+                        headerBackTitle: "Account",
+                    }}
+                />
+                <Stack.Screen 
+                    name="ads-settings"
+                    component={AdsSettingsScreen}
+                    options={{ 
+                        headerShown: true, 
+                        headerTitle: "", 
+                        gestureEnabled: true,
+                        headerBackTitle: "Options",
                     }}
                 />
             </Stack.Navigator>

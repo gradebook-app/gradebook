@@ -105,8 +105,11 @@ export const post = async <Body, >(endpoint:string, body?:any, controller?:Abort
         fetch(url, defaultOptions)
             .then(res => {
                 if (res.status === 401) throw "expired";
-                const initialResponse = res.json();
-                resolve(initialResponse);
+                let initialResponse = null; 
+
+                try { initialResponse = res.json(); }
+                catch (e) { initialResponse = null } 
+                finally { resolve(initialResponse); }
             })
             .catch(async (e:string) => {
                 if (e === "expired") {

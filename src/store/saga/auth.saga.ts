@@ -1,12 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { all, put, takeLatest } from "@redux-saga/core/effects";
 import { LOGIN_CLIENT, LOGOUT_CLIENT } from "../../constants/endpoints/auth";
-import { ISettings } from "../../pages/AccountScreen";
 import * as api from "../../utils/api";
 import { setLoading } from "../actions";
-import { setAccessDenied, setLoginError, setSetAccessToken } from "../actions/auth.actions";
+import { setAccessDenied, setSetAccessToken } from "../actions/auth.actions";
 import { setUser } from "../actions/user.actions";
-import { EAuthActions, ILoginClient } from "../constants/auth.constants";
+import { EAuthActions, ILoginClient, ILogoutClient } from "../constants/auth.constants";
 
 function* loginClient({ payload } : ILoginClient) : Generator<any> {
     yield put(setLoading(true));
@@ -19,7 +18,7 @@ function* loginClient({ payload } : ILoginClient) : Generator<any> {
         yield put(setSetAccessToken(response.accessToken));
         const settings:any = yield AsyncStorage.getItem("@settings");
         if (settings) {
-            const settingsParsed:ISettings = JSON.parse(settings); 
+            const settingsParsed = JSON.parse(settings); 
             const savePassword = settingsParsed.savePassword; 
             if (savePassword) yield AsyncStorage.setItem("@credentials", JSON.stringify(payload));
         } else {
@@ -35,8 +34,8 @@ function* loginClient({ payload } : ILoginClient) : Generator<any> {
     yield put(setLoading(false));
 }
 
-function* logoutClient() : Generator<any> {
-    yield api.post(LOGOUT_CLIENT);
+function* logoutClient({ payload } : ILogoutClient) : Generator<any> {
+    yield api.post(LOGOUT_CLIENT, payload);
     yield put(setSetAccessToken(null));
 }
 
