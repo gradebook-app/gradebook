@@ -1,18 +1,18 @@
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faFileInvoice } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { faFileInvoice } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { 
     Dimensions, 
     StyleSheet, 
     View, 
     Animated,
     Easing,
-} from 'react-native';
-import { useTheme } from '../../hooks/useTheme';
-import { loadingConfig } from './constant';
+} from "react-native";
+import { useTheme } from "../../hooks/useTheme";
+import { loadingConfig } from "./constant";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 type SlideProps = {
     icon: IconProp,
@@ -30,8 +30,8 @@ const Slide : React.FC<SlideProps> = ({ icon, slideTranslate }) => {
                 icon={icon} 
             />
         </Animated.View>
-    )
-}
+    );
+};
 
 
 type LoadingScreenProps = {
@@ -74,7 +74,7 @@ const LoadingBox: React.FC<LoadingScreenProps> = ({ loading = false }) => {
                 toValue: loading ? 1 : 0,
                 useNativeDriver: true,
             }
-        ).start()
+        ).start();
     }, [ loading ]);
 
     useEffect(handleLoading, [ handleLoading ]);
@@ -94,7 +94,7 @@ const LoadingBox: React.FC<LoadingScreenProps> = ({ loading = false }) => {
 
     return (
         <Animated.View 
-            pointerEvents={loading ? 'box-only' : 'none' }
+            pointerEvents={loading ? "box-only" : "none" }
             style={[ styles.container, { opacity: containerOpacity }]}>
             <View style={[styles.loadingContainer, { backgroundColor: theme.secondary }]}>
                 <Animated.View
@@ -104,51 +104,51 @@ const LoadingBox: React.FC<LoadingScreenProps> = ({ loading = false }) => {
                         }]
                     }]}>
                     { currentSlides.map((_, index ) => {
-                    return (
-                        <Slide 
-                            key={index} 
-                            icon={currentSlides[index]}
-                            slideTranslate={slideTranslate} 
-                        />
-                        )
+                        return (
+                            <Slide 
+                                key={index} 
+                                icon={currentSlides[index]}
+                                slideTranslate={slideTranslate} 
+                            />
+                        );
                     })}
                 </Animated.View>
             </View>
         </Animated.View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "rgba(0, 0, 0, 0.15)",
         width: width,
         height: height,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "absolute",
         zIndex: 1,
     },
     loadingContainer: {
-        position: 'absolute',
+        position: "absolute",
         zIndex: 1,
         width: width * 0.35,
         height: width * 0.35,
         minWidth: 100,
         minHeight: 100,
-        backgroundColor: '#fff',
+        backgroundColor: "#fff",
         maxWidth: 200,
         borderRadius: 10,
-        shadowColor: '#000',
+        shadowColor: "#000",
         shadowRadius: 5,
         shadowOpacity: 0.075,
         shadowOffset: { width: 0, height: 0 },
-        overflow: 'hidden',
+        overflow: "hidden",
     },
     track: {
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'row',
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "row",
     },
     doc: {
         width: width * 0.35,
@@ -157,9 +157,9 @@ const styles = StyleSheet.create({
         minHeight: 100,
         maxHeight: 200,
         maxWidth: 200,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
     }
 });
 

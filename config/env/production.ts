@@ -1,4 +1,4 @@
-export {}
+export {};
 
 const config = {
     api: {

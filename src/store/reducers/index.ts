@@ -15,24 +15,24 @@ interface IDefaultReducer {
 
 const initialState = {
     loading: false,
-}
+};
 
 const defaultReducer = (state:IDefaultReducer=initialState, action:any) => {
     switch(action.type) {
-        case EDefaultActions.SET_LOADING: {
-            return { ...state, loading: action.payload }
-        }
-
-        default: {
-            return state; 
-        }
+    case EDefaultActions.SET_LOADING: {
+        return { ...state, loading: action.payload };
     }
-}
+
+    default: {
+        return state; 
+    }
+    }
+};
 
 const reducers = combineReducers({
     auth: authReducer,
     user: userReducer,
     default: defaultReducer,
-  })
+});
 
 export { reducers };

@@ -53,7 +53,7 @@ const ScheduleCourse : React.FC<IScheduleCourseProps> = ({ course, fetching }) =
     }, [ course ]);
 
     const room = useMemo(() => {
-        return course.room.replace(/(Room|room)/, '');
+        return course.room.replace(/(Room|room)/, "");
     }, []);
 
     // useEffect(() => {
@@ -69,7 +69,7 @@ const ScheduleCourse : React.FC<IScheduleCourseProps> = ({ course, fetching }) =
     // });
 
     const period = useMemo(() => {
-        return `${course?.period?.trim()}`
+        return `${course?.period?.trim()}`;
     }, [ course ]); 
 
     return (
@@ -85,7 +85,7 @@ const ScheduleCourse : React.FC<IScheduleCourseProps> = ({ course, fetching }) =
                 </Animated.View>
             </TouchableOpacity>
         </Animated.View>
-    )
+    );
 };
 
 type IScheduleTableProps = {
@@ -93,13 +93,13 @@ type IScheduleTableProps = {
     fetching: boolean,
 }
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const ScheduleTable : React.FC<IScheduleTableProps> = ({ schedule, fetching }) => {
     const { theme } = useTheme();
 
     const noSchool = useMemo(() => {
-        const includesClosed = schedule?.header?.toLowerCase()?.includes('close');
+        const includesClosed = schedule?.header?.toLowerCase()?.includes("close");
         return includesClosed && !schedule?.courses?.length;
     }, [ schedule ]);
 
@@ -126,11 +126,11 @@ const ScheduleTable : React.FC<IScheduleTableProps> = ({ schedule, fetching }) =
             <ActivityIndicator style={styles.loading} animating={fetching} />
             <FadeIn show={!!schedule?.courses?.length}>
                 <>
-                {
-                    schedule?.courses?.map((course:IScheduleCourse, index) => (
-                        <ScheduleCourse fetching={fetching} key={index} course={course} />
-                    ))
-                }
+                    {
+                        schedule?.courses?.map((course:IScheduleCourse, index) => (
+                            <ScheduleCourse fetching={fetching} key={index} course={course} />
+                        ))
+                    }
                 </>
             </FadeIn>
             {
@@ -150,19 +150,19 @@ const ScheduleTable : React.FC<IScheduleTableProps> = ({ schedule, fetching }) =
                 )
             }
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         width: width - 30,
         borderRadius: 5,
         marginVertical: 15,
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
     },
     loading: {
-        position: 'absolute',
+        position: "absolute",
         zIndex: 1,
         top: 0,
         bottom: 0,
@@ -179,39 +179,39 @@ const styles = StyleSheet.create({
         width: width * 0.9,
         height: 75,
         padding: 15,
-        overflow: 'hidden',
+        overflow: "hidden",
         zIndex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
         paddingTop: 20,
     },
     timing: {
         marginVertical: 7.5,
     },
     room: {
-        textAlign: 'right',
+        textAlign: "right",
     },
     teacher: {
-        textAlign: 'right',
+        textAlign: "right",
         marginTop: 7.5,
         maxWidth: 200,
         flex: 1,
-        overflow: 'hidden',
+        overflow: "hidden",
     },
     noSchoolContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
     },
     noScheduleContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
     },
     courseSection: {
-        display: 'flex',
-        flexDirection: 'row',
+        display: "flex",
+        flexDirection: "row",
         justifyContent: "space-between",
     }
 });
