@@ -1,11 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { all, put, takeLatest } from "@redux-saga/core/effects";
+import { all, put, select, takeLatest } from "@redux-saga/core/effects";
 import { LOGIN_CLIENT, LOGOUT_CLIENT } from "../../constants/endpoints/auth";
 import * as api from "../../utils/api";
 import { setLoading } from "../actions";
 import { setAccessDenied, setSetAccessToken } from "../actions/auth.actions";
 import { setUser } from "../actions/user.actions";
 import { EAuthActions, ILoginClient, ILogoutClient } from "../constants/auth.constants";
+import { getSavePassword } from "../selectors/settings.selectors";
 
 function* loginClient({ payload } : ILoginClient) : Generator<any> {
     yield put(setLoading(true));
@@ -16,15 +17,8 @@ function* loginClient({ payload } : ILoginClient) : Generator<any> {
         const user = response?.user;
         yield put(setUser(user || {}));
         yield put(setSetAccessToken(response.accessToken));
-        const settings:any = yield AsyncStorage.getItem("@settings");
-        if (settings) {
-            const settingsParsed = JSON.parse(settings); 
-            const savePassword = settingsParsed.savePassword; 
-            if (savePassword) yield AsyncStorage.setItem("@credentials", JSON.stringify(payload));
-        } else {
-            yield AsyncStorage.setItem("@settings", JSON.stringify({ savePassword: true }));
-            yield AsyncStorage.setItem("@credentials", JSON.stringify(payload));
-        }
+        const savePassword = yield select(getSavePassword); 
+        if (savePassword) yield AsyncStorage.setItem("@credentials", JSON.stringify(payload));
     } else if (response && response?.access === false) {
         yield put(setAccessDenied(true));
         yield AsyncStorage.removeItem("@credentials");
@@ -35,7 +29,7 @@ function* loginClient({ payload } : ILoginClient) : Generator<any> {
 }
 
 function* logoutClient({ payload } : ILogoutClient) : Generator<any> {
-    yield api.post(LOGOUT_CLIENT, payload);
+    yield api.post(LOGOUT_CLIENT, payload).catch(_ => null);
     yield put(setSetAccessToken(null));
 }
 

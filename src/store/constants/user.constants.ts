@@ -1,6 +1,12 @@
 export enum EUserActions {
     SET_USER = "SET_USER",
-    SET_NOTIFICATION_TOKEN = "SET_NOTIFICATION_TOKEN"
+    SET_NOTIFICATION_TOKEN = "SET_NOTIFICATION_TOKEN",
+    SET_SHOWN_ALERT = "SET_SHOWN_ALERT",
+}
+
+export interface ISetShownAlert {
+    type: EUserActions.SET_SHOWN_ALERT,
+    payload: boolean,
 }
 
 export interface ISetUser {
