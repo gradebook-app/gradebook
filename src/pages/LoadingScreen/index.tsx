@@ -24,6 +24,7 @@ import messaging from "@react-native-firebase/messaging";
 import FadeIn from "../../components/FadeIn";
 import { getSettings } from "../../store/selectors/settings.selectors";
 import { getUserId } from "../../store/selectors/user.selectors";
+import { getEmail, getPass, getSchoolDistrict } from "../../store/selectors/auth.selectors";
 
 const GradebookIcon = require("../../../assets/gradebook-logo.png");
 
@@ -42,6 +43,9 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     const loginError = isLoginError(state);
     const settings = getSettings(state);
     const userId = getUserId(state);
+    const email = getEmail(state);
+    const pass = getPass(state);
+    const schoolDistrict = getSchoolDistrict(state);
 
     const [ isBiometricsEnabled, setIsBiometricsEnabled ] = useState(false);
 
@@ -68,7 +72,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
             return; 
         }
         
-        const credentials = await AsyncStorage.getItem("@credentials");
+        const credentials = email && schoolDistrict && pass; 
     
         if (loginError && credentials) {
             navigation.navigate("navigator");
@@ -113,14 +117,13 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
                 console.log(e);
             }
 
-
-            const data = JSON.parse(credentials);
-            dispatch(setLoginClient({ ...data, notificationToken: token }));
+            dispatch(setLoginClient({ 
+                notificationToken: token, userId:email, pass, schoolDistrict }));
         } else {
             setIsBiometricsEnabled(false);
             navigation.navigate("login");
         }
-    }, [ isAccessToken, accessDenied, loginError, settings ]);
+    }, [ isAccessToken, accessDenied, loginError, settings, email, pass, schoolDistrict ]);
 
     const [ visible, setVisible ] = useState(false);
 
