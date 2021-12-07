@@ -23,7 +23,6 @@ const authReducer = (state:IAuthReducer=initialState, action:any) => {
     case EAuthActions.LOGIN_ERROR: {
         return { ...state, loginError: action.payload };
     }  
-        
     default: {
         return state; 
     }

@@ -4,6 +4,7 @@ import { LOGIN_CLIENT, LOGOUT_CLIENT } from "../../constants/endpoints/auth";
 import * as api from "../../utils/api";
 import { setLoading } from "../actions";
 import { setAccessDenied, setSetAccessToken } from "../actions/auth.actions";
+import { setResetSettings } from "../actions/settings.actions";
 import { setUser } from "../actions/user.actions";
 import { EAuthActions, ILoginClient, ILogoutClient } from "../constants/auth.constants";
 import { getSavePassword } from "../selectors/settings.selectors";
@@ -29,6 +30,7 @@ function* loginClient({ payload } : ILoginClient) : Generator<any> {
 }
 
 function* logoutClient({ payload } : ILogoutClient) : Generator<any> {
+    yield put(setResetSettings());
     yield api.post(LOGOUT_CLIENT, payload).catch(_ => null);
     yield put(setSetAccessToken(null));
 }

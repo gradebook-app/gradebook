@@ -1,4 +1,4 @@
-import { ESettingsActions, ISetBiometricsEnabled, ISetLimitAds, ISetSavePassword } from "../constants/settings.interface";
+import { ESettingsActions, ISetBiometricsEnabled, ISetLimitAds, ISetResetSettings, ISetSavePassword } from "../constants/settings.interface";
 
 
 export const setBiometricsEnabled = (payload:boolean) : ISetBiometricsEnabled => ({
@@ -15,3 +15,8 @@ export const setSavePassword = (payload:boolean) : ISetSavePassword => ({
     type: ESettingsActions.SET_SAVE_PASSWORD,
     payload,
 })
+
+export const setResetSettings = () : ISetResetSettings => ({
+    type: ESettingsActions.SET_RESET_SETTINGS,
+    payload: null,
+});
