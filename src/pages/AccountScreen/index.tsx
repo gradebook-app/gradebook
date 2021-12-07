@@ -14,7 +14,6 @@ import { getAccessToken, getUser } from "../../store/selectors";
 import { genesisConfig } from "../../constants/genesis";
 import jwt_decode from "jwt-decode";
 import { getUserId } from "../../store/selectors/user.selectors";
-import { PURGE } from "redux-persist";
 
 type AccountScreenProps = {
     navigation: any,
@@ -34,12 +33,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
     const userId = getUserId(state);
 
     const handleLogOut = async () => {
-        dispatch({
-            type: PURGE,
-            key: "auth",
-            result: () => null
-        })
-        navigation.navigate("login")
+        navigation.navigate("login");
         dispatch(setLogoutClient({ userId }));
         await AsyncStorage.getAllKeys()
             .then(keys => AsyncStorage.multiRemove(keys));

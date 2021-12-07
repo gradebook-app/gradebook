@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import { EDefaultActions } from "../constants";
-import authReducer, { IAuthReducer } from "./auth.reducer";
+import { authReducer, IAuthReducer } from "./auth.reducer";
 import settingsReducer, { ISettingsReducer } from "./settings.reducer";
 import userReducer, { IUserReducer } from "./user.reducer";
 
