@@ -22,6 +22,9 @@ const initialState:ISettingsReducer = {
 
 const settingsReducer = (state:ISettingsReducer = initialState, action:IAction) : ISettingsReducer => {
     switch (action.type) {
+        case ESettingsActions.SET_RESET_SETTINGS: {
+            return { ...initialState };
+        }
         case ESettingsActions.SET_BIOMETRICS_ENABLED: {
             return { ...state, biometricsEnabled: action.payload }
         }

@@ -2,6 +2,12 @@ export enum ESettingsActions {
     SET_BIOMETRICS_ENABLED="SET_BIOMETRICS_ENABLED",
     SET_LIMIT_ADS = "SET_LIMIT_ADS",
     SET_SAVE_PASSWORD = "SET_SAVE_PASSWORD",
+    SET_RESET_SETTINGS = "SET_RESET_SETTINGS",
+}
+
+export interface ISetResetSettings {
+    type: ESettingsActions.SET_RESET_SETTINGS,
+    payload: null,
 }
 
 export interface ISetBiometricsEnabled {
