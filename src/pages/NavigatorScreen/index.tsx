@@ -7,7 +7,7 @@ import { faBook, faCalendarAlt, faUser } from "@fortawesome/free-solid-svg-icons
 import { useTheme } from "../../hooks/useTheme";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import AccountScreen from "../AccountScreen";
-import { setNotificationToken } from "../../store/actions/user.actions";
+import { setNotificationToken, setShownAlert } from "../../store/actions/user.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootReducer } from "../../store/reducers";
 import { getUser } from "../../store/selectors";
@@ -16,6 +16,7 @@ import messaging from "@react-native-firebase/messaging";
 import ScheduleScreen from "../ScheduleScreen";
 import * as Haptics from "expo-haptics";
 import Alert from "../../components/Alert";
+import { getShownAlert } from "../../store/selectors/user.selectors";
 
 type TabIconProps = {
     focused: boolean,
@@ -109,8 +110,11 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
 
     const [ showAlert, setShowAlert ] = useState(true);
 
+    const shownAlert = getShownAlert(state);
+
     const handleDismissAlert = () => {
         setShowAlert(false);
+        dispatch(setShownAlert(true));
     };
 
     return (
@@ -161,17 +165,19 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 children={() => <AccountScreen navigation={navigation} { ...props } />}
             />
         </Tabs.Navigator>
-            <Alert 
-            delay={showAlert ? 500 : 0}
-            visible={showAlert}
-            title="🥳 Version 1.2"
-            description="Version 1.2 introduces many improvements to the UX and bug fixes.
-                        A new feature included in this update is viewing future assignment points.
-                        Additionally, Version 1.2 introduces Ads to the application. In order to provide students with
-                        our services we display Ads by default. If you wish to reduce Ads and not support the application you
-                        can disable them in settings."
-            buttons={[{ title: "Continue", onPress: handleDismissAlert}]}
-        />
+            {
+                <Alert 
+                    delay={showAlert ? 500 : 0}
+                    visible={showAlert && !shownAlert}
+                    title="🥳 Version 1.2"
+                    description="Version 1.2 introduces many improvements to the UX and bug fixes.
+                                A new feature included in this update is viewing future assignment points.
+                                Additionally, Version 1.2 introduces Ads to the application. In order to provide students with
+                                our services we display Ads by default. If you wish to reduce Ads and not support the application you
+                                can disable them in settings."
+                    buttons={[{ title: "Continue", onPress: handleDismissAlert}]}
+                />
+            }
         </>
     );
 };  

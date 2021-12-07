@@ -8,22 +8,28 @@ export interface IUserReducer {
     accessToken: string | null,
     user?: IUser,
     notificationToken: null | string,
+    shownAlert: boolean,
 }
 
 const persistConfig = {
     key: 'user',
     storage: AsyncStorage,
-    whitelist: [ 'user' ]
+    whitelist: [ 'user', 'shownAlert' ]
 };
 
 
 const initialState = {
     accessToken: null,
     notificationToken: null,
+    shownAlert: false,
 };
 
 const userReducer = (state:IUserReducer=initialState, action:IAction) => {
     switch(action.type) {
+    case EUserActions.SET_SHOWN_ALERT: {
+        return { ...state, shownAlert: action.payload };
+    }
+
     case EUserActions.SET_USER: {
         return { ...state, user: action.payload };
     }

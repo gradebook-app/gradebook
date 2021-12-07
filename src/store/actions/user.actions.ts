@@ -1,5 +1,10 @@
 import { EUserActions, ISetNotificationToken, ISetUser } from "../constants/user.constants";
 
+export const setShownAlert = (payload:boolean) => ({
+    type: EUserActions.SET_SHOWN_ALERT,
+    payload,
+});
+
 export const setUser = (payload:any) : ISetUser => ({
     type: EUserActions.SET_USER,
     payload,
