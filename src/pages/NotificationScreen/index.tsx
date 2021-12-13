@@ -1,13 +1,13 @@
-import { faCheckSquare, faCog } from '@fortawesome/free-solid-svg-icons';
-import React, { useEffect } from 'react';
-import { Dimensions, Linking, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { faCheckSquare, faCog } from "@fortawesome/free-solid-svg-icons";
+import React, { useEffect } from "react";
+import { Dimensions, Linking, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import Box from "../../components/Box";
-import { IRootReducer } from '../../store/reducers';
-import { getUser } from '../../store/selectors';
+import { IRootReducer } from "../../store/reducers";
+import { getUser } from "../../store/selectors";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 type NotificationScreenProps = {
     navigation: any,
@@ -23,7 +23,7 @@ const NotificationScreen : React.FC<NotificationScreenProps> = ({ navigation }) 
     useEffect(() => {
         navigation?.setOptions({ headerStyle: { 
             backgroundColor: theme.background,
-        }})
+        }});
     }, []);
 
     return (
@@ -60,8 +60,8 @@ const NotificationScreen : React.FC<NotificationScreenProps> = ({ navigation }) 
                 </Box>
             </ScrollView>
         </SafeAreaView>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -75,12 +75,12 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
     },
     header: {
-        fontWeight: '700',
+        fontWeight: "700",
         fontSize: 30,
     },
     scrollview: {
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
     },
     captionContainer: {
         width: width,

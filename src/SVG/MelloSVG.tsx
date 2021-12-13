@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { SvgXml } from "react-native-svg";
 
 type MelloSVGProps = {
@@ -12,7 +12,7 @@ const MelloSVG: React.FC<MelloSVGProps> = ({ width }) => {
 
     return (
         <SvgXml xml={xml} height={width} width={width}/>
-    )
-}
+    );
+};
 
 export default MelloSVG;

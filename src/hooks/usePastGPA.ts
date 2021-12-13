@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react";
 import { GET_GPA, GET_PAST_GPA } from "../constants/endpoints/grades";
 import * as api from "../utils/api";
 
@@ -13,9 +13,10 @@ export interface IGPAPast {
 export const usePastGPA = () => {
     const [ loading, setLoading ] = useState(false);
     const [ pastGPA, setPastGPA ] = useState<IGPAPast[]>([]);
+    const controller = useRef(new AbortController()).current; 
 
     const setCache = async () => {
-        const cache = await AsyncStorage.getItem(`@gpaPast`);
+        const cache = await AsyncStorage.getItem("@gpaPast");
         if (cache) {
             const cachedDataParsed = JSON.parse(cache);
             if (
@@ -29,11 +30,11 @@ export const usePastGPA = () => {
 
         if (!pastGPA.length) setLoading(true);
 
-        const response = await api.get(GET_PAST_GPA);
+        const response = await api.get(GET_PAST_GPA, controller).catch(_ => null);
         
         if (response && response?.pastGradePointAverages?.length) {
             setPastGPA(response.pastGradePointAverages);
-            AsyncStorage.setItem(`@gpaPast`, JSON.stringify(response));
+            AsyncStorage.setItem("@gpaPast", JSON.stringify(response));
         }
     }, []);
 
@@ -48,9 +49,10 @@ export const usePastGPA = () => {
         });
 
         return () => {
+            controller.abort();
             mounted = false; 
         };
     }, [ getPastGPA ]);
 
-    return { reload, loading, pastGPA }
-}
+    return { reload, loading, pastGPA };
+};

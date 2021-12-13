@@ -11,6 +11,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "Light Splash Screen.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -21,6 +22,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "Dark Splash Screen.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -35,6 +37,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "Light Splash Screen-2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -45,6 +48,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "Dark Splash Screen-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -59,6 +63,7 @@
           "value" : "light"
         }
       ],
+      "filename" : "Light Splash Screen-1.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -69,6 +74,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "Dark Splash Screen-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

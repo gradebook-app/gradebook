@@ -1,7 +1,7 @@
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import React, { ReactChild } from 'react';
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import React, { ReactChild } from "react";
 import { 
     Dimensions,
     StyleSheet,
@@ -14,10 +14,10 @@ import {
     DynamicColorIOS,
     GestureResponderEvent,
 } from "react-native";
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useTheme } from '../../hooks/useTheme';
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useTheme } from "../../hooks/useTheme";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 type BoxProps = {
     style?: StyleProp<ViewStyle>,
@@ -75,16 +75,16 @@ const Box : React.FC<BoxProps> & IBoxChilds = ({ children, style, title }) => {
                 { children }
             </View>
         </View>
-    )
-}
+    );
+};
 
 Box.Clickable = ({ children, onPress }) => {
     return (
         <TouchableOpacity onPress={onPress}>
             { children }
         </TouchableOpacity>
-    )
-}
+    );
+};
 
 Box.Content = ({ icon, iconColor, title, children, showIcon = true } : IBoxContentProps) => {
     const { theme, palette } = useTheme();
@@ -102,8 +102,8 @@ Box.Content = ({ icon, iconColor, title, children, showIcon = true } : IBoxConte
             </View>
             { children }
         </View>
-    )
-}
+    );
+};
 
 Box.Button = ({ active, handleChange }) => {
     const { palette, theme } = useTheme();
@@ -112,14 +112,14 @@ Box.Button = ({ active, handleChange }) => {
         <View style={ styles.buttonContainer }>
             <Switch
                 trackColor={{ false: theme.secondary, true: palette.primary }}
-                thumbColor={!!active ? "#f4f3f4" : "#f4f3f4"}
+                thumbColor={active ? "#f4f3f4" : "#f4f3f4"}
                 ios_backgroundColor={theme.secondary}
                 onValueChange={handleChange}
                 value={!!active}
             />
         </View>
-    )
-}
+    );
+};
 
 Box.Value = ({ value }) => {
     const { theme } = useTheme();
@@ -128,20 +128,20 @@ Box.Value = ({ value }) => {
         <View style={ styles.valueContainer }>
             <Text style={[ styles.value, { color: theme.grey }]}>{ value }</Text>
         </View>
-    )
-}
+    );
+};
 
 Box.Space = () => {
     return (
         <View style={styles.space}></View>
-    )
-}
+    );
+};
 
 Box.Separator = () => {
     const color = DynamicColorIOS({
         light: "rgba(0, 0, 0, 0.1)",
         dark: "rgba(255, 255, 255, 0.1)",
-    })
+    });
 
     return (
         <View style={styles.separatorContainer}>
@@ -152,8 +152,8 @@ Box.Separator = () => {
                 ]}
             ></View>
         </View>
-    )
-}
+    );
+};
 
 Box.Arrow = ({ onPress }) => {
     const color = "#DEDEDE";
@@ -167,8 +167,8 @@ Box.Arrow = ({ onPress }) => {
                 icon={faAngleRight}
             />
         </TouchableNativeFeedback>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -177,9 +177,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 10,
         paddingVertical: 2.5,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
         shadowColor: "rgba(0, 0, 0, 0.35)",
         shadowOpacity: 0.35,
         shadowRadius: 5,
@@ -188,29 +188,29 @@ const styles = StyleSheet.create({
         marginTop: 7.5,
     },
     contentContainer:{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
         width: (width * 0.9) - 20,
         padding: 5,
         minHeight: 50,
-        alignItems: 'center',
+        alignItems: "center",
     },
     buttonContainer:{
-        marginLeft: 'auto',
+        marginLeft: "auto",
     },
     iconContainer: {
         width: 25,
         height: 25,
         borderRadius: 5,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
     },
     descriptionContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
     },
     title: {
         marginHorizontal: 10,
@@ -221,10 +221,10 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0, 0, 0, 0.0)",
     },
     separatorContainer: {
-        display: 'flex',
-        flexDirection: 'row',
+        display: "flex",
+        flexDirection: "row",
         width: width * 0.9,
-        justifyContent: 'flex-end',
+        justifyContent: "flex-end",
         marginRight: (width * 0.1 * 0.5) - 17.5,  
     },
     separator: {
@@ -233,13 +233,13 @@ const styles = StyleSheet.create({
         borderRadius: 1,
     },
     valueContainer: {
-        marginLeft: 'auto',
+        marginLeft: "auto",
     },
     value: {
         marginHorizontal: 10,
     },
     boxTitle: {
-        textAlign: 'right',
+        textAlign: "right",
         marginTop: 10,
         marginRight: 10,
     }

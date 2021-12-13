@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { SvgXml } from "react-native-svg";
 
 type NoDataSVGProps = {
@@ -12,7 +12,7 @@ const NoDataSVG: React.FC<NoDataSVGProps> = ({ width }) => {
 
     return (
         <SvgXml xml={xml} height={width} width={width}/>
-    )
-}
+    );
+};
 
 export default NoDataSVG;

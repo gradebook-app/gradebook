@@ -12,7 +12,7 @@ function* setUserNotificationToken({ payload  } : ISetNotificationToken) : Gener
 const userSaga = function*() {
     yield all([
         takeLatest(EUserActions.SET_NOTIFICATION_TOKEN, setUserNotificationToken)
-    ])
-}
+    ]);
+};
 
 export default userSaga; 

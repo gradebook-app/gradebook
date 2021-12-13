@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react";
 import { GET_GPA } from "../constants/endpoints/grades";
 import * as api from "../utils/api";
 
@@ -11,9 +11,10 @@ export interface IGPA {
 export const useGPA = () => {
     const [ loading, setLoading ] = useState(false);
     const [ gpa, setGPA ] = useState<IGPA>({});
+    const controller = useRef(new AbortController()).current;
 
     const setCache = async () => {
-        const cache = await AsyncStorage.getItem(`@gpa`);
+        const cache = await AsyncStorage.getItem("@gpa");
         if (cache) {
             const cachedDataParsed = JSON.parse(cache);
             if (
@@ -27,11 +28,11 @@ export const useGPA = () => {
 
         if (!Object.keys(gpa).length) setLoading(true);
 
-        const response = await api.get(GET_GPA);
+        const response = await api.get(GET_GPA, controller);
         
         if (response && Object.keys(response).length) {
             setGPA(response);
-            AsyncStorage.setItem(`@gpa`, JSON.stringify(response));
+            AsyncStorage.setItem("@gpa", JSON.stringify(response));
         }
     }, []);
 
@@ -47,9 +48,10 @@ export const useGPA = () => {
         });
 
         return () => {
+            controller.abort();
             mounted = false; 
         };
     }, [ getGPA ]);
 
-    return { reload, loading, gpa }
-}
+    return { reload, loading, gpa };
+};

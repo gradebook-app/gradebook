@@ -1,11 +1,11 @@
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useState } from "react";
-import { StyleSheet, TextInputProps, View } from 'react-native';
+import { StyleSheet, TextInputProps, View } from "react-native";
 import { TouchableOpacity } from "react-native";
 import InputField from "../InputField";
 
-interface PasswordFieldProps extends TextInputProps {}
+type PasswordFieldProps = TextInputProps
 
 const PasswordField : React.FC<PasswordFieldProps> = ({ style, ...props }) => {
     const [ hidden, setHidden ] = useState(true);
@@ -32,7 +32,7 @@ const PasswordField : React.FC<PasswordFieldProps> = ({ style, ...props }) => {
                 </TouchableOpacity>
             </InputField>
         </View>
-    )
+    );
 };
 
 const styles = StyleSheet.create({
@@ -40,8 +40,8 @@ const styles = StyleSheet.create({
         position: "absolute",
         right: 25,
         height: 55,
-        display: 'flex',
-        justifyContent: 'center',
+        display: "flex",
+        justifyContent: "center",
     }
 });
 

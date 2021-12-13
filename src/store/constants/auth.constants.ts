@@ -20,7 +20,7 @@ export interface ILoginClient {
 
 export interface ILogoutClient {
     type: EAuthActions.LOGOUT_CLIENT,
-    payload: null,
+    payload: { userId: string },
 }
 
 export interface ISetAccessDenied {

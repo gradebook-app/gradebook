@@ -1,20 +1,22 @@
 import "react-native-gesture-handler";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React, { useCallback, useEffect } from 'react';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React, { useCallback, useEffect, useState } from "react";
 import GradesScreen from "../GradesScreen";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBook, faCalendarAlt, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "../../hooks/useTheme";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import AccountScreen from "../AccountScreen";
-import { setNotificationToken } from "../../store/actions/user.actions";
+import { setNotificationToken, setShownAlert } from "../../store/actions/user.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootReducer } from "../../store/reducers";
 import { getUser } from "../../store/selectors";
 import { DynamicColorIOS } from "react-native";
 import messaging from "@react-native-firebase/messaging";
 import ScheduleScreen from "../ScheduleScreen";
-import * as Haptics from 'expo-haptics';
+import * as Haptics from "expo-haptics";
+import Alert from "../../components/Alert";
+import { getShownAlert } from "../../store/selectors/user.selectors";
 
 type TabIconProps = {
     focused: boolean,
@@ -35,8 +37,8 @@ const TabIcon : React.FC<TabIconProps> = ({ focused, iconSize, icon, ...props })
             icon={icon} 
             { ...props } 
         />
-    )
-}
+    );
+};
 
 type INavigatorScreenProps = {
     navigation: any,
@@ -69,12 +71,12 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
             if (!token || storedToken === token) return;
             dispatch(setNotificationToken(token));
         } catch (error) {}
-    }
+    };
 
     const getToken = async () => {
         const token = await messaging().getToken();
         return token; 
-    }
+    };
 
     const handleNotificationUpdate = useCallback(async () => {
         try {
@@ -87,8 +89,8 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
             } else {
                 getPermission();
             }
-        } catch(e) { return };
-    }, [ user?.notificationToken ])
+        } catch(e) { return; }
+    }, [ user?.notificationToken ]);
 
     useEffect(() => {
         const subscription = messaging().onTokenRefresh(handleNotificationUpdate);
@@ -106,7 +108,17 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
         dark: "rgba(255, 255, 255, 0.1)",
     });
 
+    const [ showAlert, setShowAlert ] = useState(true);
+
+    const shownAlert = getShownAlert(state);
+
+    const handleDismissAlert = () => {
+        setShowAlert(false);
+        dispatch(setShownAlert(true));
+    };
+
     return (
+        <>
         <Tabs.Navigator 
             initialRouteName="Grades"
             screenListeners={{tabPress: () => {
@@ -115,18 +127,18 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused }) => {
                     switch(route.name) {
-                        case "Grades": {
-                            return <TabIcon icon={faBook} focused={focused} />
-                        }
-                        case "Schedule": {
-                            return <TabIcon icon={faCalendarAlt} focused={focused} />
-                        }
-                        case "Account": {
-                            return <TabIcon icon={faUser} focused={focused} />
-                        }
-                        default: {
-                            return; 
-                        }
+                    case "Grades": {
+                        return <TabIcon icon={faBook} focused={focused} />;
+                    }
+                    case "Schedule": {
+                        return <TabIcon icon={faCalendarAlt} focused={focused} />;
+                    }
+                    case "Account": {
+                        return <TabIcon icon={faUser} focused={focused} />;
+                    }
+                    default: {
+                        return; 
+                    }
                     }
                 },
                 tabBarStyle: {
@@ -134,12 +146,12 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                     borderTopColor: separatorBarColor,
                 },
                 headerShown: false,
-                tabBarLabel: '',
+                tabBarLabel: "",
                 tabBarIconStyle: {
                     marginTop: 15,
                 },
-                })}
-            >
+            })}
+        >
             <Tabs.Screen 
                 name="Grades" 
                 children={() => <GradesScreen navigation={navigation} { ...props } />}
@@ -148,13 +160,27 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 name="Schedule" 
                 children={() => <ScheduleScreen navigation={navigation} { ...props } />}
             />
-             <Tabs.Screen 
+            <Tabs.Screen 
                 name="Account" 
                 children={() => <AccountScreen navigation={navigation} { ...props } />}
             />
         </Tabs.Navigator>
-    )
-}  
+            {
+                <Alert 
+                    delay={showAlert ? 500 : 0}
+                    visible={showAlert && !shownAlert}
+                    title="🥳 Version 1.2"
+                    description="Version 1.2 introduces many improvements to the UX and bug fixes.
+                                A new feature included in this update is viewing future assignment points.
+                                Additionally, Version 1.2 introduces Ads to the application. In order to provide students with
+                                our services we display Ads by default. If you wish to reduce Ads and not support the application you
+                                can disable them in settings."
+                    buttons={[{ title: "Continue", onPress: handleDismissAlert}]}
+                />
+            }
+        </>
+    );
+};  
 
 
 

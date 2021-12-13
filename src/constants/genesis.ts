@@ -5,4 +5,4 @@ export const genesisConfig:any = {
     "mtsdstudent.us": {
         "root": "https://parents.mtsd.k12.nj.us/genesis",
     }
-}
+};
