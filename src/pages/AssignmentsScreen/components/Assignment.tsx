@@ -1,13 +1,13 @@
-import { faCommentDots } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import React, { ReactChild, useCallback, } from 'react';
+import { faCommentDots } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import React, { ReactChild, useCallback, } from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useTheme } from '../../../hooks/useTheme';
-import { useAppearanceTheme } from '../../../hooks/useAppearanceTheme';
-import { IAssignment } from '../../../store/interfaces/assignment.interface';
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useTheme } from "../../../hooks/useTheme";
+import { useAppearanceTheme } from "../../../hooks/useAppearanceTheme";
+import { IAssignment } from "../../../store/interfaces/assignment.interface";
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 type AssignmentProp = {
     assignment: IAssignment,
@@ -18,7 +18,7 @@ type AssignmentProp = {
 const Assignment : React.FC<AssignmentProp> = ({ assignment, children, onPress }) => {
     const handlePress = useCallback(() => {
         onPress(assignment);
-    }, []);
+    }, [ assignment ]);
 
     const { theme } = useTheme();
     const { isDark } : any = useAppearanceTheme();
@@ -39,7 +39,7 @@ const Assignment : React.FC<AssignmentProp> = ({ assignment, children, onPress }
                                 color={ isDark ? theme.grey.dynamic.dark 
                                     : "rgba(0, 0, 0, 0.15)"} 
                                 icon={faCommentDots} /> 
-                        : <></>}
+                            : <></>}
                     </View>
                     <View style={ styles.metaInfo }>
                         <Text style={[ styles.date, { color: theme.grey } ]}>Due: { assignment.date.split(/\s/g).join(" ") }</Text>
@@ -49,8 +49,8 @@ const Assignment : React.FC<AssignmentProp> = ({ assignment, children, onPress }
                 { children }
             </View>
         </TouchableOpacity>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -65,21 +65,21 @@ const styles = StyleSheet.create({
         zIndex: 1,
         marginBottom: 0,
         padding: 15,
-        backgroundColor: '#fff',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+        backgroundColor: "#fff",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between"
     },
     metaInfo: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
     },
     title: {
         fontSize: 17.5,
-        fontWeight: '500',
+        fontWeight: "500",
         maxWidth: 225,
-        overflow: 'hidden',
+        overflow: "hidden",
     },
     date: {
         fontSize: 15,
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginLeft: 5,
         color: "rgba(0, 0, 0, 0.5)",
-        overflow: 'hidden',
+        overflow: "hidden",
         maxWidth: 115,
         marginTop: 7.5,
     },

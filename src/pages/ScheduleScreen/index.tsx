@@ -1,17 +1,15 @@
-import moment from 'moment';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, SafeAreaView, Text, ScrollView, Dimensions, RefreshControl, View } from 'react-native';
-import { useSelector } from 'react-redux';
-import FadeIn from '../../components/FadeIn';
-import { useSchedule } from '../../hooks/useSchedule';
+import moment from "moment";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { StyleSheet, SafeAreaView, Text, ScrollView, Dimensions, RefreshControl, View } from "react-native";
+import { useSelector } from "react-redux";
+import { useSchedule } from "../../hooks/useSchedule";
 import { useTheme } from "../../hooks/useTheme";
-import { IRootReducer } from '../../store/reducers';
-import { getAccessToken } from '../../store/selectors';
-import DatePicker from './components/DatePicker';
-import ScheduleTable from './components/ScheduleTable';
-import Timeline from "react-native-snap-carousel";
-import { ISchedule } from '../../store/interfaces/schedule.interface';
-import * as Haptics from "expo-haptics";
+import { IRootReducer } from "../../store/reducers";
+import { getAccessToken } from "../../store/selectors";
+import DatePicker from "./components/DatePicker";
+import ScheduleTable from "./components/ScheduleTable";
+import { ISchedule } from "../../store/interfaces/schedule.interface";
+import BannerAd from "../../components/BannerAd";
 
 interface IScheduleScreenProps {
     navigation: any,
@@ -33,12 +31,12 @@ const ScheduleScreen : React.FC<IScheduleScreenProps> = ({ navigation }) => {
 
 
     const handleDateChange = (e:string) => {
-        if (moment(e).isSame(dateSelected, 'day')) return; 
+        if (moment(e).isSame(dateSelected, "day")) return; 
         setDateSelected(e);
         const isNext = moment(e).isAfter(dateSelected); 
         // if (isNext) schedules.current.snapToNext();
         // else schedules.current.snapToPrev();
-    }
+    };
 
     const CLONES_NUMBER = 2; 
 
@@ -69,8 +67,8 @@ const ScheduleScreen : React.FC<IScheduleScreenProps> = ({ navigation }) => {
     const renderSchedule = ({ item, index } : { item: ISchedule, index:number }) => {
         return (
             <ScheduleTable fetching={fetching} key={index} schedule={item} />
-        )
-    }
+        );
+    };
 
     const dateFormatted = useMemo(() => {
         return moment(dateSelected).format("MMM DD, YYYY");
@@ -92,7 +90,7 @@ const ScheduleScreen : React.FC<IScheduleScreenProps> = ({ navigation }) => {
                 </View>
                 <DatePicker dateSelected={dateSelected} handleDateChange={handleDateChange}/>
                 <ScheduleTable fetching={fetching} schedule={schedule} />
-                    {/* <Timeline  
+                {/* <Timeline  
                         loop={true}
                         loopClonesPerSide={CLONES_NUMBER}
                         onBeforeSnapToItem={handleNextSnap}
@@ -103,33 +101,37 @@ const ScheduleScreen : React.FC<IScheduleScreenProps> = ({ navigation }) => {
                         sliderWidth={width}
                         renderItem={renderSchedule}
                     /> */}
+                <BannerAd style={styles.adContainer}/>
             </ScrollView>
         </SafeAreaView>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         width: width,
     },
+    adContainer: {
+        marginLeft: -15,
+    },
     title: {
-        fontWeight: '700',
+        fontWeight: "700",
         fontSize: 30,
     },
     scrollView: {
         padding: 15,
         height: height - 125,
-        display: 'flex',
+        display: "flex",
     },
     header: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
     },
     date: {
         fontSize: 20,
-        fontWeight: '500',
+        fontWeight: "500",
     }
 });
 

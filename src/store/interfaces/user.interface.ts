@@ -1,5 +1,5 @@
 export interface IUser {
-    _id: string,
+    _id: any | string,
     notificationToken: string,
     gpaHistory?: {
         _id: string,

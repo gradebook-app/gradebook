@@ -1,12 +1,14 @@
-import { faFingerprint, faLock } from '@fortawesome/free-solid-svg-icons';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useTheme } from '../../hooks/useTheme';
+import { faFingerprint, faLock } from "@fortawesome/free-solid-svg-icons";
+import React, { useEffect } from "react";
+import { Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useTheme } from "../../hooks/useTheme";
 import Box from "../../components/Box";
-import { ISettings } from '../AccountScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from "react-redux";
+import { setBiometricsEnabled, setSavePassword } from "../../store/actions/settings.actions";
+import { IRootReducer } from "../../store/reducers";
+import { getBiometricsEnabled, getSavePassword } from "../../store/selectors/settings.selectors";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 type SecurityScreenProps = {
     navigation: any,
@@ -14,48 +16,20 @@ type SecurityScreenProps = {
 
 const SecurityScreen : React.FC<SecurityScreenProps> = ({ navigation }) => {
     const { theme } : any = useTheme();
+    const dispatch = useDispatch();
+    const state = useSelector((state:IRootReducer) => state);
 
     useEffect(() => {
         navigation?.setOptions({ headerStyle: { 
             backgroundColor: theme.background,
-        }})
+        }});
     }, []);
     
-    const [ cacheInjected, setCacheInjected ] = useState(false);
-
-    const [ settings, setSettings ] = useState<ISettings>({
-        biometricsEnabled: null,
-        savePassword: null,
-    });
-
-    const insertCache = useCallback(async () => {
-        if (cacheInjected) return; 
-
-        const cache = await AsyncStorage.getItem("@settings");
-        const cachedSettings = cache ? JSON.parse(cache) : null;
-        if (!cachedSettings) {
-            setCacheInjected(true);
-            return; 
-        } else {
-            setSettings(cachedSettings);
-        }
-    }, [ cacheInjected ]);
-
-    useEffect(() => {
-        insertCache();
-    }, [ insertCache ]);
-
-    const handleSettingsChange = (key:keyof ISettings) => async (value:any) => {
-        setSettings({ ...settings, [ key ]: value });
-
-        const cache = await AsyncStorage.getItem("@settings");
-        const updatedSettings = cache ? JSON.parse(cache) : {};
-        AsyncStorage.setItem("@settings", JSON.stringify({ ...updatedSettings, [ key ]: value }));
-    };
-
-    const handleSavePassword = async (e:boolean) => {
-        handleSettingsChange('savePassword')(e);
-    };
+    const biometricsEnabled = getBiometricsEnabled(state);
+    const savePassword = getSavePassword(state);
+    
+    const handleBiometricsEnabled= (e:boolean) => dispatch(setBiometricsEnabled(e));
+    const handleSavePassword = (e:boolean) => dispatch(setSavePassword(e));
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
@@ -64,13 +38,13 @@ const SecurityScreen : React.FC<SecurityScreenProps> = ({ navigation }) => {
                     <Text style={[ styles.header, { color: theme.text }]}>Security</Text>
                 </View>
                 <Box.Space />
-                <Box style={{ flexDirection: 'column' }}>
+                <Box style={{ flexDirection: "column" }}>
                     <Box.Content 
                         iconColor={"#A70000"}
                         icon={faFingerprint}
                         title={"Enable Fingerprint or Face ID"}
                     >
-                        <Box.Button active={settings.biometricsEnabled} handleChange={handleSettingsChange('biometricsEnabled')} />
+                        <Box.Button active={biometricsEnabled} handleChange={handleBiometricsEnabled} />
                     </Box.Content>
                     <Box.Separator />
                     <Box.Content
@@ -78,13 +52,18 @@ const SecurityScreen : React.FC<SecurityScreenProps> = ({ navigation }) => {
                         iconColor={"#EAB500"}
                         icon={faLock}
                     >
-                        <Box.Button active={settings.savePassword} handleChange={handleSavePassword} />
+                        <Box.Button active={savePassword} handleChange={handleSavePassword} />
                     </Box.Content>
                 </Box>
+                <View style={styles.captionContainer}>
+                    <Text style={[{ color: theme.grey }]}>
+                        For changed settings to take affect make sure to reload the app once changed. 
+                    </Text>
+                </View>
             </ScrollView>
         </SafeAreaView>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -98,12 +77,12 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
     },
     header: {
-        fontWeight: '700',
+        fontWeight: "700",
         fontSize: 30,
     },
     scrollview: {
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
     },
     captionContainer: {
         width: width,

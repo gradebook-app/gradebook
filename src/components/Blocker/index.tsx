@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect } from 'react';
-import { Dimensions, StyleSheet, View, Animated } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native';
+import React, { useCallback, useEffect } from "react";
+import { Dimensions, StyleSheet, View, Animated } from "react-native";
+import { TouchableWithoutFeedback } from "react-native";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 type BlockerProps = {
     block: boolean,
@@ -27,20 +27,20 @@ const Blocker : React.FC<BlockerProps> = ({ block, onPress }) => {
     return (
         <TouchableWithoutFeedback onPress={onPress}>
             <Animated.View 
-                pointerEvents={block ? 'auto' : 'none'}
+                pointerEvents={block ? "auto" : "none"}
                 style={[ styles.container, { opacity: backgroundRef }]}>
             </Animated.View>
         </TouchableWithoutFeedback>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         width: width,
         height: height,
-        position: 'absolute',
+        position: "absolute",
         zIndex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
     }
 });
 

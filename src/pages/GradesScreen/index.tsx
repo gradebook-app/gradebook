@@ -24,9 +24,10 @@ import { useTheme } from "../../hooks/useTheme";
 import GPASlideshow from "./components/GPASlideshow";
 import { useGPA } from "../../hooks/useGPA";
 import { usePastGPA } from "../../hooks/usePastGPA";
-import messaging from '@react-native-firebase/messaging';
+import messaging from "@react-native-firebase/messaging";
+import BannerAd from "../../components/BannerAd";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const sheetHeight = (() => {
     const minHeight = 350; 
@@ -61,7 +62,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
     useEffect(() => {
         const unsubscribe = messaging().onMessage(_ => {
-            reload()
+            reload();
             reloadGPA();
         });
 
@@ -74,7 +75,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
     const handleCourse = (course:ICourse) => {
         navigation.setParams({ course, markingPeriod: currentMarkingPeriod });
-        navigation.navigate('assignments');
+        navigation.navigate("assignments");
     };
 
     const setMarkingPeriod = useCallback(() => {
@@ -118,8 +119,8 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                     ))}
                 </Picker>
             </View>
-        )
-    }
+        );
+    };
 
     const [ showSelector, setShowSelector ] = useState(false);
 
@@ -128,12 +129,12 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         selectionSheet.current.snapTo(1);
 
         setAdjustedMarkingPeriod(selectedValue);
-    }
+    };
 
     const handleSelectionMenuPress = () => {
         setShowSelector(true);
         selectionSheet.current.snapTo(0);
-    }
+    };
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
@@ -141,12 +142,12 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                 contentContainerStyle={styles.courses}
                 refreshControl={
                     <RefreshControl
-                    refreshing={loading || loadingGPA}
-                    onRefresh={onRefresh}
+                        refreshing={loading || loadingGPA}
+                        onRefresh={onRefresh}
                     />
                 }>
-               <TouchableWithoutFeedback onPress={handleSelectionMenuPress}>
-                   <Button title={selectedValue} onPress={handleSelectionMenuPress} />
+                <TouchableWithoutFeedback onPress={handleSelectionMenuPress}>
+                    <Button title={selectedValue} onPress={handleSelectionMenuPress} />
                 </TouchableWithoutFeedback>
                 <GPASlideshow handleGPAScreen={handleGPAScreen} pastGPA={pastGPA} gpa={gpa} />
                 { courses.map((course, index) => {
@@ -156,8 +157,9 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                             key={index} 
                             handleCourse={handleCourse}
                         />
-                    )
+                    );
                 })}
+                { courses.length ? <BannerAd style={{ marginTop: 15 }} /> : <></> }
             </ScrollView>
             <Blocker block={showSelector} onPress={handleSelectorBack} />
             <BottomSheet 
@@ -168,13 +170,14 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                 renderContent={renderMPSelector}
                 onCloseEnd={handleSelectorBack}
             />
+           
         </SafeAreaView>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     markingPeriod: {
-        fontWeight: '500',
+        fontWeight: "500",
         fontSize: 25,
         marginTop: 25,
         marginLeft: 25,
@@ -185,8 +188,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     courses: {
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         paddingBottom: 100,
     },
     selectContainer: {
@@ -194,5 +197,5 @@ const styles = StyleSheet.create({
         width: width,
         backgroundColor: "#fff",
     }
-})
+});
 export default React.memo(GradesScreen); 
