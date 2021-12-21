@@ -5,6 +5,8 @@ export const useGradeColor = (percent:number) => {
     const { gradeColors } : any = useTheme();
 
     const gradeColor = useMemo(() => {
+        if (isNaN(percent) || !percent) return "grey";
+
         if (percent >= 93) {
             return gradeColors.a;
         } else if (percent < 93 && percent >= 90) {

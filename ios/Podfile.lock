@@ -1,5 +1,7 @@
 PODS:
   - boost-for-react-native (1.63.0)
+  - BVLinearGradient (2.5.6):
+    - React
   - DoubleConversion (1.1.6)
   - EXAdsAdMob (11.0.3):
     - ExpoModulesCore
@@ -388,6 +390,8 @@ PODS:
     - React-perflogger (= 0.64.2)
   - RNCAsyncStorage (1.15.9):
     - React-Core
+  - RNCMaskedView (0.1.11):
+    - React
   - RNCPicker (2.1.0):
     - React-Core
   - RNCPushNotificationIOS (1.10.1):
@@ -442,11 +446,14 @@ PODS:
     - React-RCTImage
   - RNSVG (12.1.1):
     - React
+  - RNTextGradientView (0.1.7):
+    - React
   - UMTaskManagerInterface (7.0.3):
     - ExpoModulesCore
   - Yoga (1.14.0)
 
 DEPENDENCIES:
+  - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXAdsAdMob (from `../node_modules/expo-ads-admob/ios`)
   - EXApplication (from `../node_modules/expo-application/ios`)
@@ -498,6 +505,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
@@ -508,6 +516,7 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
+  - RNTextGradientView (from `../node_modules/react-native-text-gradient`)
   - UMTaskManagerInterface (from `../node_modules/unimodules-task-manager-interface/ios`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -528,6 +537,8 @@ SPEC REPOS:
     - PromisesObjC
 
 EXTERNAL SOURCES:
+  BVLinearGradient:
+    :path: "../node_modules/react-native-linear-gradient"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXAdsAdMob:
@@ -626,6 +637,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNCMaskedView:
+    :path: "../node_modules/@react-native-community/masked-view"
   RNCPicker:
     :path: "../node_modules/@react-native-picker/picker"
   RNCPushNotificationIOS:
@@ -646,6 +659,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
+  RNTextGradientView:
+    :path: "../node_modules/react-native-text-gradient"
   UMTaskManagerInterface:
     :path: "../node_modules/unimodules-task-manager-interface/ios"
   Yoga:
@@ -653,6 +668,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
+  BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   EXAdsAdMob: 2b1bfdd00f5702c709f1704153821697c5a83996
   EXApplication: 0e15240e4d125b62f1cae48759ffbbd32b9286a6
@@ -714,6 +730,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: a9904c6d0218fb9f8b19d6dd88607225927668f9
   ReactCommon: 149906e01aa51142707a10665185db879898e966
   RNCAsyncStorage: 26f25150da507524a7815f2ada06ca0967f65633
+  RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNCPicker: f7a40b21b915b7a187624d52f52b7bc2f73ea413
   RNCPushNotificationIOS: 87b8d16d3ede4532745e05b03c42cff33a36cc45
   RNFBApp: dda844e7084b590eb3d9bec1b2115cabbe4bc40e
@@ -724,6 +741,7 @@ SPEC CHECKSUMS:
   RNReanimated: 64c38d47ffcc29c97fc1d8cfde9e8a73d7be7cc8
   RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
+  RNTextGradientView: 3eb4744303f801546fad35ac47a53cc82257cb25
   UMTaskManagerInterface: 5654c50e68af11b19b9d05452bacf23d19b3f30f
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
 
