@@ -108,7 +108,7 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
         dark: "rgba(255, 255, 255, 0.1)",
     });
 
-    const [ showAlert, setShowAlert ] = useState(true);
+    const [ showAlert, setShowAlert ] = useState(false);
 
     const shownAlert = getShownAlert(state);
 
