@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     grade: {
-        marginLeft: -7.5,
+        paddingRight: 10,
         marginTop: 5,
         fontSize: 17.5,
         fontWeight: "500",
