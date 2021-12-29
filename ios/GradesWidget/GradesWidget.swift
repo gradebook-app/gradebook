@@ -118,7 +118,8 @@ struct GradesWidgetEntryView : View {
           GridItem(.flexible())
       ]
       
-      LinearGradient(gradient: Gradient(colors: [.blue, .blue]), startPoint: .top, endPoint: .bottom)
+      LinearGradient(gradient: Gradient(colors: [.black, .black
+                                                ]), startPoint: .top, endPoint: .bottom)
         .edgesIgnoringSafeArea(.vertical)
         .overlay(
           VStack {
@@ -129,8 +130,8 @@ struct GradesWidgetEntryView : View {
             pinnedViews: [.sectionHeaders, .sectionFooters]
            ) {
              ForEach(0..<8) { i in
-               Text("English: 68%")
-                 .font(.system(size: 15, weight: .bold, design: .default)).padding(5)
+               Text("English: 89%")
+                 .font(.system(size: 15, weight: .bold, design: .default)).foregroundColor(Color.white).padding(5)
              }
            }
           }.padding(20)
@@ -157,6 +158,6 @@ struct GradesWidget_Previews: PreviewProvider {
       GradesWidgetEntryView(entry: SimpleEntry(date: Date(), configuration: ConfigurationIntent(), displayText: "Demo 1"))
         .environment(\.sizeCategory, .medium)
         .previewDevice("iPhone 13 Pro")
-            .previewContext(WidgetPreviewContext(family: .systemSmall))
+        .previewContext(WidgetPreviewContext(family: .systemMedium))
     }
 }
