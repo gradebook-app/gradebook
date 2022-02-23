@@ -19,7 +19,7 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
 
     const unitID = Platform.select({
         ios: "ca-app-pub-8555090951806711/9875384854",
-        android: "",
+        android: "ca-app-pub-8555090951806711/6375245625",
     });
 
     const handleAdReceived = () => setLoaded(true);
@@ -28,19 +28,17 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
     return (
         !limitAds ? (
             <FadeIn show={loaded} style={[ styles.container, style ]}>
-                { Platform.OS === "ios" ? (
-                    <AdMobBanner 
-                        onAdViewDidReceiveAd={handleAdReceived}
-                        onDidFailToReceiveAdWithError={handleAdFailed}
-                        adUnitID={unitID}
-                        bannerSize="banner"
-                        servePersonalizedAds={true}
-                        style={{
-                            borderRadius: 10,
-                            overflow: "hidden",
-                        }}
-                    />
-                ) : <></> }
+                <AdMobBanner 
+                    onAdViewDidReceiveAd={handleAdReceived}
+                    onDidFailToReceiveAdWithError={handleAdFailed}
+                    adUnitID={unitID}
+                    bannerSize="banner"
+                    servePersonalizedAds={true}
+                    style={{
+                        borderRadius: 10,
+                        overflow: "hidden",
+                    }}
+                />
             </FadeIn>
         ) : null
     );

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "461586096673",
+    "project_id": "gradebook-ca826",
+    "storage_bucket": "gradebook-ca826.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461586096673:android:6437f1ca89ef55cebeb960",
+        "android_client_info": {
+          "package_name": "com.mahitm.gradebook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461586096673-koj2omueq8mb3e11ne80qokn4im810j7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqPdWZEmqxAuArJqy1aCMRR2HR4Jq6m7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461586096673-koj2omueq8mb3e11ne80qokn4im810j7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "461586096673-n2kj908t10lgrsja835ohm88h88411k6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mahitm.gradebook"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
