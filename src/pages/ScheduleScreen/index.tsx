@@ -110,6 +110,7 @@ const ScheduleScreen : React.FC<IScheduleScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         width: width,
+        height: height,
     },
     adContainer: {
         marginLeft: -15,

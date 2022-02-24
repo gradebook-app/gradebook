@@ -11,12 +11,12 @@ import { setNotificationToken, setShownAlert } from "../../store/actions/user.ac
 import { useDispatch, useSelector } from "react-redux";
 import { IRootReducer } from "../../store/reducers";
 import { getUser } from "../../store/selectors";
-import { DynamicColorIOS } from "react-native";
 import messaging from "@react-native-firebase/messaging";
 import ScheduleScreen from "../ScheduleScreen";
 import * as Haptics from "expo-haptics";
 import Alert from "../../components/Alert";
 import { getShownAlert } from "../../store/selectors/user.selectors";
+import { useDynamicColor } from "../../hooks/useDynamicColor";
 
 type TabIconProps = {
     focused: boolean,
@@ -103,7 +103,7 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
         }});
     }, []);
 
-    const separatorBarColor = DynamicColorIOS({
+    const separatorBarColor = useDynamicColor({
         light: "rgba(0, 0, 0, 0.15)",
         dark: "rgba(255, 255, 255, 0.1)",
     });
@@ -128,13 +128,13 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 tabBarIcon: ({ focused }) => {
                     switch(route.name) {
                     case "Grades": {
-                        return <TabIcon icon={faBook} focused={focused} />;
+                        return <TabIcon icon={faBook as IconProp} focused={focused} />;
                     }
                     case "Schedule": {
-                        return <TabIcon icon={faCalendarAlt} focused={focused} />;
+                        return <TabIcon icon={faCalendarAlt as IconProp} focused={focused} />;
                     }
                     case "Account": {
-                        return <TabIcon icon={faUser} focused={focused} />;
+                        return <TabIcon icon={faUser as IconProp} focused={focused} />;
                     }
                     default: {
                         return; 

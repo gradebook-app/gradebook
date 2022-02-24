@@ -34,7 +34,7 @@ const CourseBox : React.FC<CourseBoxProps> = ({ course, handleCourse }) => {
     }, [ course ]);
 
     return (
-        <FadeIn show={show}>
+        <FadeIn style={styles.fadeContainer} show={show}>
             <TouchableOpacity onPress={handlePress}>
                 <View style={[ styles.container, { backgroundColor: theme.secondary } ]} >
                     <View>
@@ -58,13 +58,15 @@ const CourseBox : React.FC<CourseBoxProps> = ({ course, handleCourse }) => {
 };
 
 const styles = StyleSheet.create({
+    fadeContainer: {
+    },  
     container: {
         width: width * 0.9,
         minHeight: 100,
+        marginVertical: 7.5,
         borderRadius: 5,
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOpacity: 0.35,
-        marginVertical: 7.5,
         shadowOffset: { width: 0, height: 0 },
         padding: 15,
         display: "flex",

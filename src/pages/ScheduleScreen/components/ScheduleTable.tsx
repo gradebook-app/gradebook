@@ -168,11 +168,12 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
     courseViewContainer: {
-        shadowColor: "rgba(0, 0, 0, 0.25)",
+        shadowColor: "rgba(0, 0, 0, 0.3)",
         shadowOpacity: 0.35,
         shadowRadius: 5,
         shadowOffset: { width: 0, height: 0},
         marginVertical: 5,
+        elevation: 10,
         borderRadius: 5,
     },
     courseContainer: {
