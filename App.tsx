@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import React, { Suspense } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions, Platform, StyleSheet } from "react-native";
 import LoadingScreen from "./src/pages/LoadingScreen";
 import { Provider as ReduxProvider } from "react-redux";
 import store, { persistor } from "./src/store";
@@ -8,6 +8,7 @@ import AppNavigator from "./AppNavigator";
 import { PersistGate } from 'redux-persist/integration/react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDynamicColor } from "./src/hooks/useDynamicColor";
+import { StatusBar } from "expo-status-bar";
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,6 +30,9 @@ export default function App() {
         <ReduxProvider store={store}>
             <PersistGate loading={<ReduxBlocker/>} persistor={persistor}>
                 <Suspense fallback={LoadingScreen}>
+                    { Platform.OS === "android" && (
+                         <StatusBar translucent={true} />
+                    )}
                     <AppNavigator />
                 </Suspense>
             </PersistGate>

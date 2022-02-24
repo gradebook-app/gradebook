@@ -1,7 +1,7 @@
 import { faFlagUsa, faIdBadge, faKey, faPizzaSlice, faSchool, faUserCog, faPhone, faShieldAlt } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useMemo } from "react";
-import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Platform } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import { useDispatch, useSelector } from "react-redux";
 import BrandButton from "../../components/BrandButton";
@@ -185,6 +185,7 @@ const styles = StyleSheet.create({
         height: height,
         display: "flex",
         alignItems: "center",
+        marginTop: Platform.OS === "android" ? 25 : 0, 
     },
     logOut: {
     //   marginTop: 'auto',

@@ -224,6 +224,7 @@ const styles = StyleSheet.create({
         width: width,
         height: height,
         backgroundColor: "#fff",
+        marginTop: Platform.OS === "android" ? 25 : 0, 
     },
     courses: {
         display: "flex",

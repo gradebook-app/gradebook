@@ -1,6 +1,6 @@
 import moment from "moment";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { StyleSheet, SafeAreaView, Text, ScrollView, Dimensions, RefreshControl, View } from "react-native";
+import { StyleSheet, SafeAreaView, Text, ScrollView, Dimensions, RefreshControl, View, Platform } from "react-native";
 import { useSelector } from "react-redux";
 import { useSchedule } from "../../hooks/useSchedule";
 import { useTheme } from "../../hooks/useTheme";
@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
     container: {
         width: width,
         height: height,
+        marginTop: Platform.OS === "android" ? 25 : 0, 
     },
     adContainer: {
         marginLeft: -15,
