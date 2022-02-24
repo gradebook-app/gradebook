@@ -10,6 +10,7 @@ import { getUser } from "../../../store/selectors";
 import Box from "../../../components/Box";
 import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import { IGPAPast } from "../../../hooks/usePastGPA";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 type GPASlideProps = {
     header: string,
@@ -121,7 +122,7 @@ const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA, handleGPAScr
             <Box style={styles.detail}>
                 <Box.Clickable onPress={handleMoreAboutGPA}>
                     <Box.Content 
-                        icon={faGraduationCap} 
+                        icon={faGraduationCap as IconProp} 
                         title="More About GPA" 
                         iconColor={"#006B57"}
                     >

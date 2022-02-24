@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
         shadowColor: "rgba(0, 0, 0, 0.35)",
         shadowOpacity: 0.25,
         shadowRadius: 5,
-        shadowOffset: { width: 0, height: 0, }
+        shadowOffset: { width: 0, height: 0, },
     },
     monthDay: {
         fontWeight: "500",

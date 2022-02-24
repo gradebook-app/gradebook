@@ -11,10 +11,10 @@ import {
     StyleProp,
     ViewStyle,
     TouchableNativeFeedback,
-    DynamicColorIOS,
     GestureResponderEvent,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useDynamicColor } from "../../hooks/useDynamicColor";
 import { useTheme } from "../../hooks/useTheme";
 
 const { width } = Dimensions.get("window");
@@ -111,9 +111,10 @@ Box.Button = ({ active, handleChange }) => {
     return (
         <View style={ styles.buttonContainer }>
             <Switch
-                trackColor={{ false: theme.secondary, true: palette.primary }}
+                trackColor={{ false: theme.grey, true: palette.primary }}
                 thumbColor={active ? "#f4f3f4" : "#f4f3f4"}
                 ios_backgroundColor={theme.secondary}
+                
                 onValueChange={handleChange}
                 value={!!active}
             />
@@ -138,7 +139,7 @@ Box.Space = () => {
 };
 
 Box.Separator = () => {
-    const color = DynamicColorIOS({
+    const color = useDynamicColor({
         light: "rgba(0, 0, 0, 0.1)",
         dark: "rgba(255, 255, 255, 0.1)",
     });
@@ -164,7 +165,7 @@ Box.Arrow = ({ onPress }) => {
                 size={20}
                 style={{ marginTop: 2.5 }}
                 color={color}
-                icon={faAngleRight}
+                icon={faAngleRight as any}
             />
         </TouchableNativeFeedback>
     );
@@ -186,6 +187,7 @@ const styles = StyleSheet.create({
         zIndex: 1,
         shadowOffset: { width: 0, height: 0 },
         marginTop: 7.5,
+        elevation: 15,
     },
     contentContainer:{
         display: "flex",

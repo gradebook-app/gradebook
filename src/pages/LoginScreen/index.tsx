@@ -7,7 +7,7 @@ import {
     SafeAreaView, 
     StyleSheet, 
     Button,
-    View, Text, KeyboardAvoidingView, TouchableOpacity, ScrollView
+    View, Text, KeyboardAvoidingView, TouchableOpacity, Platform, 
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import BrandButton from "../../components/BrandButton";
@@ -20,12 +20,15 @@ import BottomSheet from "reanimated-bottom-sheet";
 import PasswordField from "../../components/PasswordField";
 
 import EducationSVG from "../../SVG/EducationSVG";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker";
 import { schoolDistrictsMapped } from "../../utils/mapping";
 import { ESchoolDistricts } from "../../store/enums/school-districts.enum";
 import Blocker from "../../components/Blocker";
 import messaging from "@react-native-firebase/messaging";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { ScrollView, TouchableOpacity as TouchableOpacityGesture } from "react-native-gesture-handler";
+import IOSButton from "../../components/IOSButton";
+import { useDynamicColor } from "../../hooks/useDynamicColor";
 
 const { width, height } = Dimensions.get("window");
 
@@ -192,9 +195,12 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                     display: "flex",
                 }}>
                     <Text style={[ styles.sheetHeader, { color: theme.text }]}>Terms & Conditions</Text>
-                    <Button title="Accept" onPress={handleTermsClose} />
+                    <IOSButton onPress={handleTermsClose}>
+                        Accept
+                    </IOSButton>
+                    {/* <Button title="Accept" onPress={handleTermsClose} /> */}
                 </View>
-                <ScrollView contentContainerStyle={{ paddingBottom: 110 }} style={styles.termsList}>
+                <ScrollView contentContainerStyle={{ paddingBottom: 150 }} style={styles.termsList}>
                     <Text style={[ styles.termItem, { color: theme.grey }]}>
                         1. All data, including the client's password, is securely stored on Genesus's servers 
                         for providing clients with access to their grades. Passwords and other client data
@@ -225,6 +231,9 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         handleTermsClose();
     };
 
+    const pickerColor = useDynamicColor({ dark: theme.grey, light: theme.text }); 
+    const [ districtPickerOpen, setDistrictPickerOpen ] = useState(false);
+
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <LoadingBox loading={loading}/>
@@ -235,13 +244,56 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                     <EducationSVG width={width * 0.85}/>
                 </View>
                 <View style={styles.form}>
-                    <TouchableWithoutFeedback onPress={handleSchoolDistrictOpen}>
-                        <InputField 
-                            value={schoolDistrictsMapped[values.schoolDistrict as ESchoolDistricts]}
-                            editable={false}
-                            placeholder={"Select School District"}
-                        />
-                    </TouchableWithoutFeedback>
+                    {
+                        Platform.OS === "ios" ? (
+                            <TouchableOpacityGesture onPress={handleSchoolDistrictOpen}>
+                                <InputField 
+                                    value={schoolDistrictsMapped[values.schoolDistrict as ESchoolDistricts]}
+                                    editable={false}
+                                    placeholder={"Select School District"}
+                                />
+                            </TouchableOpacityGesture>
+                        ) : (
+                            <View style={styles.androidPicker}>
+                                <Picker     
+                                    onValueChange={(itemValue) => {
+                                        setDistrictPickerOpen(false);
+                                        handleValueChange("schoolDistrict")(itemValue);
+                                    }}
+                                    selectedValue={values.schoolDistrict}
+                                    dropdownIconColor={useDynamicColor({ dark: theme.grey, light: "grey" })}
+                                    mode="dropdown"
+                                    prompt="School District"
+                                    onFocus={() => { setDistrictPickerOpen(true) }}
+                                    onBlur={() => { setDistrictPickerOpen(false); }}
+                                    itemStyle={{
+                                        borderRadius: 5,
+                                    }}
+                                    style={{
+                                        borderRadius: 5,
+                                        backgroundColor: theme.secondary
+                                    }}
+                                >
+                                    <Picker.Item 
+                                        enabled={false}
+                                        color={districtPickerOpen ? "rgba(0, 0, 0, 1)" : theme.grey }
+                                        label={"Choose School District"} 
+                                        value={undefined} 
+                                    />  
+                                    { Object.keys(schoolDistrictsMapped).map((schoolDistrict, index) => {
+                                        return (
+                                                <Picker.Item 
+                                                    key={index}
+                                                    color={districtPickerOpen ? "rgba(0, 0, 0, 1)" : pickerColor as string }
+                                                    label={schoolDistrictsMapped[schoolDistrict as ESchoolDistricts]} 
+                                                    value={schoolDistrict} 
+                                                />
+                                            );
+                                        })}
+                                    </Picker>
+                            </View>
+                        )
+                    }
                     <InputField 
                         value={values.userId}
                         returnKeyType={"done"}
@@ -267,7 +319,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                         style={styles.button}
                         onPress={handleLogin}
                     >
-                        <FontAwesomeIcon color={"#fff"} icon={faBinoculars} />
+                        <FontAwesomeIcon color={"#fff"} icon={faBinoculars as IconProp} />
                     </BrandButton>
                     <TouchableOpacity onPress={handleTermsOpen} style={styles.conditionContainer}>
                         <Text 
@@ -357,6 +409,18 @@ const styles = StyleSheet.create({
     },
     termItem: {
         marginBottom: 15,
+    },
+    androidPicker: {
+        width: width * 0.9,
+        marginBottom: 10,
+        borderRadius: 5,
+        overflow: "hidden",
+        shadowColor: "rgba(0, 0, 0, 0.35)",
+        shadowRadius: 15,
+        shadowOpacity: 0.15,
+        shadowOffset: { width: 0, height: 0 },
+        marginVertical: 10,
+        elevation: 7.5,
     }
 }); 
 

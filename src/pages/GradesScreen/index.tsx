@@ -7,7 +7,9 @@ import {
     View,
     RefreshControl,
     Text,
-    Button
+    Button,
+    StatusBar,
+    Platform
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useSelector } from "react-redux";
@@ -26,6 +28,8 @@ import { useGPA } from "../../hooks/useGPA";
 import { usePastGPA } from "../../hooks/usePastGPA";
 import messaging from "@react-native-firebase/messaging";
 import BannerAd from "../../components/BannerAd";
+import IOSButton from "../../components/IOSButton";
+import { useDynamicColor } from "../../hooks/useDynamicColor";
 
 const { width, height } = Dimensions.get("window");
 
@@ -100,7 +104,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         reloadGPA();
     };
 
-    const { theme }  = useTheme();
+    const { theme, palette }  = useTheme();
 
     const handleGPAScreen = () => {
         navigation.navigate("gpa");
@@ -145,6 +149,10 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         selectionSheet.current.snapTo(0);
     };
 
+    //{/*  <IOSButton style={{ marginTop: 10 }}>{ selectedValue }</IOSButton> */} 
+
+    const [ mpPickerOpen, setMPPickerOpen ] = useState(false);
+
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <ScrollView 
@@ -154,10 +162,33 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                         refreshing={loading || loadingGPA}
                         onRefresh={onRefresh}
                     />
-                }>
-                <TouchableWithoutFeedback onPress={handleSelectionMenuPress}>
-                    <Button title={selectedValue} onPress={handleSelectionMenuPress} />
-                </TouchableWithoutFeedback>
+                }> 
+               {
+                   Platform.OS === "ios" ? (
+                        <TouchableWithoutFeedback onPress={handleSelectionMenuPress}>
+                            <Button title={selectedValue} onPress={handleSelectionMenuPress} />
+                        </TouchableWithoutFeedback>
+                   ) : (
+                        <Picker
+                            selectedValue={selectedValue}
+                            mode="dropdown"
+                            dropdownIconColor={useDynamicColor({ dark: theme.grey, light: "grey" })}
+                            onFocus={() => { setMPPickerOpen(true) }}
+                            onBlur={() => { setMPPickerOpen(false); }}
+                            style={[styles.androidMPPicker,{backgroundColor: theme.secondary}]}
+                            prompt="Marking Period"
+                            onValueChange={(itemValue) => {
+                                setMPPickerOpen(false);
+                                setSelectedValue(itemValue);
+                                setAdjustedMarkingPeriod(itemValue);
+                            }}
+                        >
+                            { markingPeriods.map((mp, index) => (
+                                <Picker.Item color={mpPickerOpen ? 'rgba(0, 0, 0, 0.75)' : palette.blue } label={mp} value={mp} key={index} />
+                            ))}
+                        </Picker>
+                   )
+               }
                 <GPASlideshow handleGPAScreen={handleGPAScreen} pastGPA={pastGPA} gpa={gpa} />
                 { courses.map((course, index) => {
                     return (
@@ -203,6 +234,18 @@ const styles = StyleSheet.create({
         height: sheetHeight,
         width: width,
         backgroundColor: "#fff",
-    }
+    },
+    androidMPPicker: {
+        width: width * 0.9,
+        borderRadius: 10,
+        overflow: 'hidden',
+        shadowColor: "rgba(0, 0, 0, 0.35)",
+        shadowOpacity: 0.35,
+        shadowRadius: 5,
+        zIndex: 1,
+        shadowOffset: { width: 0, height: 0 },
+        marginTop: 15,
+        elevation: 15,
+    },
 });
 export default React.memo(GradesScreen); 

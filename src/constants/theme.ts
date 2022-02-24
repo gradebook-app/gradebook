@@ -1,17 +1,8 @@
-
-import { DynamicColorIOS, OpaqueColorValue } from "react-native";
-
-export interface ITheme {
+export interface IThemeStatic {
     palette: {
         primary: string,
         secondary: string,
-    },
-    theme: {
-        background: OpaqueColorValue | any,
-        secondary: OpaqueColorValue | any,
-        icon: OpaqueColorValue | any,
-        text: OpaqueColorValue | any,
-        grey: OpaqueColorValue | any,
+        blue: string; 
     },
     gradeColors: {
         a: string,
@@ -36,40 +27,6 @@ export interface ITheme {
         default:string,
     }
 }
-
-const dynamicBackgroundColor = DynamicColorIOS({
-    light: "#fff",
-    dark: "#000",
-});
-  
-const dynamicSecondaryColor = DynamicColorIOS({
-    light: "#fff",
-    dark: "#111111",
-});
-
-const dynamicTextColor = DynamicColorIOS({
-    light: "#000",
-    dark: "#fff",
-});
-
-const dynamicGreyColor = DynamicColorIOS({
-    light: "rgba(0, 0, 0, 0.5)",
-    dark: "rgba(255, 255, 255, 0.5)",
-});
-
-const dynamicIconColor = DynamicColorIOS({
-    light: "rgba(0, 0, 0, 0.15)",
-    dark: "rgba(255, 255, 255, 0.35)",
-});
-
-const themePalette = {
-    background: dynamicBackgroundColor,
-    secondary: dynamicSecondaryColor,
-    icon: dynamicIconColor,
-    text: dynamicTextColor,
-    grey: dynamicGreyColor
-};
-
 const gradeColors = {
     a: "#009B0E",
     aMinus: "#009B0E",
@@ -94,12 +51,12 @@ const categoryColors = {
     default: "#FAC51E",
 };
 
-const theme:ITheme = {
+const theme:IThemeStatic = {
     palette: {
         primary: "#a2d2ff",
         secondary: "#43A4FF",
+        blue: "#147EFB"
     }, 
-    theme:themePalette,
     gradeColors,
     categoryColors,
 };
