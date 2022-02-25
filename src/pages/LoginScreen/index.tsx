@@ -275,7 +275,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                                     }}
                                 >
                                     <Picker.Item 
-                                        enabled={false}
+                                        enabled={!districtPickerOpen}
                                         color={districtPickerOpen ? "rgba(0, 0, 0, 1)" : theme.grey }
                                         label={"Choose School District"} 
                                         value={undefined} 

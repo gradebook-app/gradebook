@@ -10,6 +10,7 @@ interface IDynamicColors {
 export const useDynamicColor = ({ light, dark } : IDynamicColors) => {
     if (Platform.OS === "ios") return DynamicColorIOS({ dark, light });
 
-    const { isDark } = useAppearanceTheme();
-    return isDark ? dark : light; 
+    // const { isDark } = useAppearanceTheme();
+    // return isDark ? dark : light; 
+    return dark; 
 }
