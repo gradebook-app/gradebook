@@ -48,6 +48,8 @@ build/
 local.properties
 *.iml
 *.hprof
+*.apk
+release/
 
 # node.js
 #
