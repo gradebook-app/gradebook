@@ -9,6 +9,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDynamicColor } from "./src/hooks/useDynamicColor";
 import { StatusBar } from "expo-status-bar";
+import changeNavigationBarColor from "react-native-navigation-bar-color";
+import { useAppearanceTheme } from "./src/hooks/useAppearanceTheme";
 
 const { width, height } = Dimensions.get('window');
 
@@ -26,6 +28,9 @@ const styles = StyleSheet.create({
 });
 
 export default function App() {
+    // const { isDark } = useAppearanceTheme();
+    changeNavigationBarColor("#000000", false, false);
+
     return (
         <ReduxProvider store={store}>
             <PersistGate loading={<ReduxBlocker/>} persistor={persistor}>
