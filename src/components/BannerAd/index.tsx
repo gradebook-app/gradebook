@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { StyleSheet, Platform, Dimensions, StyleProp, ViewStyle } from "react-native";
-import { AdMobBanner } from "expo-ads-admob";
+import { StyleSheet, Platform, Dimensions, StyleProp, ViewStyle, View } from "react-native";
+// import { AdMobBanner } from "expo-ads-admob";
+import { BannerAd as AdMobBanner, BannerAdSize } from '@react-native-firebase/admob';
 import FadeIn from "../FadeIn";
 import { useSelector } from "react-redux";
 import { IRootReducer } from "../../store/reducers";
@@ -19,7 +20,7 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
 
     const unitID = Platform.select({
         ios: "ca-app-pub-8555090951806711/9875384854",
-        android: "",
+        android: "ca-app-pub-8555090951806711/6375245625",
     });
 
     const handleAdReceived = () => setLoaded(true);
@@ -28,19 +29,19 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
     return (
         !limitAds ? (
             <FadeIn show={loaded} style={[ styles.container, style ]}>
-                { Platform.OS === "ios" ? (
-                    <AdMobBanner 
-                        onAdViewDidReceiveAd={handleAdReceived}
-                        onDidFailToReceiveAdWithError={handleAdFailed}
-                        adUnitID={unitID}
-                        bannerSize="banner"
-                        servePersonalizedAds={true}
-                        style={{
-                            borderRadius: 10,
-                            overflow: "hidden",
+               <View style={styles.adContainer}>
+                    <AdMobBanner
+                        unitId={unitID as string}
+                        size={BannerAdSize.BANNER}
+                        requestOptions={{
+                            keywords: ["education", "games"],
+                            requestNonPersonalizedAdsOnly: false,
                         }}
+                        onAdLoaded={handleAdReceived}
+                        onAdFailedToLoad={handleAdFailed}
                     />
-                ) : <></> }
+               </View>
+               
             </FadeIn>
         ) : null
     );
@@ -55,7 +56,10 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         height: 50,
         overflow: "hidden",
+    },
+    adContainer: {
         borderRadius: 5,
+        overflow: "hidden",
     }
 });
 

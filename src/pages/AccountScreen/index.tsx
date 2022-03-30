@@ -1,7 +1,7 @@
 import { faFlagUsa, faIdBadge, faKey, faPizzaSlice, faSchool, faUserCog, faPhone, faShieldAlt } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useMemo } from "react";
-import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Platform } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import { useDispatch, useSelector } from "react-redux";
 import BrandButton from "../../components/BrandButton";
@@ -14,6 +14,7 @@ import { getAccessToken, getUser } from "../../store/selectors";
 import { genesisConfig } from "../../constants/genesis";
 import jwt_decode from "jwt-decode";
 import { getUserId } from "../../store/selectors/user.selectors";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 type AccountScreenProps = {
     navigation: any,
@@ -36,7 +37,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
         navigation.navigate("login");
         dispatch(setLogoutClient({ userId }));
         await AsyncStorage.getAllKeys()
-            .then(keys => AsyncStorage.multiRemove(keys));
+            .then(keys => AsyncStorage.multiRemove(keys as string[]));
     };
 
     const { account, loading, reload } = useAccount();
@@ -115,23 +116,23 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                             </View>
                         </View>
                         <Box.Separator />
-                        <Box.Content iconColor={"#9B7F00"} icon={faSchool} title="Grade Level">
+                        <Box.Content iconColor={"#9B7F00"} icon={faSchool as IconProp} title="Grade Level">
                             <Box.Value value={`${account.grade || ""}`}></Box.Value>
                         </Box.Content>
                         <Box.Separator />
-                        <Box.Content iconColor={"#DD0370"} icon={faPizzaSlice} title="Lunch Balance">
+                        <Box.Content iconColor={"#DD0370"} icon={faPizzaSlice as IconProp} title="Lunch Balance">
                             <Box.Value value={`${account.lunchBalance || ""}`}></Box.Value>
                         </Box.Content>
                         <Box.Separator />
-                        <Box.Content iconColor={"#034FDD"} icon={faKey} title="Locker">
+                        <Box.Content iconColor={"#034FDD"} icon={faKey as IconProp} title="Locker">
                             <Box.Value value={`${account.locker || ""}`}></Box.Value>
                         </Box.Content>
                         <Box.Separator />
-                        <Box.Content iconColor={"#9B6000"} icon={faIdBadge} title="Student ID">
+                        <Box.Content iconColor={"#9B6000"} icon={faIdBadge as IconProp} title="Student ID">
                             <Box.Value value={`${account.studentId || ""}`}></Box.Value>
                         </Box.Content>
                         <Box.Separator />
-                        <Box.Content iconColor={"#009B8D"} icon={faFlagUsa} title="State ID">
+                        <Box.Content iconColor={"#009B8D"} icon={faFlagUsa as IconProp} title="State ID">
                             <Box.Value value={`${account.stateId || ""}`}></Box.Value>
                         </Box.Content>
                     </Box>
@@ -141,7 +142,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                                 <Box.Content 
                                     title="Options"
                                     iconColor={"#DD4503"}
-                                    icon={faUserCog}
+                                    icon={faUserCog as IconProp}
                                 >
                                     <Box.Arrow onPress={handleOptions} />
                                 </Box.Content>
@@ -150,7 +151,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                         <Box.Clickable onPress={handleContactsSettings}>
                         <Box.Content
                             iconColor={"#34E600"}
-                            icon={faPhone}
+                            icon={faPhone as IconProp}
                             title="Contact">
                             <Box.Arrow onPress={handleContactsSettings} />
                         </Box.Content>
@@ -160,7 +161,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                         <Box.Content 
                             title="Privacy Policy"
                             iconColor={"#E66C00"}
-                            icon={faShieldAlt}
+                            icon={faShieldAlt as IconProp}
                         >
                             <Box.Arrow onPress={handlePrivacySettings} />
                         </Box.Content>
@@ -184,6 +185,7 @@ const styles = StyleSheet.create({
         height: height,
         display: "flex",
         alignItems: "center",
+        marginTop: Platform.OS === "android" ? 25 : 0, 
     },
     logOut: {
     //   marginTop: 'auto',

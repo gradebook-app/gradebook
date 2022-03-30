@@ -49,6 +49,9 @@ local.properties
 *.iml
 *.hprof
 
+release/
+*.apk
+
 # node.js
 #
 node_modules/
@@ -73,3 +76,6 @@ web-build/
 dist/
 
 # @end expo-cli
+
+# Vscode Config
+.vscode/

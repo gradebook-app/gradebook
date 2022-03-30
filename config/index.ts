@@ -5,7 +5,7 @@ import _ from "lodash";
 const dynamicConfig = __DEV__ ? development : production; 
 
 const config = _.extend({
-    name: "GradeBook"
+    name: "Gradebook"
 }, dynamicConfig );
 
 export default config; 

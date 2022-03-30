@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { Appearance } from "react-native";
+import { useEffect, useState } from "react";
+import { Appearance, Platform } from "react-native";
 
 
 export const useAppearanceTheme = () => {
@@ -14,5 +14,5 @@ export const useAppearanceTheme = () => {
         return () => Appearance.removeChangeListener(listener);
     }, []);
 
-    return { isDark };
+    return { isDark: Platform.OS === "ios" ? isDark : true };
 };
