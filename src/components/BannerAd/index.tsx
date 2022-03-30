@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Platform, Dimensions, StyleProp, ViewStyle, View } from "react-native";
-// import { AdMobBanner } from "expo-ads-admob";
-import { BannerAd as AdMobBanner, BannerAdSize } from '@react-native-firebase/admob';
+import { BannerAd as AdMobBanner, BannerAdSize } from '@react-native-admob/admob';
 import FadeIn from "../FadeIn";
 import { useSelector } from "react-redux";
 import { IRootReducer } from "../../store/reducers";
@@ -41,7 +40,6 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
                         onAdFailedToLoad={handleAdFailed}
                     />
                </View>
-               
             </FadeIn>
         ) : null
     );
