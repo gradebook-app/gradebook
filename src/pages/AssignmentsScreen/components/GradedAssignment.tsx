@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { useTheme } from "../../../hooks/useTheme";
 import { useGradeColor } from "../../../hooks/useGradeColor";
 import { IAssignment } from "../../../store/interfaces/assignment.interface";
+import GradientText from "../../../components/GradientText";
+import Percentage from "../../../components/Percentage";
 
 const { width, height } = Dimensions.get("window");
 
@@ -11,12 +13,19 @@ type GradedAssignmentProp = {
 }
 
 const GradedAssignment : React.FC<GradedAssignmentProp> = ({ assignment }) => {
-    const gradeColor = useGradeColor(assignment?.grade?.percentage || 0);
     const { theme } = useTheme();
+
+    const grade = useMemo(() => {
+        return `${ assignment.grade.percentage }%`; 
+    }, [ assignment ]);
 
     return (
         <View>
-            <Text style={[ styles.percentage, { color: gradeColor} ]}>{ assignment.grade.percentage }%</Text>
+            <Percentage 
+                grade={assignment?.grade?.percentage || 0}
+                label={grade}
+                style={styles.percentage}
+            />
             <Text style={[ styles.points, { color: theme.grey } ]}>{ assignment.grade.points }</Text>
         </View>
     );

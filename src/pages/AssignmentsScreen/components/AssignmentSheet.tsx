@@ -8,6 +8,8 @@ import { useCategoryColor } from "../../../hooks/useCategoryColor";
 import { useGradeColor } from "../../../hooks/useGradeColor";
 import { IAssignment } from "../../../store/interfaces/assignment.interface";
 import moment from "moment";
+import GradientText from "../../../components/GradientText";
+import Percentage from "../../../components/Percentage";
 
 type AssignmentSheetProps = {
     assignment?: IAssignment | null,
@@ -20,7 +22,6 @@ const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
     const { isDark } = useAppearanceTheme();
 
     const assignmentColor = useCategoryColor(assignment?.category || "");
-    const gradeColor = useGradeColor(assignment?.grade.percentage || 0);
     const gradeLabel = useMemo(() => {
         const grade = assignment?.grade.percentage; 
         return grade ? `${grade}%` : ""; 
@@ -51,8 +52,16 @@ const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
     return (
         <View style={[ styles.assignmentSheet, { backgroundColor: theme.background } ]}>
             <View style={styles.headerContainer}>
-                <Text style={[ styles.header, { color: theme.text } ]}>{ assignment?.name }</Text>
-                <Text style={[ styles.grade, { color: gradeColor } ]}>{ gradeLabel }</Text>
+                <Text 
+                    style={[ styles.header, { color: theme.text } ]}
+                >
+                    { assignment?.name }
+                </Text>
+                <Percentage 
+                    grade={assignment?.grade.percentage || 0}
+                    label={gradeLabel}
+                    style={styles.grade}
+                />
             </View>
             <Text style={[ styles.date, { color: theme.grey }]}>{ date ?? "" }</Text>
             {
@@ -90,6 +99,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     },
     header: {
+        width: width * 0.8,
         fontSize: 25,
         fontWeight: "600",
     },
@@ -126,7 +136,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     grade: {
-        marginHorizontal: 10,
+        paddingRight: 10,
+        marginTop: 5,
         fontSize: 17.5,
         fontWeight: "500",
     },
@@ -134,7 +145,6 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection:"row",
         justifyContent: "space-between",
-        alignItems: "center",
     },
     date: {
         marginVertical: 5,
