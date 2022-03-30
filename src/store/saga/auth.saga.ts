@@ -14,6 +14,7 @@ function* loginClient({ payload } : ILoginClient) : Generator<any> {
     const response:any = yield api.post(LOGIN_CLIENT, payload).catch(() => {
         null; 
     });
+
     if (response && response?.access === true) {
         const user = response?.user;
         yield put(setUser(user || {}));
