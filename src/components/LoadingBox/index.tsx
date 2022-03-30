@@ -107,7 +107,7 @@ const LoadingBox: React.FC<LoadingScreenProps> = ({ loading = false }) => {
                         return (
                             <Slide 
                                 key={index} 
-                                icon={currentSlides[index]}
+                                icon={currentSlides[index] as IconProp}
                                 slideTranslate={slideTranslate} 
                             />
                         );

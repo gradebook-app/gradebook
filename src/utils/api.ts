@@ -59,7 +59,8 @@ export const get = async (endpoint:string, controller?:AbortController,) => {
     let defaultOptions:RequestInit = {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${accessToken}`
+            "Authorization": `Bearer ${accessToken}`,
+            "Accept": "application/json"
         }
     };
 
@@ -92,8 +93,10 @@ export const post = async <Body, >(endpoint:string, body?:any, controller?:Abort
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${accessToken}`
+            "Authorization": `Bearer ${accessToken}`,
+            "Accept": "application/json"
         },
+        mode: "cors",
         body: JSON.stringify((body || {}) as Body),
     };
 
@@ -121,7 +124,7 @@ export const post = async <Body, >(endpoint:string, body?:any, controller?:Abort
                         });
                         resolve(retry);
                     }
-                }
+                } else resolve(null); 
             });
     });
 };

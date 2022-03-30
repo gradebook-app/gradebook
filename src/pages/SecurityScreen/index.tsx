@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setBiometricsEnabled, setSavePassword } from "../../store/actions/settings.actions";
 import { IRootReducer } from "../../store/reducers";
 import { getBiometricsEnabled, getSavePassword } from "../../store/selectors/settings.selectors";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 const { width, height } = Dimensions.get("window");
 
@@ -41,7 +42,7 @@ const SecurityScreen : React.FC<SecurityScreenProps> = ({ navigation }) => {
                 <Box style={{ flexDirection: "column" }}>
                     <Box.Content 
                         iconColor={"#A70000"}
-                        icon={faFingerprint}
+                        icon={faFingerprint as IconProp}
                         title={"Enable Fingerprint or Face ID"}
                     >
                         <Box.Button active={biometricsEnabled} handleChange={handleBiometricsEnabled} />
@@ -50,7 +51,7 @@ const SecurityScreen : React.FC<SecurityScreenProps> = ({ navigation }) => {
                     <Box.Content
                         title="Save Password on Login"
                         iconColor={"#EAB500"}
-                        icon={faLock}
+                        icon={faLock as IconProp}
                     >
                         <Box.Button active={savePassword} handleChange={handleSavePassword} />
                     </Box.Content>
