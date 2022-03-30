@@ -109,7 +109,16 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     const renderMPSelector = () => {
         return (
             <View style={[ styles.selectContainer, { backgroundColor: theme.background } ]}>
-                <Text style={[ styles.markingPeriod, { color: theme.text } ]}>Select Marking Period</Text>
+                <View style={{ 
+                    flexDirection: "row", 
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    display: "flex",
+                    padding: 20,
+                }}>
+                    <Text style={[ styles.markingPeriod, { color: theme.text } ]}>Select Marking Period</Text>
+                    <Button title="Done" onPress={handleSelectorBack} />
+                </View>
                 <Picker
                     selectedValue={selectedValue}
                     onValueChange={(itemValue) => setSelectedValue(itemValue)}
@@ -179,8 +188,6 @@ const styles = StyleSheet.create({
     markingPeriod: {
         fontWeight: "500",
         fontSize: 25,
-        marginTop: 25,
-        marginLeft: 25,
     },
     container: {
         width: width,

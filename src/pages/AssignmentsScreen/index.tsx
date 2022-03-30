@@ -19,6 +19,7 @@ import { useTheme } from "../../hooks/useTheme";
 import messaging from "@react-native-firebase/messaging";
 import { useAppearanceTheme } from "../../hooks/useAppearanceTheme";
 import NoDataSVG from "../../SVG/NoDataSVG";
+import Percentage from "../../components/Percentage";
 const NoDataPNG = require("../../../assets/no-data.png");
 
 const { width, height } = Dimensions.get("window");
@@ -96,6 +97,12 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
         reload();
     };
 
+    const gradeLabel = useMemo(() : string => {
+        const percentageLabel = course.grade.percentage ?`${course.grade.percentage}%` : "N/A";
+        const letterLabel = `${course.grade.letter || ""}`;
+        return `${percentageLabel} ${letterLabel}`;
+    }, [ course ]);
+
     const { isDark } = useAppearanceTheme();
 
     return (
@@ -112,10 +119,11 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                     <Text style={[ styles.teacher, { color: theme.grey} ]}>{ course?.teacher || "" }</Text>
                 </View>
                 <View>
-                    <Text style={[ styles.grade, { color: gradeColor }]}>
-                        { course.grade.percentage ?`${course.grade.percentage}% ` : "N/A" }
-                        { `${course.grade.letter || ""}` }
-                    </Text>
+                    <Percentage 
+                        grade={course?.grade.percentage || 0}
+                        label={ gradeLabel }
+                        style={styles.grade}
+                    />
                 </View>
             </View>
             <ScrollView 
