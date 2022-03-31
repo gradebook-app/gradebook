@@ -6,6 +6,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import FadeIn from "../../../components/FadeIn";
 import Percentage from "../../../components/Percentage";
 import moment from "moment-timezone";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type CourseBoxProps = {
     course: ICourse,
@@ -23,7 +24,7 @@ const CourseBox : React.FC<CourseBoxProps> = ({ course, handleCourse }) => {
     const handlePress = () => {
         const date = moment().tz("America/New_York"); 
         if (date.month() === 3 && date.date() === 1) {
-            Linking.openURL("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+            Linking.openURL("https://www.youtube.com/watch?v=QtBDL8EiNZo");
         }       
         handleCourse(course);
     };
