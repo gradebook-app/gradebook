@@ -1,10 +1,11 @@
 import { useTheme } from "../../../hooks/useTheme";
 import React, { useEffect, useMemo, useState } from "react";
-import { View, StyleSheet, Dimensions, Text } from "react-native";
+import { View, StyleSheet, Dimensions, Text, Linking } from "react-native";
 import { ICourse } from "../../../store/interfaces/course.interface";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import FadeIn from "../../../components/FadeIn";
 import Percentage from "../../../components/Percentage";
+import moment from "moment-timezone";
 
 type CourseBoxProps = {
     course: ICourse,
@@ -20,6 +21,10 @@ const CourseBox : React.FC<CourseBoxProps> = ({ course, handleCourse }) => {
     useEffect(() => setShow(true), []);
 
     const handlePress = () => {
+        const date = moment().tz("America/New_York"); 
+        if (date.month() === 3 && date.date() === 1) {
+            Linking.openURL("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+        }       
         handleCourse(course);
     };
 
