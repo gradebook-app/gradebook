@@ -56,16 +56,15 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
 
     const { graded, ungraded } = useMemo(() => {
         const graded = assignments.filter(assignment => {
-            return !!assignment.grade.percentage;
+            const graded = !!assignment?.grade?.percentage || !!assignment?.grade?.points;
+            return graded;  
         });
         const ungraded = assignments.filter(assignment => {
-            return assignment.grade.percentage === null;
+            return assignment.grade.percentage === null && !assignment.grade.points;   
         });
 
         return { graded, ungraded };
     }, [ assignments ]);
-
-    const gradeColor = useGradeColor(course.grade.percentage);
 
     const assignmentSheet = useRef<any | null>(null);
 
