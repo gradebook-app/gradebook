@@ -54,7 +54,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     const handleLogOut = async () => {
         await AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys as string[]));
         navigation.navigate("login");
-        dispatch(setLogoutClient({ userId }));
+        if (!!userId) dispatch(setLogoutClient({ userId }));
     };
 
     const navigateToNavigator = useCallback(() => {
