@@ -16,7 +16,9 @@ const GradedAssignment : React.FC<GradedAssignmentProp> = ({ assignment }) => {
     const { theme } = useTheme();
 
     const grade = useMemo(() => {
-        return `${ assignment.grade.percentage }%`; 
+        if (!!assignment.grade.percentage)
+            return `${ assignment.grade.percentage }%`; 
+        else return "";
     }, [ assignment ]);
 
     return (
