@@ -51,12 +51,12 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
 
     const highschoolGPAUnweighted = useMemo(() => {
         const total = pastGPAUnweighted + (gpa.unweightedGPA || 0);
-        return (total / (pastGPAUnweighted ? 2 : 1));
+        return (total / (gpa.unweightedGPA && pastGPAUnweighted ? 2 : 1));
     }, [ pastGPAUnweighted, gpa ]);
 
     const highschoolGPAWeighted = useMemo(() => {
         const total = pastGPAWeighted + (gpa.weightedGPA || 0);
-        return (total / (pastGPAWeighted ? 2 : 1));
+        return (total / (gpa.weightedGPA && pastGPAWeighted ? 2 : 1));
     }, [ pastGPAWeighted, gpa ]);
 
     const onRefresh = () => {

@@ -16,26 +16,14 @@ export const useSchedule = ({ dateSelected }:IUseSchedule) => {
     const [ loading, setLoading ] = useState<boolean>(false);
     const [ fetching, setFetching ] = useState<boolean>(false);
 
-    // const setCache = useCallback(async () => {
-    //     const data = await AsyncStorage.getItem(`@assignments-${courseId}-${sectionId}-${markingPeriod}`);
-    //     if (data) {
-    //         const { assignments:cachedAssignments } = JSON.parse(data);
-    //         if (!assignments.length) {
-    //             setAssignments(cachedAssignments);
-    //         }
-    //     }
-    // }, [ courseId, sectionId ]);
-
     const dateParameter = useMemo(() => moment(dateSelected).format("L"), [ dateSelected ]);
 
     const getSchedule = useCallback(async () => {
         
-        // if (!assignments.length) setCache();
-        const response = await api.get(getScheduleEndpoint(dateParameter));
+        const response = await api.get(getScheduleEndpoint(dateParameter)).catch(() => null);
 
         if (response && Object.keys(response).length) {
             setSchedule(response);
-            // AsyncStorage.setItem(`@assignments-${courseId}-${sectionId}-${markingPeriod}`, JSON.stringify({ assignments: data }));
         } else setSchedule({});
     }, [ dateParameter ]);
 

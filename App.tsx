@@ -10,7 +10,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDynamicColor } from "./src/hooks/useDynamicColor";
 import { StatusBar } from "expo-status-bar";
 import changeNavigationBarColor from "react-native-navigation-bar-color";
-import { useAppearanceTheme } from "./src/hooks/useAppearanceTheme";
 
 const { width, height } = Dimensions.get('window');
 

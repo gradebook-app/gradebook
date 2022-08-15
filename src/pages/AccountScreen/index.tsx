@@ -15,6 +15,7 @@ import { genesisConfig } from "../../constants/genesis";
 import jwt_decode from "jwt-decode";
 import { getUserId } from "../../store/selectors/user.selectors";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import analytics from '@react-native-firebase/analytics';
 
 type AccountScreenProps = {
     navigation: any,
@@ -36,6 +37,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
     const handleLogOut = async () => {
         navigation.navigate("login");
         dispatch(setLogoutClient({ userId }));
+        await analytics().setUserId(null);
         await AsyncStorage.getAllKeys()
             .then(keys => AsyncStorage.multiRemove(keys as string[]));
     };
@@ -57,7 +59,8 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
         const schoolExtension = user?.schoolDistrict;
         if (schoolExtension === undefined) return null; 
         const base = genesisConfig[schoolExtension]?.root;
-        const url = `${base}/sis/photos?type=student&studentID=${account.studentId}`;
+        const studentId = user?.studentId || account.studentId;
+        const url = `${base}/sis/photos?type=student&studentID=${studentId}`;
         return url; 
     }, [ user, account ]);
 
