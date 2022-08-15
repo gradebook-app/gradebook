@@ -8,7 +8,6 @@ import {
     RefreshControl,
     Text,
     Button,
-    StatusBar,
     Platform
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
@@ -28,18 +27,9 @@ import { useGPA } from "../../hooks/useGPA";
 import { usePastGPA } from "../../hooks/usePastGPA";
 import messaging from "@react-native-firebase/messaging";
 import BannerAd from "../../components/BannerAd";
-<<<<<<< Updated upstream
-import IOSButton from "../../components/IOSButton";
-import { useDynamicColor } from "../../hooks/useDynamicColor";
-=======
-<<<<<<< Updated upstream
-=======
-import IOSButton from "../../components/IOSButton";
 import { useDynamicColor } from "../../hooks/useDynamicColor";
 import NoCoursesSVG from "../../SVG/NoCoursesSVG";
 import FadeIn from "../../components/FadeIn";
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
 const { width, height } = Dimensions.get("window");
 
