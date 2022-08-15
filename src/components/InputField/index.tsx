@@ -44,14 +44,7 @@ const styles = StyleSheet.create({
         shadowOpacity: Platform.OS === "ios" ? 0.075 : 0.15,
         shadowOffset: { width: 0, height: 0 },
         marginVertical: 10,
-<<<<<<< Updated upstream
-        elevation: 7.5,
-=======
-<<<<<<< Updated upstream
-=======
         elevation: 7.5
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     },
     input: {
         width: "100%",
