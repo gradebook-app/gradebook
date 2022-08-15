@@ -1,7 +1,7 @@
 import { faBinoculars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useTheme } from "../../hooks/useTheme";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { 
     Dimensions, 
     SafeAreaView, 
@@ -29,6 +29,8 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { ScrollView, TouchableOpacity as TouchableOpacityGesture } from "react-native-gesture-handler";
 import IOSButton from "../../components/IOSButton";
 import { useDynamicColor } from "../../hooks/useDynamicColor";
+import analytics from "@react-native-firebase/analytics";
+import { getUserId } from "../../store/selectors/user.selectors";
 
 const { width, height } = Dimensions.get("window");
 
@@ -55,9 +57,12 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
     const dispatch = useDispatch();
 
     const state = useSelector((state:IRootReducer) => state);
+    const userId = getUserId(state);
     const loading = isLoading(state);
     const isAccessToken = !!getAccessToken(state);
     const accessDenied = isAccessDenied(state);
+
+    const [ attemptingLogin, setAttemptingLogin ] = useState(false);
 
     const { theme } = useTheme();
 
@@ -108,16 +113,24 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
             console.log(e);
         }
 
+        setAttemptingLogin(true);
         dispatch(setLoginClient({ ...values, notificationToken: notificationToken }));
     }, [ values ]));
     
-    const handleNavigate = useCallback(() => {
-        if (isAccessToken) {
+
+    const handleNavigate = useCallback(async () => {
+        if (isAccessToken && attemptingLogin) {
+            await analytics().logLogin({ method: "manual" });
+            await analytics().setUserId(userId);
+            await analytics().setUserProperty("userId", userId);
             navigation.navigate("navigator");
         }
-    }, [ isAccessToken ]);
+    }, [ isAccessToken, userId, attemptingLogin]);
+    
 
-    useEffect(handleNavigate, [ handleNavigate ]);
+    useEffect(() => {
+        handleNavigate();
+    }, [ handleNavigate ]);
 
     const handleValueChange = (type:keyof IFormValues) => (text:any) => { 
         setValues({ ...values, errorMessage: "", [ type ]: text });

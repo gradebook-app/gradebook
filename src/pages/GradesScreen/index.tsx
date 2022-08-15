@@ -28,8 +28,18 @@ import { useGPA } from "../../hooks/useGPA";
 import { usePastGPA } from "../../hooks/usePastGPA";
 import messaging from "@react-native-firebase/messaging";
 import BannerAd from "../../components/BannerAd";
+<<<<<<< Updated upstream
 import IOSButton from "../../components/IOSButton";
 import { useDynamicColor } from "../../hooks/useDynamicColor";
+=======
+<<<<<<< Updated upstream
+=======
+import IOSButton from "../../components/IOSButton";
+import { useDynamicColor } from "../../hooks/useDynamicColor";
+import NoCoursesSVG from "../../SVG/NoCoursesSVG";
+import FadeIn from "../../components/FadeIn";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 const { width, height } = Dimensions.get("window");
 
@@ -199,7 +209,27 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                         />
                     );
                 })}
-                { courses.length ? <BannerAd style={{ marginTop: 15 }} /> : <></> }
+                {
+                    !courses.length && !loading && (
+                        <FadeIn 
+                        show={true}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            padding: 15,
+                        }}>
+                           <>
+                                <NoCoursesSVG width={width * 0.65} />
+                                <Text
+                                    style={{ color: theme.grey, marginVertical: 15 }}
+                                >
+                                    No Courses Available.
+                                </Text>
+                            </>
+                        </FadeIn>
+                    )
+                }
+                { courses.length && loading ? <BannerAd style={{ marginTop: 15 }} /> : <></> }
             </ScrollView>
             <Blocker block={showSelector} onPress={handleSelectorBack} />
             <BottomSheet 

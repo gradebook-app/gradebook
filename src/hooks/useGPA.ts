@@ -28,7 +28,7 @@ export const useGPA = () => {
 
         if (!Object.keys(gpa).length) setLoading(true);
 
-        const response = await api.get(GET_GPA, controller);
+        const response = await api.get(GET_GPA, controller).catch(() => null);
         
         if (response && Object.keys(response).length) {
             setGPA(response);
@@ -52,6 +52,6 @@ export const useGPA = () => {
             mounted = false; 
         };
     }, [ getGPA ]);
-
+    
     return { reload, loading, gpa };
 };

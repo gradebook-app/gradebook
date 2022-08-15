@@ -10,6 +10,9 @@ podfile_properties = JSON.parse(File.read('./Podfile.properties.json')) rescue {
 target 'Gradebook' do
   use_expo_modules!
   config = use_native_modules!
+  
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
 
   use_react_native!(
     :path => config[:reactNativePath],

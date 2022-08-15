@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Platform, Dimensions, StyleProp, ViewStyle, View } from "react-native";
-import { BannerAd as AdMobBanner, BannerAdSize } from '@react-native-admob/admob';
+//import { BannerAd as AdMobBanner, BannerAdSize } from '@react-native-admob/admob';
 import FadeIn from "../FadeIn";
 import { useSelector } from "react-redux";
 import { IRootReducer } from "../../store/reducers";
@@ -23,13 +23,15 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
     });
 
     const handleAdReceived = () => setLoaded(true);
-    const handleAdFailed = () => setLoaded(false);
+    const handleAdFailed = () => {
+        setLoaded(false);
+    }
     
     return (
         !limitAds ? (
             <FadeIn show={loaded} style={[ styles.container, style ]}>
                <View style={styles.adContainer}>
-                    <AdMobBanner
+                    {/* <AdMobBanner
                         unitId={unitID as string}
                         size={BannerAdSize.BANNER}
                         requestOptions={{
@@ -38,7 +40,7 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
                         }}
                         onAdLoaded={handleAdReceived}
                         onAdFailedToLoad={handleAdFailed}
-                    />
+                    /> */}
                </View>
             </FadeIn>
         ) : null

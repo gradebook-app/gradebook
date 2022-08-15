@@ -1,23 +1,24 @@
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import NetInfo from '@react-native-community/netinfo';
-import React, { useCallback, useEffect, useState } from "react";
+import analytics from '@react-native-firebase/analytics';
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import {useNetInfo, addEventListener as networkEventListener } from "@react-native-community/netinfo";
 import { 
     Dimensions, 
     SafeAreaView, 
     StyleSheet, 
     View, 
-    Button,
     ActivityIndicator,
     Image,
     Platform,
+    Text,
 } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import { useDispatch, useSelector } from "react-redux";
-import { setAccessDenied, setLoginClient, setLoginError, setLogoutClient } from "../../store/actions/auth.actions";
+import { setAccessDenied, setLoginClient, setLogoutClient } from "../../store/actions/auth.actions";
 import { IRootReducer } from "../../store/reducers";
-import { getAccessToken, getUser, isAccessDenied, isLoading, isLoginError } from "../../store/selectors";
+import { getAccessToken, isAccessDenied, isLoading, isLoginError } from "../../store/selectors";
 import * as LocalAuthentication from "expo-local-authentication";
 import BrandButton from "../../components/BrandButton";
 import { TouchableOpacity } from "react-native";
@@ -45,6 +46,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     const loginError = isLoginError(state);
     const settings = getSettings(state);
     const userId = getUserId(state);
+    const network = useNetInfo();
 
     const [ isBiometricsEnabled, setIsBiometricsEnabled ] = useState(false);
 
@@ -52,13 +54,18 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     const loading = isLoading(state);
 
     const handleLogOut = async () => {
+        await analytics().setUserId(null);
+        await analytics().setUserProperty("userId", null);
         await AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys as string[]));
         navigation.navigate("login");
         if (!!userId) dispatch(setLogoutClient({ userId }));
     };
 
-    const navigateToNavigator = useCallback(() => {
-       if (isAccessToken) navigation.navigate("navigator");
+    const navigateToNavigator = useCallback(async () => {
+       if (isAccessToken) {
+            await analytics().logLogin({ method: "automatic" });
+            navigation.navigate("navigator");
+       }
     }, [ isAccessToken ]);
 
     const handleAuth = useCallback(async () => {
@@ -69,14 +76,14 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
             dispatch(setAccessDenied(false));
             return; 
         }
-        
+
         const credentials = await AsyncStorage.getItem("@credentials");
     
-        if (loginError && credentials) {
-            navigation.navigate("navigator");
-            dispatch(setLoginError(false));
-            return false; 
-        }
+        // if (loginError && credentials) {
+        //     navigation.navigate("navigator");
+        //     dispatch(setLoginError(false));
+        //     return false; 
+        // }
 
         let token = null;
 
@@ -115,14 +122,19 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
                 console.log(e);
             }
 
-
             const data = JSON.parse(credentials);
+  
+            if (!!userId){
+                await analytics().setUserId(userId);
+                await analytics().setUserProperty("userId", userId);
+            }
+            
             dispatch(setLoginClient({ ...data, notificationToken: token }));
         } else {
             setIsBiometricsEnabled(false);
             navigation.navigate("login");
         }
-    }, [ isAccessToken, accessDenied, loginError, settings ]);
+    }, [ isAccessToken, accessDenied, loginError, settings, userId ]);
 
     const [ visible, setVisible ] = useState(false);
 
@@ -138,9 +150,22 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
         navigateToNavigator()
     }, [ navigateToNavigator ]);
 
+    const networkPrevState = useRef<boolean | null>(null);
+
+    useEffect(() => {
+        const subscription = networkEventListener((e) => {
+            if (networkPrevState.current === false && e.isConnected === true && !loading) {
+                dispatch(setLoginClient(false))
+                handleAuth();
+            };
+            networkPrevState.current = e.isConnected;
+        });
+        return () => subscription();
+    }, [ networkPrevState, loading ]);
+    
     return (
         <SafeAreaView style={[ styles.container, {  backgroundColor: theme.background }]}>
-            { isBiometricsEnabled && (
+            { (isBiometricsEnabled) && (
                 <TouchableOpacity onPress={handleLogOut} style={styles.signOut}>
                     <IOSButton style={{ marginHorizontal: Platform.OS === "ios" ? 0 : 10 }} onPress={handleLogOut}>Sign Out</IOSButton>
                     <FontAwesomeIcon color={"#006ee6"} icon={faSignOutAlt as IconProp} />
@@ -148,7 +173,6 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
             )}
             <FadeIn style={styles.loadingContainer} show={visible}>
                 <>
-                    {/* <FontAwesomeIcon size={65} color={colors.primary} icon={faBook} />   */}
                     <View style={{ ...styles.loading, backgroundColor: theme.secondary }}>
                         <Image style={{ width: 100, height: 100 }} source={GradebookIcon}/>
                     </View>
@@ -156,7 +180,27 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
                 </>
             </FadeIn>
             <View style={styles.buttonGroup}>
-                { isBiometricsEnabled ? (
+                {
+                    (loginError && !network.isConnected) && (
+                        <FadeIn show={true}>
+                            <Text 
+                                style={styles.error}>
+                                    No Network Connection.
+                            </Text>
+                        </FadeIn>
+                    )
+                }
+                {
+                    (loginError && network.isConnected) && (
+                        <FadeIn show={true}>
+                            <Text 
+                                style={styles.error}>
+                                    Unable to communicate with server.
+                            </Text>
+                        </FadeIn>
+                    )
+                }
+                { (isBiometricsEnabled || loginError) && (
                     <>
                         <BrandButton 
                             style={[{ backgroundColor: palette.primary } ]}
@@ -165,7 +209,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
                             onPress={handleAuth}
                         ></BrandButton>
                     </>
-                ) : null }
+                )}
             </View>
         </SafeAreaView>
     );
@@ -223,6 +267,11 @@ const styles = StyleSheet.create({
         right: 15,
         top: 45,
         alignItems: "center",
+    },
+    error: { 
+        color: 'red', 
+        textAlign: "center", 
+        marginVertical: 15 
     }
 });
 
