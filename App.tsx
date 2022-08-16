@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
 });
 
 export default function App() {
-    // const { isDark } = useAppearanceTheme();
     changeNavigationBarColor("#000000", false, false);
 
     useEffect(() => {
