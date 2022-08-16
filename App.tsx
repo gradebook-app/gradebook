@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Dimensions, Platform, StyleSheet } from "react-native";
 import LoadingScreen from "./src/pages/LoadingScreen";
 import { Provider as ReduxProvider } from "react-redux";
@@ -10,6 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDynamicColor } from "./src/hooks/useDynamicColor";
 import { StatusBar } from "expo-status-bar";
 import changeNavigationBarColor from "react-native-navigation-bar-color";
+import SplashScreen from 'react-native-splash-screen'
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,6 +30,10 @@ const styles = StyleSheet.create({
 export default function App() {
     // const { isDark } = useAppearanceTheme();
     changeNavigationBarColor("#000000", false, false);
+
+    useEffect(() => {
+        SplashScreen.hide();
+    }, []);
 
     return (
         <ReduxProvider store={store}>
