@@ -11,8 +11,19 @@ import { useDynamicColor } from "./src/hooks/useDynamicColor";
 import { StatusBar } from "expo-status-bar";
 import changeNavigationBarColor from "react-native-navigation-bar-color";
 import SplashScreen from 'react-native-splash-screen'
-
 const { width, height } = Dimensions.get('window');
+import mobileAds, { MaxAdContentRating } from 'react-native-google-mobile-ads';
+
+mobileAds()
+  .setRequestConfiguration({
+    maxAdContentRating: MaxAdContentRating.T,
+    tagForChildDirectedTreatment: true,
+    tagForUnderAgeOfConsent: true,
+    testDeviceIdentifiers: [],
+  })
+  .then(() => {
+    mobileAds().initialize();
+})
 
 const ReduxBlocker = () => {
     const backgroundColor = useDynamicColor({ dark: "#000", light: "#fff" });
