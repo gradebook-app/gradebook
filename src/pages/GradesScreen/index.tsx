@@ -219,7 +219,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                         </FadeIn>
                     )
                 }
-                { courses.length && loading ? <BannerAd style={{ marginTop: 15 }} /> : <></> }
+                { !loading ? <BannerAd style={{ marginTop: 15 }} /> : <></> }
             </ScrollView>
             <Blocker block={showSelector} onPress={handleSelectorBack} />
             <BottomSheet 

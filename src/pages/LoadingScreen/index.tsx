@@ -128,7 +128,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
                 await analytics().setUserId(userId);
                 await analytics().setUserProperty("userId", userId);
             }
-            
+
             dispatch(setLoginClient({ ...data, notificationToken: token }));
         } else {
             setIsBiometricsEnabled(false);

@@ -139,7 +139,7 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                         Disclaimer: All GPA Calculations are estimated and may differ from your actual GPA. 
                     </Text>
                 </View>
-                <BannerAd style={{ marginBottom: 50 }} />
+                <BannerAd style={{ marginBottom: 100 }} />
             </ScrollView>
         </SafeAreaView>
     );
