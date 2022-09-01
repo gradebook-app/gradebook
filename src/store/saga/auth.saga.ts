@@ -3,7 +3,7 @@ import { all, put, select, takeLatest } from "@redux-saga/core/effects";
 import { LOGIN_CLIENT, LOGOUT_CLIENT } from "../../constants/endpoints/auth";
 import * as api from "../../utils/api";
 import { setLoading } from "../actions";
-import { setAccessDenied, setSetAccessToken } from "../actions/auth.actions";
+import { setAccessDenied, setLoginError, setSetAccessToken } from "../actions/auth.actions";
 import { setResetSettings } from "../actions/settings.actions";
 import { setUser } from "../actions/user.actions";
 import { EAuthActions, ILoginClient, ILogoutClient } from "../constants/auth.constants";
@@ -25,7 +25,7 @@ function* loginClient({ payload } : ILoginClient) : Generator<any> {
         yield put(setAccessDenied(true));
         yield AsyncStorage.removeItem("@credentials");
     } else if (!response) {
-        // yield put(setLoginError(true));
+        yield put(setLoginError(true));
     }
     yield put(setLoading(false));
 }

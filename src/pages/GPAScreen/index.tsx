@@ -16,7 +16,7 @@ type GPAScreenProps = {
 const { width, height } = Dimensions.get("window");
 
 const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
-    const { theme } = useTheme();
+    const { theme, palette } = useTheme();
 
     const { loading:loadingGPA, gpa, reload } = useGPA();
     const { loading:loadingPastGPA, pastGPA } = usePastGPA();
@@ -51,12 +51,12 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
 
     const highschoolGPAUnweighted = useMemo(() => {
         const total = pastGPAUnweighted + (gpa.unweightedGPA || 0);
-        return (total / (pastGPAUnweighted ? 2 : 1));
+        return (total / (gpa.unweightedGPA && pastGPAUnweighted ? 2 : 1));
     }, [ pastGPAUnweighted, gpa ]);
 
     const highschoolGPAWeighted = useMemo(() => {
         const total = pastGPAWeighted + (gpa.weightedGPA || 0);
-        return (total / (pastGPAWeighted ? 2 : 1));
+        return (total / (gpa.weightedGPA && pastGPAWeighted ? 2 : 1));
     }, [ pastGPAWeighted, gpa ]);
 
     const onRefresh = () => {
@@ -78,7 +78,10 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                     pastGPA.map((eachPastGPA, index) => {
                         return (
                             <FadeIn key={index} style={styles.gpaContainer} show={true}>
-                                <Box title={`Grade ${eachPastGPA.gradeLevel} | ${eachPastGPA.year}`} style={{ flexDirection: "column" }}>
+                                <Box 
+                                    title={`Grade ${eachPastGPA.gradeLevel} | ${eachPastGPA.year}`} style={{ 
+                                        flexDirection: "column",
+                                    }}>
                                     <Box.Content 
                                         showIcon={false}
                                         title="Unweighted GPA"
@@ -136,7 +139,7 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                         Disclaimer: All GPA Calculations are estimated and may differ from your actual GPA. 
                     </Text>
                 </View>
-                <BannerAd style={{ marginBottom: 50 }} />
+                <BannerAd style={{ marginBottom: 100 }} />
             </ScrollView>
         </SafeAreaView>
     );
