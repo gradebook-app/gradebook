@@ -7,9 +7,15 @@ platform :ios, '12.0'
 require 'json'
 podfile_properties = JSON.parse(File.read('./Podfile.properties.json')) rescue {}
 
+$RNFirebaseAnalyticsWithoutAdIdSupport=true
+
 target 'Gradebook' do
   use_expo_modules!
+
   config = use_native_modules!
+  
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
 
   use_react_native!(
     :path => config[:reactNativePath],
@@ -35,6 +41,9 @@ target 'Gradebook' do
             target.build_phases.move(build_phase, 0)
           end
         end
+      end
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
       end
     end
   end

@@ -3,7 +3,7 @@ import { View, StyleSheet, Dimensions } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import { LineChart, Grid, YAxis } from "react-native-svg-charts";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 type GradeChartProps = {
     data: number[],

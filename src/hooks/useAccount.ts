@@ -23,7 +23,7 @@ export const useAccount = () => {
 
         if (!Object.keys(account).length) setLoading(true);
 
-        const response = await api.get(GET_ACCOUNT);
+        const response = await api.get(GET_ACCOUNT)
         
         if (response && Object.keys(response).length) {
             setAccount(response);

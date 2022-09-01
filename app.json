@@ -38,5 +38,9 @@
       "favicon": "./assets/favicon.png"
     },
     "description": ""
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-8555090951806711~9906284761",
+    "ios_app_id": "ca-app-pub-8555090951806711~1794567511"
   }
 }
