@@ -54,7 +54,7 @@ const ScheduleCourse : React.FC<IScheduleCourseProps> = ({ course, fetching }) =
 
     const room = useMemo(() => {
         return course.room.replace(/(Room|room)/, "");
-    }, []);
+    }, [ course ]);
 
     // useEffect(() => {
     //     return () => { 
