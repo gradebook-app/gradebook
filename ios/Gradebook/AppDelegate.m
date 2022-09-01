@@ -1,4 +1,5 @@
 #import <Firebase.h>
+#import "RNSplashScreen.h"
 #import "AppDelegate.h"
 
 #import <React/RCTBridge.h>
@@ -53,6 +54,8 @@ static void InitializeFlipper(UIApplication *application) {
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
 
+  [RNSplashScreen show];
+  
   return YES;
  }
 

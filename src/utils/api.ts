@@ -83,6 +83,7 @@ export const get = async (endpoint:string, controller?:AbortController,) => {
                     });
                 }
             }
+            else throw e;
         });
 };
 

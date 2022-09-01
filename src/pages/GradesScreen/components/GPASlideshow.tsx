@@ -92,14 +92,16 @@ const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA, handleGPAScr
     }, [ pastGPA ]);
 
     const highschoolGPAUnweighted = useMemo(() => {
-        const total = pastGPAUnweighted + (gpa.unweightedGPA || 0);
-        return (total / (pastGPAUnweighted ? 2 : 1));
-    }, [ pastGPAUnweighted, gpa ]);
+        const unweightedGPA = gpa.unweightedGPA || user?.unweightedGPA;
+        const total = pastGPAUnweighted + (unweightedGPA || 0);
+        return (total / (unweightedGPA && pastGPAUnweighted ? 2 : 1));
+    }, [ pastGPAUnweighted, gpa, user ]);
 
     const highschoolGPAWeighted = useMemo(() => {
-        const total = pastGPAWeighted + (gpa.weightedGPA || 0);
-        return (total / (pastGPAWeighted ? 2 : 1));
-    }, [ pastGPAWeighted, gpa ]);
+        const weightedGPA = gpa.weightedGPA || user?.weightedGPA;
+        const total = pastGPAWeighted + (weightedGPA || 0);
+        return (total / (weightedGPA && pastGPAWeighted ? 2 : 1));
+    }, [ pastGPAWeighted, gpa, user ]);
 
     const highschoolGPAUnweightedProgression = useMemo(() => {
         return unweightedProgression.map(value => {
@@ -135,10 +137,34 @@ const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA, handleGPAScr
 
     return (
         <Slider caption={renderCaption}>
-            <GPASlide gpaProgression={unweightedProgression} gpa={gpa?.unweightedGPA} header={"Unweighted GPA"}/>
-            <GPASlide gpaProgression={weightedProgression} gpa={gpa?.weightedGPA} header={"Weighted GPA"}/>
-            <GPASlide gpaProgression={highschoolGPAUnweightedProgression} gpa={highschoolGPAUnweighted} header={"Unweighted Total GPA"}/>
-            <GPASlide gpaProgression={highschoolGPAWeightedProgression} gpa={highschoolGPAWeighted} header={"Weighted Total GPA"}/>
+            <GPASlide 
+                gpaProgression={unweightedProgression} 
+                gpa={gpa?.unweightedGPA || user?.unweightedGPA} 
+                header={"Unweighted GPA"}
+            />
+            <GPASlide 
+                gpaProgression={weightedProgression} 
+                gpa={gpa?.weightedGPA || user?.weightedGPA} 
+                header={"Weighted GPA"}
+            />
+            {
+                gpa.unweightedGPA ? (
+                    <GPASlide 
+                        gpaProgression={highschoolGPAUnweightedProgression}
+                        gpa={highschoolGPAUnweighted} 
+                        header={"Unweighted Total GPA"}
+                    />
+                ) : <></>
+            }
+            {
+                gpa.weightedGPA ? (
+                    <GPASlide 
+                        gpaProgression={highschoolGPAWeightedProgression} 
+                        gpa={highschoolGPAWeighted} 
+                        header={"Weighted Total GPA"}
+                    />
+                ) : <></>
+            }
         </Slider> 
     );
 };

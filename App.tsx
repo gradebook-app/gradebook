@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Dimensions, Platform, StyleSheet } from "react-native";
 import LoadingScreen from "./src/pages/LoadingScreen";
 import { Provider as ReduxProvider } from "react-redux";
@@ -10,9 +10,20 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDynamicColor } from "./src/hooks/useDynamicColor";
 import { StatusBar } from "expo-status-bar";
 import changeNavigationBarColor from "react-native-navigation-bar-color";
-import { useAppearanceTheme } from "./src/hooks/useAppearanceTheme";
-
+import SplashScreen from 'react-native-splash-screen'
 const { width, height } = Dimensions.get('window');
+import mobileAds, { MaxAdContentRating } from 'react-native-google-mobile-ads';
+
+mobileAds()
+  .setRequestConfiguration({
+    maxAdContentRating: MaxAdContentRating.T,
+    tagForChildDirectedTreatment: true,
+    tagForUnderAgeOfConsent: true,
+    testDeviceIdentifiers: [],
+  })
+  .then(() => {
+    mobileAds().initialize();
+})
 
 const ReduxBlocker = () => {
     const backgroundColor = useDynamicColor({ dark: "#000", light: "#fff" });
@@ -28,8 +39,11 @@ const styles = StyleSheet.create({
 });
 
 export default function App() {
-    // const { isDark } = useAppearanceTheme();
     changeNavigationBarColor("#000000", false, false);
+
+    useEffect(() => {
+        SplashScreen.hide();
+    }, []);
 
     return (
         <ReduxProvider store={store}>
