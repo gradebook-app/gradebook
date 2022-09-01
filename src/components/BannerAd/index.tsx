@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { StyleSheet, Platform, Dimensions, StyleProp, ViewStyle, View } from "react-native";
-import { BannerAd as AdMobBanner, BannerAdSize } from '@react-native-admob/admob';
 import FadeIn from "../FadeIn";
 import { useSelector } from "react-redux";
 import { IRootReducer } from "../../store/reducers";
 import { getLimitAds } from "../../store/selectors/settings.selectors";
+import { BannerAd as AdMobBannerAd, TestIds, BannerAdSize } from "react-native-google-mobile-ads";
 
 const { width } = Dimensions.get("screen");
 
@@ -17,27 +17,38 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
     const state = useSelector((state:IRootReducer) => state);
     const limitAds = getLimitAds(state);
 
-    const unitID = Platform.select({
+    const unitID = __DEV__ ? TestIds.BANNER : Platform.select({
         ios: "ca-app-pub-8555090951806711/9875384854",
         android: "ca-app-pub-8555090951806711/6375245625",
     });
 
-    const handleAdReceived = () => setLoaded(true);
-    const handleAdFailed = () => setLoaded(false);
+    const nativeAdViewRef = React.useRef<any | null>(null);
+
+    const handleAdReceived = () => {
+        setLoaded(true)
+    };
+
+    const handleAdFailed = () => {
+        setLoaded(false);
+    }
+
+    React.useEffect(() => {
+        nativeAdViewRef.current?.loadAd();
+    }, []);
     
     return (
         !limitAds ? (
             <FadeIn show={loaded} style={[ styles.container, style ]}>
                <View style={styles.adContainer}>
-                    <AdMobBanner
+                    <AdMobBannerAd
                         unitId={unitID as string}
-                        size={BannerAdSize.BANNER}
-                        requestOptions={{
-                            keywords: ["education", "games"],
-                            requestNonPersonalizedAdsOnly: false,
-                        }}
                         onAdLoaded={handleAdReceived}
                         onAdFailedToLoad={handleAdFailed}
+                        size={BannerAdSize.LARGE_BANNER}
+                        requestOptions={{
+                            keywords: [ "education", "school", "math", "english" ],
+                            requestNonPersonalizedAdsOnly: true,
+                        }}
                     />
                </View>
             </FadeIn>

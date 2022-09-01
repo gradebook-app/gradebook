@@ -17,6 +17,7 @@ import notifee from "@notifee/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import OptionsScreen from "./src/pages/OptionsScreen";
 import AdsSettingsScreen from "./src/pages/AdsSettingsScreen";
+import { useTheme } from "./src/hooks/useTheme";
 
 const Stack = createStackNavigator();
 
@@ -53,6 +54,8 @@ const AppNavigator = () => {
         return subscription; 
     },[]);
 
+    const { theme } = useTheme();
+
     return (
         <NavigationContainer theme={DarkTheme}>
             <Stack.Navigator initialRouteName="loading">
@@ -79,7 +82,10 @@ const AppNavigator = () => {
                     component={GPAScreen}
                     options={{
                         headerShown: true, 
-                        headerTitle: "", 
+                        headerTitle: "GPA Summary", 
+                        headerTitleStyle: {
+                            color: theme.text
+                        },
                         gestureEnabled: true,
                         headerBackTitle: "",
                     }}

@@ -1,4 +1,4 @@
-import React, { ReactChild, useState } from "react";
+import React, { ReactChild, useMemo, useState } from "react";
 import { 
     NativeScrollEvent, 
     NativeSyntheticEvent,
@@ -32,6 +32,11 @@ const Slider : React.FC<SliderProps> = ({ children, caption }) => {
 
     const { palette, theme } = useTheme();
 
+    const filteredChildren = useMemo(() => {
+        return children.filter(child => {
+            return (child as React.ReactElement).type !== React.Fragment;
+        });
+    }, [ children ]);
     
     return (
         <>
@@ -48,7 +53,7 @@ const Slider : React.FC<SliderProps> = ({ children, caption }) => {
             { caption && caption() }
             <View style={ styles.dots }>
                 {
-                    new Array(React.Children.count(children)).fill(0).map((_, index) => {
+                    filteredChildren.map((_, index) => {
                         return (
                             <View 
                                 key={index} 

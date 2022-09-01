@@ -37,17 +37,20 @@ export const useGrades = ({ markingPeriod } : { markingPeriod: string }) => {
 
         setLoading(true);
 
-        const response = await api.get(queryGrades(markingPeriod));
+        const response = (await api.get(queryGrades(markingPeriod)).catch(() => ({
+            error: true
+        })) || {});
 
         setLoading(false);
 
-        const { courses = [], markingPeriods = [], currentMarkingPeriod = ""} = response;
+        const { courses = [], markingPeriods = [], currentMarkingPeriod = "", error = false} = response;
+        const responseData = { courses, markingPeriods, currentMarkingPeriod };
 
         if (courses.length) {
-            const responseData = { courses, markingPeriods, currentMarkingPeriod };
             setData(responseData);
-            AsyncStorage.setItem(`@courses-${currentMarkingPeriod}`, JSON.stringify(responseData));
         }
+        
+        if (!error) AsyncStorage.setItem(`@courses-${currentMarkingPeriod}`, JSON.stringify(responseData));
     }, [ markingPeriod ]);
 
     const reload = () => {
