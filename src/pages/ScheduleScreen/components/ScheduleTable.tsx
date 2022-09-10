@@ -42,11 +42,6 @@ const ScheduleCourse : React.FC<IScheduleCourseProps> = ({ course, fetching }) =
     }, [ fetching ]);
     useEffect(setTranslateY, [ setTranslateY]);
 
-    const translateYRange = translateY.interpolate({
-        inputRange: [ 0, 1],
-        outputRange: [ 25, 0]
-    });
-
     const timing = useMemo(() => {
         const startTime = course?.startTime?.toLowerCase().split(/(pm|am)/);
         return `${startTime[0]} - ${course?.endTime}`;
@@ -55,18 +50,6 @@ const ScheduleCourse : React.FC<IScheduleCourseProps> = ({ course, fetching }) =
     const room = useMemo(() => {
         return course.room.replace(/(Room|room)/, "");
     }, [ course ]);
-
-    // useEffect(() => {
-    //     return () => { 
-    //         Animated.timing(
-    //             containerOpacity, {
-    //                 toValue: 0,
-    //                 duration: 350,
-    //                 useNativeDriver: true,
-    //             }
-    //         ).start();
-    //     }
-    // });
 
     const period = useMemo(() => {
         return `${course?.period?.trim()}`;

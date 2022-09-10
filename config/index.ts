@@ -1,10 +1,10 @@
 import development from "./env/development";
 import production from "./env/production";
-import _ from "lodash";
+import extend from "lodash/extend";
 
-const dynamicConfig = __DEV__ && process.env.APP_SERVER !== "production" ? development : production; 
+const dynamicConfig = !__DEV__ && process.env.APP_SERVER !== "production" ? development : production; 
 
-const config = _.extend({
+const config = extend({
     name: "Gradebook"
 }, dynamicConfig );
 

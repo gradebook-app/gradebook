@@ -36,10 +36,10 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
 
     const handleLogOut = async () => {
         navigation.navigate("login");
-        dispatch(setLogoutClient({ userId }));
         await analytics().setUserId(null);
         await AsyncStorage.getAllKeys()
             .then(keys => AsyncStorage.multiRemove(keys as string[]));
+        dispatch(setLogoutClient({ userId }));
     };
 
     const { account, loading, reload } = useAccount();
@@ -49,8 +49,10 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
     };
 
     const handleAuth = useCallback(() => {
-        if (!accessToken) return; 
-        reload();
+        if (!isAccessToken) return; 
+        setTimeout(() => {
+            reload();
+        }, 0);
     }, [ isAccessToken ]);
 
     useEffect(handleAuth, [ handleAuth ]);
@@ -92,6 +94,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                 <ScrollView 
                     refreshControl={
                         <RefreshControl
+                            enabled={true}
                             refreshing={loading}
                             onRefresh={onRefresh}
                         />

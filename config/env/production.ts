@@ -2,7 +2,7 @@ export {};
 
 const config = {
     api: {
-        url: "https://gradebook-web-api.herokuapp.com",
+        url: "https://gradebook.api.mahitm.com",
     }
 };
 

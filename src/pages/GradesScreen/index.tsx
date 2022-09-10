@@ -30,6 +30,7 @@ import BannerAd from "../../components/BannerAd";
 import { useDynamicColor } from "../../hooks/useDynamicColor";
 import NoCoursesSVG from "../../SVG/NoCoursesSVG";
 import FadeIn from "../../components/FadeIn";
+import SaveBanner from "../../components/SaveBanner";
 
 const { width, height } = Dimensions.get("window");
 
@@ -51,7 +52,7 @@ interface INavigationParams {
 
 const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     const { params: { cachedMarkingPeriod = null  } = {} as any} : INavigationParams = 
-        navigation?.getState()?.routes?.find((route:any) => (route.name == "loading"));
+        navigation?.getState()?.routes?.find((route:any) => (route.name == "loading")) ;
 
     const [selectedValue, setSelectedValue] = useState(cachedMarkingPeriod ?? "");
     const [ adjustedMarkingPeriod, setAdjustedMarkingPeriod ] = useState(cachedMarkingPeriod ?? "");
@@ -190,6 +191,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                    )
                }
                 <GPASlideshow handleGPAScreen={handleGPAScreen} pastGPA={pastGPA} gpa={gpa} />
+                <SaveBanner />
                 { courses.map((course, index) => {
                     return (
                         <CourseBox 

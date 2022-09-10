@@ -40,15 +40,20 @@ const Alert : React.FC<AlertProps> = ({ title, description, buttons, visible, de
                     <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 200,}}>
                         <Text style={[ styles.description, { color: theme.grey }]}>{ description }</Text>
                     </ScrollView>
-                    { 
-                        buttons?.map(({ title, onPress } : IAlertButton, index:number) => (
-                        <Button 
-                                key={index}
-                                onPress={onPress} 
-                                title={title} 
-                            />
-                        ))
-                    }
+                   <View style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                        { 
+                            buttons?.map(({ title, onPress } : IAlertButton, index:number) => (
+                            <>
+                                <Button 
+                                    key={index}
+                                    onPress={onPress} 
+                                    title={title} 
+                                />
+                                { index !== buttons?.length - 1 && <Text style={{ color: theme.text }}>|</Text> }
+                            </>
+                            ))
+                        }
+                    </View>
                 </>
             </FadeIn>
         </View>
@@ -80,6 +85,8 @@ const styles = StyleSheet.create({
         alignItems:'center',
         padding: 15,
         zIndex: 1,
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.1)"
     }
 });
 
