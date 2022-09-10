@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
         padding: 15,
         paddingBottom: 100,
         display: "flex",
+        minHeight: height - 125
     },
     header: {
         display: "flex",

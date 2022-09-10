@@ -17,7 +17,7 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
     const state = useSelector((state:IRootReducer) => state);
     const limitAds = getLimitAds(state);
 
-    const unitID = !__DEV__ ? TestIds.BANNER : Platform.select({
+    const unitID = __DEV__ ? TestIds.BANNER : Platform.select({
         ios: "ca-app-pub-8704529290641186/4889775423", // genesus.app account
         android: "ca-app-pub-8555090951806711/6375245625",
     });
