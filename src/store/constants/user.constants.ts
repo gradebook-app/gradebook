@@ -1,11 +1,17 @@
 export enum EUserActions {
     SET_USER = "SET_USER",
     SET_NOTIFICATION_TOKEN = "SET_NOTIFICATION_TOKEN",
-    SET_SHOWN_ALERT = "SET_SHOWN_ALERT",
+    SET_SHOWN_ALERT_1_5 = "SET_SHOWN_ALERT_1_5",
+    SET_SHOWN_SAVE_BANNER = "SET_SHOWN_SAVE_BANNER"
 }
 
 export interface ISetShownAlert {
-    type: EUserActions.SET_SHOWN_ALERT,
+    type: EUserActions.SET_SHOWN_ALERT_1_5,
+    payload: boolean,
+}
+
+export interface ISetSaveBanner {
+    type: EUserActions.SET_SHOWN_SAVE_BANNER,
     payload: boolean,
 }
 

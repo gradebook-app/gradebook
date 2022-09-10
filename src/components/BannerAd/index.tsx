@@ -17,8 +17,8 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
     const state = useSelector((state:IRootReducer) => state);
     const limitAds = getLimitAds(state);
 
-    const unitID = __DEV__ ? TestIds.BANNER : Platform.select({
-        ios: "ca-app-pub-8555090951806711/9875384854",
+    const unitID = !__DEV__ ? TestIds.BANNER : Platform.select({
+        ios: "ca-app-pub-8704529290641186/4889775423", // genesus.app account
         android: "ca-app-pub-8555090951806711/6375245625",
     });
 
@@ -44,7 +44,7 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
                         unitId={unitID as string}
                         onAdLoaded={handleAdReceived}
                         onAdFailedToLoad={handleAdFailed}
-                        size={BannerAdSize.LARGE_BANNER}
+                        size={BannerAdSize.BANNER}
                         requestOptions={{
                             keywords: [ "education", "school", "math", "english" ],
                             requestNonPersonalizedAdsOnly: true,
@@ -59,7 +59,7 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
 const styles = StyleSheet.create({
     container: {
         marginTop: "auto",
-        width: width,
+        width: width  ,
         display: "flex",
         flexDirection:"row",
         justifyContent: "center",

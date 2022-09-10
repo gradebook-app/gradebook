@@ -17,6 +17,7 @@ import * as Haptics from "expo-haptics";
 import Alert from "../../components/Alert";
 import { getShownAlert } from "../../store/selectors/user.selectors";
 import { useDynamicColor } from "../../hooks/useDynamicColor";
+import { Linking } from "react-native";
 
 type TabIconProps = {
     focused: boolean,
@@ -52,17 +53,6 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
     const dispatch = useDispatch();
     const user = getUser(state);
 
-    // const handleAppStateUpdate = () => {
-    //     console.log("focused");
-    // };
-
-    // useEffect(() => {
-    //     AppState.addEventListener('focus', handleAppStateUpdate);
-    //     return () => {
-    //         AppState.removeEventListener('focus', handleAppStateUpdate);
-    //     }
-    // });
-
     const getPermission = async () => {
         try {
             await messaging().requestPermission();
@@ -93,6 +83,7 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
     }, [ user?.notificationToken ]);
 
     useEffect(() => {
+        
         const subscription = messaging().onTokenRefresh(handleNotificationUpdate);
         return subscription;
     }, []);
@@ -108,13 +99,17 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
         dark: "rgba(255, 255, 255, 0.1)",
     });
 
-    const [ showAlert, setShowAlert ] = useState(false);
+    const [ showAlert, setShowAlert ] = useState(true);
 
     const shownAlert = getShownAlert(state);
 
     const handleDismissAlert = () => {
         setShowAlert(false);
         dispatch(setShownAlert(true));
+    };
+
+    const handleDonate = () => {
+        Linking.openURL("https://gofund.me/0985ba53");
     };
 
     return (
@@ -145,6 +140,9 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                     backgroundColor: theme?.secondary,
                     borderTopColor: separatorBarColor,
                 },
+                headerStyle: {
+                    height: 0
+                },
                 headerShown: false,
                 tabBarLabel: "",
                 tabBarIconStyle: {
@@ -169,13 +167,16 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 <Alert 
                     delay={showAlert ? 500 : 0}
                     visible={showAlert && !shownAlert}
-                    title="🥳 Version 1.2"
-                    description="Version 1.2 introduces many improvements to the UX and bug fixes.
-                                A new feature included in this update is viewing future assignment points.
-                                Additionally, Version 1.2 introduces Ads to the application. In order to provide students with
-                                our services we display Ads by default. If you wish to reduce Ads and not support the application you
-                                can disable them in settings."
-                    buttons={[{ title: "Continue", onPress: handleDismissAlert}]}
+                    title="🚀 #SaveGenesus"
+                    description="The current solution is no longer viable for hosting Genesus servers as they are shutting down their free tier. Support us at our GoFundMe before November 28th, 2022 to Save Genesus! Even just one dollar from a quarter of our users is enough to last Genesus for years to come."
+                    buttons={[
+                        { 
+                            title: "Continue", onPress: handleDismissAlert
+                        },
+                        {
+                            title: "Donate", onPress: handleDonate
+                        }
+                    ]}
                 />
             }
         </>
