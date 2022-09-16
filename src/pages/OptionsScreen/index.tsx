@@ -2,7 +2,7 @@ import React from "react";
 import { View, SafeAreaView, Dimensions, StyleSheet, ScrollView, Text } from 'react-native';
 import Box from "../../components/Box";
 import { useTheme } from "../../hooks/useTheme";
-import { faBell, faDollarSign, faLock } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faDollarSign, faLock, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
 
 const { width } = Dimensions.get('window');
 
@@ -31,6 +31,10 @@ const OptionsScreen : React.FC<OptionsScreenProps> = ({ navigation }) => {
 
     const handleAdsSettings = () => {
         navigation.navigate("ads-settings");
+    };
+
+    const handleAdvancedOptions = () => {
+        navigation.navigate("advanced-options");
     };
    
     return (
@@ -70,6 +74,18 @@ const OptionsScreen : React.FC<OptionsScreenProps> = ({ navigation }) => {
                         >
                             <>
                                 <Box.Arrow onPress={handleAdsSettings}/>
+                            </>
+                        </Box.Content>
+                    </Box.Clickable>
+                    <Box.Separator />
+                    <Box.Clickable onPress={handleAdvancedOptions}>
+                        <Box.Content
+                            title="Advanced"
+                            iconColor={"#8a2be2"}
+                            icon={faWandMagicSparkles}
+                        >
+                            <>
+                                <Box.Arrow onPress={handleAdvancedOptions}/>
                             </>
                         </Box.Content>
                     </Box.Clickable>

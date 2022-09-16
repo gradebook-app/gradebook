@@ -1,4 +1,4 @@
-import { EUserActions, ISetNotificationToken, ISetUser } from "../constants/user.constants";
+import { EUserActions, ISetNotificationToken, ISetUser, IUserPurgeCache } from "../constants/user.constants";
 
 export const setShownAlert = (payload:boolean) => ({
     type: EUserActions.SET_SHOWN_ALERT_1_5,
@@ -19,3 +19,8 @@ export const setNotificationToken = (payload:string | null) : ISetNotificationTo
     type: EUserActions.SET_NOTIFICATION_TOKEN,
     payload,
 });
+
+export const setUserPurgeCache = (payload:any) : IUserPurgeCache  => ({
+    type: EUserActions.USER_PURGE_CACHE,
+    payload
+})
