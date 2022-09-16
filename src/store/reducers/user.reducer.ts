@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { persistReducer } from "redux-persist";
+import { persistReducer, PURGE } from "redux-persist";
 import { EUserActions } from "../constants/user.constants";
 import { IAction } from "../interfaces/action.interface";
 import { IUser } from "../interfaces/user.interface";

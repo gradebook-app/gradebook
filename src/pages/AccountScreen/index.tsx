@@ -1,7 +1,7 @@
-import { faFlagUsa, faIdBadge, faKey, faPizzaSlice, faSchool, faUserCog, faPhone, faShieldAlt } from "@fortawesome/free-solid-svg-icons";
+import { faFlagUsa, faIdBadge, faKey, faPizzaSlice, faSchool, faUserCog, faPhone, faShieldAlt, faCoins } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useMemo } from "react";
-import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Platform } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Platform, Linking } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import { useDispatch, useSelector } from "react-redux";
 import BrandButton from "../../components/BrandButton";
@@ -16,6 +16,7 @@ import jwt_decode from "jwt-decode";
 import { getUserId } from "../../store/selectors/user.selectors";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import analytics from '@react-native-firebase/analytics';
+import config from "../../../config";
 
 type AccountScreenProps = {
     navigation: any,
@@ -86,6 +87,10 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
 
     const handlePrivacySettings = () => {
         navigation.navigate("privacy-policy");
+    };
+
+    const handleDonateLink = () => {
+        Linking.openURL(config.donateLink);
     };
 
     return (
@@ -170,6 +175,16 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                             icon={faShieldAlt as IconProp}
                         >
                             <Box.Arrow onPress={handlePrivacySettings} />
+                        </Box.Content>
+                    </Box.Clickable>
+                    <Box.Separator />
+                    <Box.Clickable onPress={handleDonateLink}>
+                        <Box.Content 
+                            title="Donate"
+                            iconColor={"#89A0DD"}
+                            icon={faCoins as IconProp}
+                        >
+                            <Box.Arrow onPress={handleDonateLink} />
                         </Box.Content>
                     </Box.Clickable>
                     </Box>

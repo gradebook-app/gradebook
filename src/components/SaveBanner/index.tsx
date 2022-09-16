@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { IRootReducer } from "../../store/reducers";
 import { getShownSaveBanner } from "../../store/selectors/user.selectors";
 import { setShownSaveBanner } from "../../store/actions/user.actions";
+import config from "../../../config";
     
 const { width } = Dimensions.get("screen");
 
@@ -22,7 +23,7 @@ const SaveBanner = () => {
     const [ unmount, setUnmount ] = useState(false);
 
     const handlePress = () => {
-        Linking.openURL("https://gofund.me/0985ba53");
+        Linking.openURL(config.donateLink);
     }
 
     const handleX = (e: GestureResponderEvent) => {

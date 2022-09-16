@@ -2,7 +2,7 @@ export {};
 
 const config = {
     api: {
-        url: "https://gradebook.api.mahitm.com",
+        url: "https://genesus.api.mahitm.com",
     }
 };
 

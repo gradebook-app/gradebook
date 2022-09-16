@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import OptionsScreen from "./src/pages/OptionsScreen";
 import AdsSettingsScreen from "./src/pages/AdsSettingsScreen";
 import { useTheme } from "./src/hooks/useTheme";
+import AdvancedOptionsScreen from "./src/pages/AdvancedOptionsScreen";
 
 const Stack = createStackNavigator();
 
@@ -148,6 +149,16 @@ const AppNavigator = () => {
                         headerTitle: "", 
                         gestureEnabled: true,
                         headerBackTitle: "Account",
+                    }}
+                />
+                 <Stack.Screen
+                    name="advanced-options"
+                    component={AdvancedOptionsScreen}
+                    options={{ 
+                        headerShown: true, 
+                        headerTitle: "", 
+                        gestureEnabled: true,
+                        headerBackTitle: "Options",
                     }}
                 />
                 <Stack.Screen 

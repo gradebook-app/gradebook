@@ -18,6 +18,7 @@ import Alert from "../../components/Alert";
 import { getShownAlert } from "../../store/selectors/user.selectors";
 import { useDynamicColor } from "../../hooks/useDynamicColor";
 import { Linking } from "react-native";
+import config from "../../../config";
 
 type TabIconProps = {
     focused: boolean,
@@ -109,7 +110,7 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
     };
 
     const handleDonate = () => {
-        Linking.openURL("https://gofund.me/0985ba53");
+        Linking.openURL(config.donateLink);
     };
 
     return (
