@@ -18,6 +18,7 @@
 		1742A0052738A5FF00CD05D3 /* GradesWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1742A0012738A5FD00CD05D3 /* GradesWidget.intentdefinition */; };
 		1742A0062738A5FF00CD05D3 /* GradesWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1742A0012738A5FD00CD05D3 /* GradesWidget.intentdefinition */; };
 		1742A0112738DADB00CD05D3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1742A0102738DADB00CD05D3 /* GoogleService-Info.plist */; };
+		17BEB71B28D5675300255FA5 /* RCTStorage in Resources */ = {isa = PBXBuildFile; fileRef = 17BEB71A28D5675300255FA5 /* RCTStorage */; };
 		17C5C7F728D3B97D00D25293 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 17C5C7F628D3B97D00D25293 /* AppDelegate.mm */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		68E285628E724845928C2F84 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC680D9FBEC64770A2058EC7 /* noop-file.swift */; };
@@ -54,6 +55,7 @@
 		1742A0022738A5FF00CD05D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1742A0042738A5FF00CD05D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1742A0102738DADB00CD05D3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		17BEB71A28D5675300255FA5 /* RCTStorage */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RCTStorage; path = Gradebook/RCTStorage; sourceTree = "<group>"; };
 		17C5C7F628D3B97D00D25293 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = Gradebook/AppDelegate.mm; sourceTree = "<group>"; };
 		2D9CF2E0F5224A63B3EBEA70 /* Gradebook-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "Gradebook-Bridging-Header.h"; path = "Gradebook/Gradebook-Bridging-Header.h"; sourceTree = "<group>"; };
 		61DFC228D062915B9D152290 /* libPods-Gradebook.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Gradebook.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,6 +92,7 @@
 		13B07FAE1A68108700A75B9A /* Gradebook */ = {
 			isa = PBXGroup;
 			children = (
+				17BEB71A28D5675300255FA5 /* RCTStorage */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -286,6 +289,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				1742A0112738DADB00CD05D3 /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				17BEB71B28D5675300255FA5 /* RCTStorage in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -480,6 +484,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mahitm.gradebook;
 				PRODUCT_NAME = gradebook;
 				SWIFT_OBJC_BRIDGING_HEADER = "Gradebook/Gradebook-Bridging-Header.h";
@@ -514,6 +519,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mahitm.gradebook;
 				PRODUCT_NAME = gradebook;
 				SWIFT_OBJC_BRIDGING_HEADER = "Gradebook/Gradebook-Bridging-Header.h";
@@ -553,6 +559,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mahitm.gradebook.GradesWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -594,6 +601,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mahitm.gradebook.GradesWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

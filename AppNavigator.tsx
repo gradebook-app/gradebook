@@ -8,7 +8,7 @@ import LoginScreen from "./src/pages/LoginScreen";
 import React, { useCallback, useEffect } from "react";
 import GPAScreen from "./src/pages/GPAScreen";
 import NotificationScreen from "./src/pages/NotificationScreen";
-import SharedGroupPreferences from "react-native-shared-group-preferences";
+// import SharedGroupPreferences from "react-native-shared-group-preferences";
 import ContactScreen from "./src/pages/ContactScreen";
 import messaging from "@react-native-firebase/messaging";
 import SecurityScreen from "./src/pages/SecurityScreen";
@@ -23,25 +23,25 @@ import AdvancedOptionsScreen from "./src/pages/AdvancedOptionsScreen";
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
-    const setAppGroupData = useCallback(async () => {
-        const credentialsRaw = await AsyncStorage.getItem("@credentials");
-        const { userId = null, pass = null } = credentialsRaw ? JSON.parse(credentialsRaw) : {};
+    // const setAppGroupData = useCallback(async () => {
+    //     const credentialsRaw = await AsyncStorage.getItem("@credentials");
+    //     const { userId = null, pass = null } = credentialsRaw ? JSON.parse(credentialsRaw) : {};
   
-        const appGroupIdentifier = "group.com.Gradebook.Gradebook";
-        try {
-            await SharedGroupPreferences.setItem(
-                "credentials",
-                { "userId": userId, "pass": pass },
-                appGroupIdentifier,
-            );
-        } catch (e) {
-            console.log("Error", e);
-        }
-    }, []);
+    //     const appGroupIdentifier = "group.com.Gradebook.Gradebook";
+    //     try {
+    //         await SharedGroupPreferences.setItem(
+    //             "credentials",
+    //             { "userId": userId, "pass": pass },
+    //             appGroupIdentifier,
+    //         );
+    //     } catch (e) {
+    //         console.log("Error", e);
+    //     }
+    // }, []);
 
-    useEffect(() => {
-        setAppGroupData();
-    });
+    // useEffect(() => {
+    //     setAppGroupData();
+    // });
 
     useEffect(()=>{
         const subscription = messaging().onMessage(message => {
