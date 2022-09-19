@@ -3,6 +3,7 @@ import { View, SafeAreaView, Dimensions, StyleSheet, ScrollView, Text } from 're
 import Box from "../../components/Box";
 import { useTheme } from "../../hooks/useTheme";
 import { faBell, faDollarSign, faLock, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
+import BannerAd from "../../components/BannerAd";
 
 const { width } = Dimensions.get('window');
 
@@ -95,6 +96,7 @@ const OptionsScreen : React.FC<OptionsScreenProps> = ({ navigation }) => {
                         Options will allow you to customize your App Experience. 
                     </Text>
                 </View>
+                <BannerAd />
             </ScrollView>
         </SafeAreaView>
     )

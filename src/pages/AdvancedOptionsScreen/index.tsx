@@ -1,7 +1,7 @@
 import { faDatabase } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useState } from "react";
-import { View, SafeAreaView, Dimensions, StyleSheet, ScrollView, Text, ActivityIndicator } from 'react-native';
+import { View, SafeAreaView, Dimensions, StyleSheet, ScrollView, Text, ActivityIndicator, Button } from 'react-native';
 import Box from "../../components/Box";
 import FadeIn from "../../components/FadeIn";
 import { useTheme } from "../../hooks/useTheme";
@@ -56,7 +56,7 @@ const AdvancedOptionsScreen : React.FC<OptionsScreenProps> = ({ navigation }) =>
                                 <ActivityIndicator animating={clearingCache} />
                                 { !clearingCache &&  (
                                     <FadeIn show={true}>
-                                        <Box.Value value={"0.00 MB"} />
+                                        <Button onPress={handleClearCache} title="Purge" />
                                     </FadeIn>
                                 )}
                             </>
