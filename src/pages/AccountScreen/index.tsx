@@ -17,7 +17,6 @@ import { getUserId } from "../../store/selectors/user.selectors";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import analytics from '@react-native-firebase/analytics';
 import config from "../../../config";
-import BannerAd from "../../components/BannerAd";
 
 type AccountScreenProps = {
     navigation: any,
@@ -178,8 +177,8 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                             <Box.Arrow onPress={handlePrivacySettings} />
                         </Box.Content>
                     </Box.Clickable>
-                    <Box.Separator />
-                    {/* <Box.Clickable onPress={handleDonateLink}>
+                   {/* <Box.Separator />
+                     <Box.Clickable onPress={handleDonateLink}>
                         <Box.Content 
                             title="Donate"
                             iconColor={"#89A0DD"}
@@ -189,7 +188,6 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                         </Box.Content>
                     </Box.Clickable> */}
                     </Box>
-                    <BannerAd style={{ marginTop: 15 }} />
                     <BrandButton 
                         style={styles.logOut}
                         title="Log Out"
