@@ -43,7 +43,6 @@ export const useAssigments = ({ courseId, sectionId, markingPeriod  }:IUseAssigm
 
         if (data && data?.length) {
             setAssignments(data);
-
             AsyncStorage.setItem(`@assignments-${courseId}-${sectionId}-${markingPeriod}`, JSON.stringify({ assignments: data }));
         }
     }, [ courseId, sectionId ]);

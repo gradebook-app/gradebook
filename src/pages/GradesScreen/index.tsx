@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { 
     Dimensions, 
     SafeAreaView, 
@@ -8,7 +8,7 @@ import {
     RefreshControl,
     Text,
     Button,
-    Platform
+    Platform,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useSelector } from "react-redux";
@@ -60,6 +60,12 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     const { courses, markingPeriods, currentMarkingPeriod, loading, reload } = useGrades({
         markingPeriod: adjustedMarkingPeriod
     });
+
+    const [ loadingGrades, setLoadingGrades ] = useState(false);
+
+    useEffect(() => {
+        setLoadingGrades(loadingGrades);
+    }, [ loading ]);
 
     const { reload:reloadGPA, loading:loadingGPA, gpa } = useGPA();
     const { pastGPA } = usePastGPA();
@@ -191,7 +197,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                    )
                }
                 <GPASlideshow handleGPAScreen={handleGPAScreen} pastGPA={pastGPA} gpa={gpa} />
-                <SaveBanner />
+                { !loadingGrades ? <BannerAd style={{ marginTop: 15 }} /> : <></> }
                 { courses.map((course, index) => {
                     return (
                         <CourseBox 
@@ -221,7 +227,6 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                         </FadeIn>
                     )
                 }
-                { !loading ? <BannerAd style={{ marginTop: 15 }} /> : <></> }
             </ScrollView>
             <Blocker block={showSelector} onPress={handleSelectorBack} />
             <BottomSheet 

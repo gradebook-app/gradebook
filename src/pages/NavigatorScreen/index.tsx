@@ -168,14 +168,11 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 <Alert 
                     delay={showAlert ? 500 : 0}
                     visible={showAlert && !shownAlert}
-                    title="🚀 #SaveGenesus"
-                    description="The current solution is no longer viable for hosting Genesus servers as they are shutting down their free tier. Support us at our GoFundMe before November 28th, 2022 to Save Genesus! Even just one dollar from a quarter of our users is enough to last Genesus for years to come."
+                    title="🚀 GPA Update"
+                    description="For a long time the GPA calculation has been inaccurate because Genesus was not able to accurately detect which classes were AP and Honors classes. Now, users are able to manually change the weighting of each class to improve their GPA accuracy. Find the option by clicking on a class and pressing the gradient button indicating the current weighting."
                     buttons={[
                         { 
                             title: "Continue", onPress: handleDismissAlert
-                        },
-                        {
-                            title: "Donate", onPress: handleDonate
                         }
                     ]}
                 />
