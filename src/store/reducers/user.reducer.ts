@@ -10,6 +10,7 @@ export interface IUserReducer {
     notificationToken: null | string,
     shownAlert1_5: boolean,
     shownSaveBanner: boolean,
+    updatingCourseWeight: boolean; 
 }
 
 const persistConfig = {
@@ -23,13 +24,18 @@ const initialState = {
     accessToken: null,
     notificationToken: null,
     shownAlert1_5: false,
-    shownSaveBanner: false
+    shownSaveBanner: false,
+    updatingCourseWeight: false
 };
 
 const userReducer = (state:IUserReducer=initialState, action:IAction) => {
     switch(action.type) {
     case EUserActions.SET_SHOWN_ALERT_1_5: {
         return { ...state, shownAlert1_5: action.payload };
+    }
+
+    case EUserActions.SET_UPDATING_COURSE_WEIGHT: {
+        return { ...state, updatingCourseWeight: action.payload}
     }
 
     case EUserActions.SET_SHOWN_SAVE_BANNER: {

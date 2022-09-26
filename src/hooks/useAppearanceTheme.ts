@@ -10,8 +10,12 @@ export const useAppearanceTheme = () => {
     };
 
     useEffect(() => {
-        Appearance.addChangeListener(listener);
-        return () => Appearance.removeChangeListener(listener);
+        Appearance?.addChangeListener(listener);
+        return () => {
+            if (typeof listener === "function" && typeof Appearance.removeChangeListener === "function") {
+                Appearance?.removeChangeListener(listener)
+            }
+        };
     }, []);
 
     return { isDark: Platform.OS === "ios" ? isDark : true };
