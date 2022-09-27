@@ -102,9 +102,13 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
 
     const handleUpdateDonateValue = (value:number) => {
         setDonateValue(value);
+
+        const formattedValue = value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });; 
+        setCustomDonateValue(`$${formattedValue}`);
     };
 
     const formatCustomDonateValue = useCallback(() => {
+        console.log("0", customDonateValue);
         const formattedValue = customDonateValue?.replace(/[$,]+/g, "").trim();
         if (!formattedValue) { 
             setDonateValue(null);
@@ -118,23 +122,15 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
             setCustomDonateValue(""); 
             return null; 
         } 
-        else setDonateValue(parseFloat(parsedValue));
-
+        else setDonateValue(parseFloat(parsedValue.replace(/[$,]+/g, "").trim()));
         setCustomDonateValue(`$${parsedValue}`);
 
-        return parseFloat(parsedValue);
+        return parseFloat(parsedValue.replace(/[$,]+/g, "").trim())
     }, [ customDonateValue ]);
 
     const handleChangeText = (text:string) => {
         setCustomDonateValue(text);
     }; 
-
-
-    useEffect(() => {
-        if (!donateValue) { setCustomDonateValue(""); return; }
-        const formattedValue = donateValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        setCustomDonateValue(`$${formattedValue}`);
-    }, [ donateValue ]);
 
     const { isDark } = useAppearanceTheme();
 
@@ -145,8 +141,8 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
                     <Text style={[ styles.header, { color: theme.text }]}>Contribute to Genesus</Text>
                 </View>
                 <InputField 
-                    onBlur={formatCustomDonateValue}
-                    onEndEditing={formatCustomDonateValue}
+                    // onBlur={formatCustomDonateValue}
+                    onEndEditing={() => { formatCustomDonateValue() }}
                     onChangeText={handleChangeText}
                     placeholder="Choose a Donation Option"
                     style={[
