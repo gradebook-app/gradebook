@@ -90,7 +90,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
     };
 
     const handleDonateLink = () => {
-        Linking.openURL(config.donateLink);
+        navigation.navigate("donate");
     };
 
     return (
@@ -149,6 +149,22 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                     </Box>
                     <Box.Space />
                     <Box style={{ flexDirection: "column" }}>
+                        {
+                            Platform.OS === "ios" && (
+                                <>
+                                    <Box.Clickable onPress={handleDonateLink}>
+                                        <Box.Content 
+                                            title="Donate"
+                                            iconColor={"#89A0DD"}
+                                            icon={faCoins as IconProp}
+                                        >
+                                            <Box.Arrow onPress={handleDonateLink} />
+                                        </Box.Content>
+                                    </Box.Clickable>
+                                    <Box.Separator />
+                                </>
+                            )
+                        }
                         <Box.Clickable onPress={handleOptions}>
                                 <Box.Content 
                                     title="Options"
@@ -176,17 +192,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                         >
                             <Box.Arrow onPress={handlePrivacySettings} />
                         </Box.Content>
-                    </Box.Clickable>
-                   {/* <Box.Separator />
-                     <Box.Clickable onPress={handleDonateLink}>
-                        <Box.Content 
-                            title="Donate"
-                            iconColor={"#89A0DD"}
-                            icon={faCoins as IconProp}
-                        >
-                            <Box.Arrow onPress={handleDonateLink} />
-                        </Box.Content>
-                    </Box.Clickable> */}
+                    </Box.Clickable>           
                     </Box>
                     <BrandButton 
                         style={styles.logOut}
