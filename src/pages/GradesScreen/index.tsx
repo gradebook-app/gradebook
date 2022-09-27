@@ -158,6 +158,10 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
     //{/*  <IOSButton style={{ marginTop: 10 }}>{ selectedValue }</IOSButton> */} 
 
+    const handleDonateScreen = () => {
+        navigation.navigate("donate");
+    };
+
     const [ mpPickerOpen, setMPPickerOpen ] = useState(false);
 
     return (
@@ -198,6 +202,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                }
                 <GPASlideshow handleGPAScreen={handleGPAScreen} pastGPA={pastGPA} gpa={gpa} />
                 { !loadingGrades ? <BannerAd style={{ marginTop: 15 }} /> : <></> }
+                <SaveBanner onPress={handleDonateScreen} />
                 { courses.map((course, index) => {
                     return (
                         <CourseBox 

@@ -18,6 +18,8 @@
 		1742A0052738A5FF00CD05D3 /* GradesWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1742A0012738A5FD00CD05D3 /* GradesWidget.intentdefinition */; };
 		1742A0062738A5FF00CD05D3 /* GradesWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1742A0012738A5FD00CD05D3 /* GradesWidget.intentdefinition */; };
 		1742A0112738DADB00CD05D3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1742A0102738DADB00CD05D3 /* GoogleService-Info.plist */; };
+		17906E3228E377BD00827609 /* RNTApplePayButtonManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 17906E3128E377BD00827609 /* RNTApplePayButtonManager.m */; };
+		17906E3428E37BFC00827609 /* ApplePayButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 17906E3328E37BFC00827609 /* ApplePayButtonView.m */; };
 		17C5C7F728D3B97D00D25293 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 17C5C7F628D3B97D00D25293 /* AppDelegate.mm */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		68E285628E724845928C2F84 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC680D9FBEC64770A2058EC7 /* noop-file.swift */; };
@@ -54,6 +56,9 @@
 		1742A0022738A5FF00CD05D3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1742A0042738A5FF00CD05D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1742A0102738DADB00CD05D3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		17906E3128E377BD00827609 /* RNTApplePayButtonManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTApplePayButtonManager.m; sourceTree = "<group>"; };
+		17906E3328E37BFC00827609 /* ApplePayButtonView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ApplePayButtonView.m; sourceTree = "<group>"; };
+		17906E3528E37C1400827609 /* ApplePayButtonView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApplePayButtonView.h; sourceTree = "<group>"; };
 		17C5C7F628D3B97D00D25293 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = Gradebook/AppDelegate.mm; sourceTree = "<group>"; };
 		2D9CF2E0F5224A63B3EBEA70 /* Gradebook-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "Gradebook-Bridging-Header.h"; path = "Gradebook/Gradebook-Bridging-Header.h"; sourceTree = "<group>"; };
 		61DFC228D062915B9D152290 /* libPods-Gradebook.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Gradebook.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,6 +95,7 @@
 		13B07FAE1A68108700A75B9A /* Gradebook */ = {
 			isa = PBXGroup;
 			children = (
+				17906E2E28E3771700827609 /* RNTApplePay */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -113,6 +119,16 @@
 				1742A0042738A5FF00CD05D3 /* Info.plist */,
 			);
 			path = GradesWidget;
+			sourceTree = "<group>";
+		};
+		17906E2E28E3771700827609 /* RNTApplePay */ = {
+			isa = PBXGroup;
+			children = (
+				17906E3128E377BD00827609 /* RNTApplePayButtonManager.m */,
+				17906E3328E37BFC00827609 /* ApplePayButtonView.m */,
+				17906E3528E37C1400827609 /* ApplePayButtonView.h */,
+			);
+			path = RNTApplePay;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -431,7 +447,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17906E3228E377BD00827609 /* RNTApplePayButtonManager.m in Sources */,
 				1742A0062738A5FF00CD05D3 /* GradesWidget.intentdefinition in Sources */,
+				17906E3428E37BFC00827609 /* ApplePayButtonView.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
 				17C5C7F728D3B97D00D25293 /* AppDelegate.mm in Sources */,

@@ -19,6 +19,7 @@ import OptionsScreen from "./src/pages/OptionsScreen";
 import AdsSettingsScreen from "./src/pages/AdsSettingsScreen";
 import { useTheme } from "./src/hooks/useTheme";
 import AdvancedOptionsScreen from "./src/pages/AdvancedOptionsScreen";
+import DonateScreen from "./src/pages/DonateScreen";
 
 const Stack = createStackNavigator();
 
@@ -159,6 +160,16 @@ const AppNavigator = () => {
                         headerTitle: "", 
                         gestureEnabled: true,
                         headerBackTitle: "Options",
+                    }}
+                />
+                 <Stack.Screen
+                    name="donate"
+                    component={DonateScreen}
+                    options={{ 
+                        headerShown: true, 
+                        headerTitle: "", 
+                        headerBackTitle: "",
+                        gestureEnabled: true,
                     }}
                 />
                 <Stack.Screen 
