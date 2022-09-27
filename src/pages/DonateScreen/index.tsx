@@ -108,7 +108,6 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
     };
 
     const formatCustomDonateValue = useCallback(() => {
-        console.log("0", customDonateValue);
         const formattedValue = customDonateValue?.replace(/[$,]+/g, "").trim();
         if (!formattedValue) { 
             setDonateValue(null);

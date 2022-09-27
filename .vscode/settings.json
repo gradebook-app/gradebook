@@ -3,7 +3,7 @@
     "java.jdt.ls.java.home": "/opt/Homebrew/Cellar/openjdk@11/11.0.12/libexec/openjdk.jdk/Contents/Home",
     "java.configuration.updateBuildConfiguration": "automatic",
     "search.exclude": {
-        "**/node_modules":false
+        "**/node_modules":true
     },
     "search.useIgnoreFiles":false
 }
