@@ -140,10 +140,11 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
                     <Text style={[ styles.header, { color: theme.text }]}>Contribute to Genesus</Text>
                 </View>
                 <InputField 
-                    // onBlur={formatCustomDonateValue}
                     onEndEditing={() => { formatCustomDonateValue() }}
                     onChangeText={handleChangeText}
-                    placeholder="Choose a Donation Option"
+                    keyboardType="decimal-pad"
+                    returnKeyType="done"
+                    placeholder="Enter an Amount to Contribute"
                     style={[
                         styles.customDonationField,
                         {
@@ -160,12 +161,12 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
                     />
                     <DonateOption
                         onPress={handleUpdateDonateValue}
-                        value={2}
+                        value={3}
                         selectedValue={donateValue}
                     />
                     <DonateOption
                         onPress={handleUpdateDonateValue}
-                        value={3}
+                        value={5}
                         selectedValue={donateValue}
                         style={{
                             marginRight: 0
