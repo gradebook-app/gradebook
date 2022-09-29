@@ -6,8 +6,12 @@ const dynamicConfig = __DEV__ && process.env.APP_SERVER !== "production" ? devel
 
 const config = extend({
     name: "Gradebook",
-    applePay: {
-        merchantId: "merchant.com.mahitm.gradebook"
+    iap: {
+        skus: [
+            "donate_one", 
+            "donate_three", 
+            "donate_five" 
+        ] 
     }
 }, dynamicConfig );
 

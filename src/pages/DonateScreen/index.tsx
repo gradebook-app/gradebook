@@ -1,19 +1,25 @@
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useCallback, useEffect, useMemo, useState } from "react"
-import { Dimensions, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
-import ApplePay from "react-native-apple-payment";
+import { Button, Dimensions, Image, LayoutAnimation, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import { getProducts, useIAP, withIAPContext } from "react-native-iap";
+import { useDispatch, useSelector } from "react-redux";
 import config from "../../../config";
-import ApplePayButton from "../../components/ApplePayButton";
 import BannerAd from "../../components/BannerAd";
+import FadeIn from "../../components/FadeIn";
 import InputField from "../../components/InputField";
 import { useAppearanceTheme } from "../../hooks/useAppearanceTheme";
 import { useTheme } from "../../hooks/useTheme";
+import { setDonateProducts } from "../../store/actions";
+import { IRootReducer } from "../../store/reducers";
+import { getDonateProducts } from "../../store/selectors";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const { width, height } = Dimensions.get("window");
 
 interface IDonateOption {
-    value: number; 
-    onPress: (value:number) => void;
-    selectedValue: number | null;
+    value: string; 
+    onPress: (value:string) => void;
+    selectedValue: string | null;
     style?: ViewStyle;
 }
 
@@ -24,10 +30,6 @@ const DonateOption : React.FC<IDonateOption> = ({ value, onPress, selectedValue,
     const handlePress = useCallback(() => {
        if (!selected) onPress(value)
     }, [ value, selected ])
-
-    const valueFormatted = useMemo(() => {
-        return value.toLocaleString(undefined, { minimumFractionDigits: 2 })
-    }, [ value ]);
 
     const { theme, palette } = useTheme();
 
@@ -54,7 +56,7 @@ const DonateOption : React.FC<IDonateOption> = ({ value, onPress, selectedValue,
                     color: theme.text
                 }
             ]}>
-                ${valueFormatted}
+                { value }
             </Text>
         </TouchableOpacity>
     )
@@ -65,73 +67,95 @@ type DonateScreenProps = {
 }
 
 const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
-    const { theme } = useTheme();
-
-    const [ customDonateValue, setCustomDonateValue ] = useState<string | undefined>(undefined);
-
     useEffect(() => {
         navigation?.setOptions({ headerStyle: { 
             backgroundColor: theme.background,
         }});
     }, []);
 
-    const [ donateValue, setDonateValue ] = useState<number | null>(null);
+    const { theme, palette } = useTheme();
+
+    const state = useSelector((state:IRootReducer) => state);
+    const donateProducts = getDonateProducts(state);
+    const dispatch = useDispatch();
+
+    const [ donateValue, setDonateValue ] = useState<string | null>(null);
+    const [ isSuccess, setIsSuccess ] = useState<boolean>(false);
+
+    const resetConfirmation = useCallback(() => {
+        LayoutAnimation.easeInEaseOut();
+        setIsSuccess(false)
+    }, []);
+
+    const { 
+        connected,
+        currentPurchase,
+        finishTransaction,
+        requestPurchase
+    } = useIAP();
 
     const handleDonate = useCallback(async () => {
-        const amount = formatCustomDonateValue()
+        resetConfirmation();
 
-        if (!amount) return; 
+        if (!connected || !donateValue) return;
 
-        const payment = new ApplePay({
-            merchantIdentifier: config.applePay.merchantId,
-            countryCode: "US",
-            currencyCode: "USD",
-            supportedNetworks: [ "AmEx", "MasterCard", "Visa" ]
-        }, {
-            total: {
-                amount,
-                label: "Contribution to Genesus"
-            }
-        });
+        const productId = donateProducts.find(product => product.localizedPrice === donateValue)?.productId;
 
-        const canMakePayment = await payment.canMakePayments()
-        if (!canMakePayment) return;
+        if (!productId) return; 
 
-        const _paymentResponse = await payment.initApplePay()
-    }, [ customDonateValue ]);
+        const response = await requestPurchase({ sku: productId })
+            .catch(e => console.log('Failed Donation: ', e));
 
-    const handleUpdateDonateValue = (value:number) => {
-        setDonateValue(value);
-
-        const formattedValue = value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });; 
-        setCustomDonateValue(`$${formattedValue}`);
-    };
-
-    const formatCustomDonateValue = useCallback(() => {
-        const formattedValue = customDonateValue?.replace(/[$,]+/g, "").trim();
-        if (!formattedValue) { 
-            setDonateValue(null);
-            setCustomDonateValue(""); 
-            return null; 
+        if (!response) {
+            return; // handle failure
         }
 
-        const parsedValue = parseFloat(formattedValue!).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        if (isNaN(parseFloat(parsedValue))) { 
-            setDonateValue(null);
-            setCustomDonateValue(""); 
-            return null; 
-        } 
-        else setDonateValue(parseFloat(parsedValue.replace(/[$,]+/g, "").trim()));
-        setCustomDonateValue(`$${parsedValue}`);
+        LayoutAnimation.easeInEaseOut();
+        setIsSuccess(true);
+        setDonateValue(null);
+    }, [ donateProducts, donateValue, connected ]);
 
-        return parseFloat(parsedValue.replace(/[$,]+/g, "").trim())
-    }, [ customDonateValue ]);
+    const handleGetProducts = useCallback(async () => {
+        if (!!donateProducts.length) return; 
 
-    const handleChangeText = (text:string) => {
-        setCustomDonateValue(text);
+        const products = await getProducts({ skus: config.iap.skus })
+            .catch(() => null)
+
+        if (products && products.length) {
+          dispatch(setDonateProducts(products));
+        }
+ 
+    }, [ donateProducts ]);
+
+    const handleCheckCurrentPurchase = useCallback(async () => {    
+        if (!currentPurchase) return; 
+        const receipt = currentPurchase.transactionReceipt; 
+        if (!receipt) return;
+
+        try {
+            await finishTransaction({ purchase: currentPurchase, isConsumable: true });
+        } catch (ackErr) {
+            console.log("Failed to Acknowledge: ", ackErr)
+        }
+    }, [ currentPurchase, finishTransaction ]);
+
+    useEffect(() => { handleCheckCurrentPurchase() }, [ handleCheckCurrentPurchase ]);
+    useEffect(() => { handleGetProducts() }, [ handleGetProducts ]);
+    
+    const { isDark } = useAppearanceTheme();
+
+    const handleUpdateDonateValue = (value:string) => {
+        resetConfirmation();
+        setDonateValue(value);
     }; 
 
-    const { isDark } = useAppearanceTheme();
+    const sortedProducts = useMemo(() => {
+        for (const prod of donateProducts) {
+            if (isNaN(parseFloat(prod.price))) return donateProducts;
+            else continue; 
+        }
+        return donateProducts.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+    }, [ donateProducts ]);
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
@@ -139,50 +163,77 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
                 <View style={styles.headerContainer}>
                     <Text style={[ styles.header, { color: theme.text }]}>Contribute to Genesus</Text>
                 </View>
+                {
+                    isSuccess && (
+                        <View style={[ styles.confirmationContainer ]}>
+                            <Text style={[ styles.successfulText, { color: palette.blue }]} >Payment Successful 🚀</Text>
+                            <Text style={[ styles.gratitudeText, { color: theme.grey } ]}>Thank You for Your Contribution!</Text>
+                            <TouchableOpacity onPress={resetConfirmation} style={{ marginTop: 10 }}>
+                                <FontAwesomeIcon color={"#fff"} icon={faXmark} size={20} />
+                            </TouchableOpacity>
+                        </View>
+                    )
+                }
                 <InputField 
-                    onEndEditing={() => { formatCustomDonateValue() }}
-                    onChangeText={handleChangeText}
-                    keyboardType="decimal-pad"
-                    returnKeyType="done"
-                    placeholder="Enter an Amount to Contribute"
+                    editable={false}
+                    placeholder="Choose an Option to Contribute"
                     style={[
                         styles.customDonationField,
                         {
                             borderColor: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.075)",
                         }
                     ]}
-                    value={customDonateValue}
+                    value={donateValue || ""}
                 />
-                <View style={styles.donationOptions}>
-                    <DonateOption
-                        onPress={handleUpdateDonateValue}
-                        value={1}
-                        selectedValue={donateValue}
-                    />
-                    <DonateOption
-                        onPress={handleUpdateDonateValue}
-                        value={3}
-                        selectedValue={donateValue}
-                    />
-                    <DonateOption
-                        onPress={handleUpdateDonateValue}
-                        value={5}
-                        selectedValue={donateValue}
-                        style={{
-                            marginRight: 0
-                        }}
-                    />
+                <View style={styles.donationOptionsWrapper}>
+                    <FadeIn show={!!sortedProducts.length} style={styles.donationOptions}>
+                        <>
+                        {
+                            sortedProducts.map((product, index) => (
+                                <DonateOption 
+                                    key={product.productId}
+                                    onPress={handleUpdateDonateValue}
+                                    value={product.localizedPrice}
+                                    selectedValue={donateValue}
+                                    style={index === donateProducts.length - 1 ? { 
+                                        marginRight: 0
+                                    } : undefined}
+                                />
+                            ))
+                        }
+                        </>
+                    </FadeIn>
+                    {
+                        !sortedProducts.length && (
+                            <FadeIn show={true} delay={250}>
+                                <View style={styles.donateErrorMSG}>
+                                    <Text style={[{ color: theme.grey, textAlign: "center" }]}>
+                                        No Donation Options Available Currently.
+                                    </Text>
+                                </View>
+                            </FadeIn>
+                        )
+                    }
                 </View>
-                <ApplePayButton 
+                <TouchableOpacity 
+                    disabled={!donateValue}
                     onPress={handleDonate}
-                    cornerRadius={13.5}
-                    buttonType={isDark ? "light" : "dark"}
-                    style={{ 
-                        height: 45, 
-                        width: width * 0.9,
-                        marginTop: 35
-                    }} 
-                />
+                    style={[ 
+                        styles.donateButton,
+                        {
+                            backgroundColor: isDark ? "#fff" : "#000",
+                            opacity: !donateValue  ? (isDark ? 0.5 : 0.2) : 1
+                        }
+                    ]}>
+                    <Text 
+                        style={[ styles.donateButtonText, { color: !isDark ? "#fff" : "#000" }]}
+                        >Contribute to
+                    </Text>
+                    <Image 
+                        style={{ width: 30, height: 30, borderRadius: 8, marginLeft: 5 }}
+                        source={require("../../../assets/gradebook-1024.png")}
+                    />
+                </TouchableOpacity>
                 <View style={styles.captionContainer}>
                     <Text style={[{ color: theme.grey }]}>
                         Recently our server hosting providers stated they are shutting down their free tier, forcing Genesus to migrate to alternative solutions or pay expensive fees to the current provider. In order to save Genesus and continue to operate its servers, it is mandatory to raise the goal before November 28th, 2022 (Which is the last date for using the current free solution).
@@ -217,6 +268,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         minHeight: height - 150,
     },
+    donateErrorMSG: {
+        width: "100%",
+        padding: 10
+    },  
     captionContainer: {
         width: width,
         padding: 25,
@@ -227,12 +282,16 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         marginTop: 25
     },
+    donationOptionsWrapper: {
+        width: width * 0.9,
+        minHeight: 55,
+        maxWidth: 500,
+    },
     donationOptions: {
         display: "flex",
         justifyContent: "space-around",
         flexDirection: "row",
-        width: width * 0.9,
-        maxWidth: 500,
+        width: "100%",
         position: "relative"
     },
     donateOption: {
@@ -252,6 +311,36 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 0 },
         elevation: 7.5
     },
+    donateButton: {
+        width: width * 0.9,
+        height: 45,
+        borderRadius: 15,
+        marginTop: 15,
+        display: "flex",
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: "row"
+    },
+    donateButtonText: {
+        fontWeight: "500",
+        fontSize: 20
+    },
+    confirmationContainer:{
+        height: 150,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    successfulText: {
+        fontWeight: "500",
+        fontSize: 20,
+        textAlign: "center",
+        marginLeft: 15
+    },
+    gratitudeText: {
+        textAlign: "center",
+        marginTop: 5
+    }
 });
 
-export default DonateScreen;
+export default withIAPContext(DonateScreen);
