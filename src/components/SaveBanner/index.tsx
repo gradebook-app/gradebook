@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, StyleSheet, Image, Text, TouchableOpacity, GestureResponderEvent, LayoutAnimation } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import LinearGradient from "react-native-linear-gradient";
@@ -36,9 +36,15 @@ const SaveBanner : React.FC<ISaveBannerProps>  = ({ onPress }) => {
         dispatch(setShownSaveBanner(true));
     };
 
+    const wasBeingShown = useRef(false);
+
+    useEffect(() => {
+        if (!shownSaveBanner) wasBeingShown.current = true;
+    }, [ shownSaveBanner ]);
+
     return (
-        <FadeIn show={!shownSaveBanner} onHidden={() => {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        <FadeIn style={{ display: wasBeingShown.current ? undefined : "none" }} show={!shownSaveBanner} onHidden={() => {
+            if (wasBeingShown.current) LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             setUnmount(true);
         }}>
             {
