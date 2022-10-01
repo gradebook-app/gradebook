@@ -6,7 +6,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import FadeIn from "../../../components/FadeIn";
 import Percentage from "../../../components/Percentage";
 import moment from "moment-timezone";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type CourseBoxProps = {
     course: ICourse,

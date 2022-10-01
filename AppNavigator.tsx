@@ -5,16 +5,15 @@ import NavigatorScreen from "./src/pages/NavigatorScreen";
 import AssignmentsScreen from "./src/pages/AssignmentsScreen";
 import LoadingScreen from "./src/pages/LoadingScreen";
 import LoginScreen from "./src/pages/LoginScreen";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import GPAScreen from "./src/pages/GPAScreen";
 import NotificationScreen from "./src/pages/NotificationScreen";
-import SharedGroupPreferences from "react-native-shared-group-preferences";
+// import SharedGroupPreferences from "react-native-shared-group-preferences";
 import ContactScreen from "./src/pages/ContactScreen";
 import messaging from "@react-native-firebase/messaging";
 import SecurityScreen from "./src/pages/SecurityScreen";
 import PrivacyPolicyScreen from "./src/pages/PrivacyPolicyScreen";
 import notifee from "@notifee/react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import OptionsScreen from "./src/pages/OptionsScreen";
 import AdsSettingsScreen from "./src/pages/AdsSettingsScreen";
 import { useTheme } from "./src/hooks/useTheme";
@@ -24,24 +23,24 @@ import DonateScreen from "./src/pages/DonateScreen";
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
-    const setAppGroupData = useCallback(async () => {
-        const credentialsRaw = await AsyncStorage.getItem("@credentials");
-        const { userId = null, pass = null } = credentialsRaw ? JSON.parse(credentialsRaw) : {};
+    // const setAppGroupData = useCallback(async () => {
+    //     const credentialsRaw = await AsyncStorage.getItem("@credentials");
+    //     const { userId = null, pass = null } = credentialsRaw ? JSON.parse(credentialsRaw) : {};
   
-        const appGroupIdentifier = "group.com.Gradebook.Gradebook";
-        try {
-            await SharedGroupPreferences.setItem(
-                "credentials",
-                { "userId": userId, "pass": pass },
-                appGroupIdentifier,
-            );
-        } catch (e) {
-            console.log("Error", e);
-        }
-    }, []);
+    //     const appGroupIdentifier = "group.com.Gradebook.Gradebook";
+    //     try {
+    //         await SharedGroupPreferences.setItem(
+    //             "credentials",
+    //             { "userId": userId, "pass": pass },
+    //             appGroupIdentifier,
+    //         );
+    //     } catch (e) {
+    //         console.log("Error", e);
+    //     }
+    // }, []);
 
     useEffect(() => {
-        setAppGroupData();
+       // setAppGroupData();
     });
 
     useEffect(()=>{

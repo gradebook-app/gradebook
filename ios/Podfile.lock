@@ -494,8 +494,6 @@ PODS:
     - RNNotifee/NotifeeCore (= 3.0.4)
   - RNNotifee/NotifeeCore (3.0.4):
     - React-Core
-  - RNReactNativeSharedGroupPreferences (1.1.23):
-    - React
   - RNReanimated (2.2.4):
     - DoubleConversion
     - FBLazyVector
@@ -604,7 +602,6 @@ DEPENDENCIES:
   - RNGoogleMobileAds (from `../node_modules/react-native-google-mobile-ads`)
   - RNIap (from `../node_modules/react-native-iap`)
   - "RNNotifee (from `../node_modules/@notifee/react-native`)"
-  - RNReactNativeSharedGroupPreferences (from `../node_modules/react-native-shared-group-preferences`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -762,8 +759,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-iap"
   RNNotifee:
     :path: "../node_modules/@notifee/react-native"
-  RNReactNativeSharedGroupPreferences:
-    :path: "../node_modules/react-native-shared-group-preferences"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -858,7 +853,6 @@ SPEC CHECKSUMS:
   RNGoogleMobileAds: ad5ed70608dd943e5d2954ebd24c390aca8d1b28
   RNIap: 6375e29602f8365d5d26c8c8ce1441545fa0f683
   RNNotifee: c1d164933c68654e1fb2c843118506751ad4578c
-  RNReactNativeSharedGroupPreferences: de0121a4224c267bc7e9fb16c398f3f087c8da81
   RNReanimated: 1b1b442d84cba454bae467c91a0ac3274e4ca25d
   RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
   RNSVG: 07037623c36f12e41312730622d5f6b3656227ca
