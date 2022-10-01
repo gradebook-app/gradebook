@@ -46,7 +46,7 @@ const NotificationScreen : React.FC<NotificationScreenProps> = ({ navigation }) 
                 </Box>
                 <View style={styles.captionContainer}>
                     <Text style={[{ color: theme.grey }]}>
-                        For changed settings to take affect make sure to reload the app once changed. 
+                        For changed settings to take effect make sure to reload the app once changed. 
                     </Text>
                 </View>
                 <Box>

@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useCallback, useEffect, useMemo, useState } from "react"
-import { Button, Dimensions, Image, LayoutAnimation, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import { ActivityIndicator, Dimensions, Image, LayoutAnimation, Platform, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 import { getProducts, useIAP, withIAPContext } from "react-native-iap";
 import { useDispatch, useSelector } from "react-redux";
 import config from "../../../config";
@@ -81,6 +81,7 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
 
     const [ donateValue, setDonateValue ] = useState<string | null>(null);
     const [ isSuccess, setIsSuccess ] = useState<boolean>(false);
+    const [ fetchingProducts, setFetchingProducts ] = useState<boolean>(false);
 
     const resetConfirmation = useCallback(() => {
         LayoutAnimation.easeInEaseOut();
@@ -118,14 +119,30 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
     const handleGetProducts = useCallback(async () => {
         if (!!donateProducts.length) return; 
 
+        setFetchingProducts(true);
         const products = await getProducts({ skus: config.iap.skus })
             .catch(() => null)
+
+        setFetchingProducts(false);
 
         if (products && products.length) {
           dispatch(setDonateProducts(products));
         }
  
     }, [ donateProducts ]);
+
+    const handleForceGetProducts = useCallback(async () => {    
+        setFetchingProducts(true);
+
+        const products = await getProducts({ skus: config.iap.skus })
+            .catch(() => null)
+
+        if (products && products.length) {
+            dispatch(setDonateProducts(products));
+        }
+
+        setFetchingProducts(false);
+    }, []);
 
     const handleCheckCurrentPurchase = useCallback(async () => {    
         if (!currentPurchase) return; 
@@ -159,7 +176,14 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
-            <ScrollView contentContainerStyle={styles.scrollview}>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={fetchingProducts}
+                        onRefresh={handleForceGetProducts}
+                    />
+                }
+                contentContainerStyle={styles.scrollview}>
                 <View style={styles.headerContainer}>
                     <Text style={[ styles.header, { color: theme.text }]}>Contribute to Genesus</Text>
                 </View>
@@ -204,13 +228,20 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
                         </>
                     </FadeIn>
                     {
-                        !sortedProducts.length && (
+                        (!sortedProducts.length && !fetchingProducts) && (
                             <FadeIn show={true} delay={250}>
                                 <View style={styles.donateErrorMSG}>
                                     <Text style={[{ color: theme.grey, textAlign: "center" }]}>
                                         No Donation Options Available Currently.
                                     </Text>
                                 </View>
+                            </FadeIn>
+                        )
+                    }
+                    {
+                        (fetchingProducts && !sortedProducts.length) && (
+                            <FadeIn show={true} delay={250}>
+                                <ActivityIndicator animating style={{ marginTop: 5 }} />
                             </FadeIn>
                         )
                     }

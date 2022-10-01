@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserCourseWeight } from "../../store/actions/user.actions";
 import { getIsUpdatingCourseWeight } from "../../store/selectors/user.selectors";
 import { IRootReducer } from "../../store/reducers";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 const { width, height } = Dimensions.get("window");
 
@@ -160,6 +161,8 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
         if (isSettingWeight) handleCloseWeightsSheet();
     };
 
+    const { isInternetReachable } = useNetInfo();
+
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <Blocker block={!!selectedAssignment || isSettingWeight} onPress={handleBlockerClick} />
@@ -190,7 +193,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                 }
                 style={{ borderRadius: 10}}
                 contentContainerStyle={ styles.scrollView }>
-                <View style={{ height: 25, marginBottom: 5 }}>
+                <View style={{ minHeight: 25, marginBottom: 5 }}>
                     {
                         (!weightLoading || !!weight) && (weight !== null) ? (
                             <FadeIn show={true}>
@@ -201,7 +204,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                                         colors={courseWeightMappedColors[weight || ECourseWeight.UNWEIGHTED]}
                                         style={[ styles.weightedLabel ]}
                                     >
-                                        <Text style={[{ color: theme.text, fontWeight: "500" }]}>
+                                        <Text style={[{ color: "#fff", fontWeight: "500" }]}>
                                             { courseWeightMapped[weight || ECourseWeight.UNWEIGHTED ]}
                                         </Text>
                                     </LinearGradient>
@@ -210,7 +213,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                         ) : <></>
                     }
                     {
-                        weight === null && !weightLoading && (
+                        weight === null && !weightLoading && isInternetReachable ? (
                             <FadeIn style={styles.weightUnavailableWarning} show={true}>
                                 <Text  
                                     style={styles.weightUnavailableWarningText}
@@ -218,7 +221,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                                     Warning: Manual Weight Changing Not Available. Please await more grades then try again.
                                 </Text>
                             </FadeIn>
-                        )
+                        ) : <></>
                     }
                 </View>
                 { graded.length ? <GradeGraphSlider assignments={graded} /> : <></> }
