@@ -1,4 +1,3 @@
-import _ from "lodash";
 import { OpaqueColorValue } from "react-native";
 import { IThemeStatic, theme as staticTheme } from "../constants/theme";
 import { useDynamicColor } from "./useDynamicColor";
