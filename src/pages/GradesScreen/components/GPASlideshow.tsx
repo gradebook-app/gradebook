@@ -16,11 +16,12 @@ type GPASlideProps = {
     header: string,
     gpa?: number,
     gpaProgression: number[],
+    fadeIn?: boolean,
 }
 
 const { width } = Dimensions.get("window");
 
-const GPASlide : React.FC<GPASlideProps> = ({ header, gpa, gpaProgression = [] }) => {
+const GPASlide : React.FC<GPASlideProps> = ({ fadeIn = false, header, gpa, gpaProgression = [] }) => {
     const { theme } = useTheme();
 
     const roundedGPA = useMemo(() => {
@@ -43,10 +44,12 @@ const GPASlide : React.FC<GPASlideProps> = ({ header, gpa, gpaProgression = [] }
                 <Text style={[ styles.slideHeaderMain, { color: theme.text }]}>GPA: {roundedGPA || "-"}</Text>
                 <Text style={[ styles.slideHeader, { color: theme.grey }]}>{ header }</Text>
             </View>
-            <GradeChart data={gpaHistory}/>
+            <GradeChart fadeIn={fadeIn} fadeInDelay={1} data={gpaHistory}/>
         </View>
     );
 };
+
+const GPASlideMemoized = React.memo(GPASlide);
 
 type GPASlideshowProps = {
     gpa: IGPA,
@@ -137,19 +140,20 @@ const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA, handleGPAScr
 
     return (
         <Slider caption={renderCaption}>
-            <GPASlide 
+            <GPASlideMemoized 
+                fadeIn={true}
                 gpaProgression={unweightedProgression} 
                 gpa={gpa?.unweightedGPA || user?.unweightedGPA} 
                 header={"Unweighted GPA"}
             />
-            <GPASlide 
+            <GPASlideMemoized 
                 gpaProgression={weightedProgression} 
                 gpa={gpa?.weightedGPA || user?.weightedGPA} 
                 header={"Weighted GPA"}
             />
             {
                 gpa.unweightedGPA ? (
-                    <GPASlide 
+                    <GPASlideMemoized 
                         gpaProgression={highschoolGPAUnweightedProgression}
                         gpa={highschoolGPAUnweighted} 
                         header={"Unweighted Total GPA"}
@@ -158,7 +162,7 @@ const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA, handleGPAScr
             }
             {
                 gpa.weightedGPA ? (
-                    <GPASlide 
+                    <GPASlideMemoized 
                         gpaProgression={highschoolGPAWeightedProgression} 
                         gpa={highschoolGPAWeighted} 
                         header={"Weighted Total GPA"}
@@ -195,4 +199,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default GPASlideshow;
+export default React.memo(GPASlideshow);

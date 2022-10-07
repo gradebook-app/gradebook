@@ -54,7 +54,7 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
                         onAdFailedToLoad={handleAdFailed}
                         size={BannerAdSize.BANNER}
                         requestOptions={{
-                            keywords: [ "education", "school", "math", "english" ],
+                            keywords: [ "education", "school", "math", "english", "science" ],
                             requestNonPersonalizedAdsOnly: true,
                         }}
                     />
