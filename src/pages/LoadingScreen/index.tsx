@@ -28,6 +28,7 @@ import { getSettings } from "../../store/selectors/settings.selectors";
 import { getUserId } from "../../store/selectors/user.selectors";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import IOSButton from "../../components/IOSButton";
+import GradeChart from "../../components/GradeChart";
 
 const GradebookIcon = require("../../../assets/gradebook-logo.png");
 

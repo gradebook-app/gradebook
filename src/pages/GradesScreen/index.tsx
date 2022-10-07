@@ -68,7 +68,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     }, [ loading ]);
 
     const { reload:reloadGPA, loading:loadingGPA, gpa } = useGPA();
-    const { pastGPA } = usePastGPA();
+    const { reload:reloadPastGPA , pastGPA } = usePastGPA();
 
 
     useEffect(() => {
@@ -102,6 +102,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         if (!accessToken) return; 
         reload();
         reloadGPA();
+        reloadPastGPA();
     }, [ isAccessToken ]);
 
     useEffect(handleAuth, [ handleAuth ]);
@@ -109,6 +110,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     const onRefresh = () => {
         reload();
         reloadGPA();
+        reloadPastGPA();
     };
 
     const { theme, palette }  = useTheme();
@@ -242,7 +244,6 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                 renderContent={renderMPSelector}
                 onCloseEnd={handleSelectorBack}
             />
-           
         </SafeAreaView>
     );
 };

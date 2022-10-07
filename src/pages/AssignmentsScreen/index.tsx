@@ -193,7 +193,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                 }
                 style={{ borderRadius: 10}}
                 contentContainerStyle={ styles.scrollView }>
-                <View style={{ minHeight: 25, marginBottom: 5 }}>
+                <View style={{ minHeight: 28, marginBottom: 5 }}>
                     {
                         (!weightLoading || !!weight) && (weight !== null) ? (
                             <FadeIn show={true}>
@@ -218,7 +218,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                                 <Text  
                                     style={styles.weightUnavailableWarningText}
                                 >
-                                    Warning: Manual Weight Changing Not Available. Please await more grades then try again.
+                                    Warning: Manual weight changing unavailable. Please await more grades then try again.
                                 </Text>
                             </FadeIn>
                         ) : <></>
