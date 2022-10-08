@@ -18,7 +18,7 @@ type GradeChartProps = {
 }
 
 const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxis }) => {
-    const { palette, theme  }  = useTheme();
+    const { palette  }  = useTheme();
 
     const { isDark } = useAppearanceTheme();
 
@@ -53,8 +53,7 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxis }) =
     // }, [ data ]);
 
     return  (
-        <View style={styles.graphContainer}>
-            <View style={[ styles.graph, { backgroundColor: theme.secondary } ]}>
+        <>
                 {/* <Svg width={30}>
                     <G>
                         {
@@ -109,8 +108,7 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxis }) =
                         stroke: isDark ? "rgba(255,255,255, 0.1)" : "rgba(0,0,0, 0.1)" 
                     }} />
                 </LineChart>
-            </View>
-        </View>
+        </>
     );
 };
 
@@ -137,6 +135,10 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         shadowOffset: { width: 0, height: 0 },
         elevation: 15,
+    },
+    graphFadeInContainer: {
+        display: "flex",
+        flexDirection: "row",
     }
 });
 
@@ -149,11 +151,21 @@ const withFadeIn = (Component: React.FC<GradeChartProps & IChartFadeConfig>) => 
     fadeIn = false, fadeInDelay = 0, ...props 
 } : GradeChartProps & IChartFadeConfig) => {
 
-    return fadeIn ? (
-        <FadeIn show={true} delay={fadeInDelay}>
-            <Component { ...props }  />
-        </FadeIn>
-    ) : <Component { ...props } />
+    const { theme  }  = useTheme();
+
+    return (
+        <View style={styles.graphContainer}>
+            <View style={[ styles.graph, { backgroundColor: theme.secondary } ]}>
+            {
+                fadeIn ? (
+                    <FadeIn style={styles.graphFadeInContainer} show={true} delay={fadeInDelay}>
+                        <Component { ...props }  />
+                    </FadeIn>
+                ) : <Component { ...props } />
+            }
+            </View>
+        </View>
+    )
 };
 
 export default withFadeIn(React.memo(GradeChart)); 

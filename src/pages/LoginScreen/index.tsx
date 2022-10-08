@@ -25,7 +25,6 @@ import { schoolDistrictsMapped } from "../../utils/mapping";
 import { ESchoolDistricts } from "../../store/enums/school-districts.enum";
 import Blocker from "../../components/Blocker";
 import messaging from "@react-native-firebase/messaging";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { ScrollView, TouchableOpacity as TouchableOpacityGesture } from "react-native-gesture-handler";
 import IOSButton from "../../components/IOSButton";
 import { useDynamicColor } from "../../hooks/useDynamicColor";
@@ -332,7 +331,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                         style={styles.button}
                         onPress={handleLogin}
                     >
-                        <FontAwesomeIcon color={"#fff"} icon={faBinoculars as IconProp} />
+                        <FontAwesomeIcon color={"#fff"} icon={faBinoculars} />
                     </BrandButton>
                     <TouchableOpacity onPress={handleTermsOpen} style={styles.conditionContainer}>
                         <Text 

@@ -5,7 +5,6 @@ import GradesScreen from "../GradesScreen";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBook, faCalendarAlt, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "../../hooks/useTheme";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import AccountScreen from "../AccountScreen";
 import { setNotificationToken, setShownAlert } from "../../store/actions/user.actions";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +20,7 @@ import { useDynamicColor } from "../../hooks/useDynamicColor";
 type TabIconProps = {
     focused: boolean,
     iconSize?: number,
-    icon: IconProp,
+    icon: any,
 }
 
 const TabIcon : React.FC<TabIconProps> = ({ focused, iconSize, icon, ...props }) => {
@@ -122,13 +121,13 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 tabBarIcon: ({ focused }) => {
                     switch(route.name) {
                     case "Grades": {
-                        return <TabIcon icon={faBook as IconProp} focused={focused} />;
+                        return <TabIcon icon={faBook} focused={focused} />;
                     }
                     case "Schedule": {
-                        return <TabIcon icon={faCalendarAlt as IconProp} focused={focused} />;
+                        return <TabIcon icon={faCalendarAlt} focused={focused} />;
                     }
                     case "Account": {
-                        return <TabIcon icon={faUser as IconProp} focused={focused} />;
+                        return <TabIcon icon={faUser} focused={focused} />;
                     }
                     default: {
                         return; 
