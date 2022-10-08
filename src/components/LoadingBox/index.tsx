@@ -1,4 +1,3 @@
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faFileInvoice } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -6,8 +5,7 @@ import {
     Dimensions, 
     StyleSheet, 
     View, 
-    Animated,
-    Easing,
+    Animated
 } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import { loadingConfig } from "./constant";
@@ -15,7 +13,7 @@ import { loadingConfig } from "./constant";
 const { width, height } = Dimensions.get("window");
 
 type SlideProps = {
-    icon: IconProp,
+    icon: any,
     slideTranslate: any
 }
 
@@ -107,7 +105,7 @@ const LoadingBox: React.FC<LoadingScreenProps> = ({ loading = false }) => {
                         return (
                             <Slide 
                                 key={index} 
-                                icon={currentSlides[index] as IconProp}
+                                icon={currentSlides[index]}
                                 slideTranslate={slideTranslate} 
                             />
                         );

@@ -6,7 +6,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTheme } from "../../../hooks/useTheme";
 import { useAppearanceTheme } from "../../../hooks/useAppearanceTheme";
 import { IAssignment } from "../../../store/interfaces/assignment.interface";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 const { width } = Dimensions.get("window");
 
@@ -39,7 +38,7 @@ const Assignment : React.FC<AssignmentProp> = ({ assignment, children, onPress }
                                 size={20} 
                                 color={ isDark ? theme.grey
                                     : "rgba(0, 0, 0, 0.15)"} 
-                                icon={faCommentDots as IconProp} /> 
+                                icon={faCommentDots} /> 
                             : <></>}
                     </View>
                     <View style={ styles.metaInfo }>

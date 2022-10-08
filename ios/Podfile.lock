@@ -467,8 +467,6 @@ PODS:
     - React
   - RNCPicker (2.4.4):
     - React-Core
-  - RNCPushNotificationIOS (1.10.1):
-    - React-Core
   - RNFBAnalytics (15.3.0):
     - Firebase/AnalyticsWithoutAdIdSupport (= 9.4.0)
     - React-Core
@@ -594,7 +592,6 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
-  - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
@@ -743,8 +740,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/masked-view"
   RNCPicker:
     :path: "../node_modules/@react-native-picker/picker"
-  RNCPushNotificationIOS:
-    :path: "../node_modules/@react-native-community/push-notification-ios"
   RNFBAnalytics:
     :path: "../node_modules/@react-native-firebase/analytics"
   RNFBApp:
@@ -845,7 +840,6 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNCPicker: 0b65be85fe7954fbb2062ef079e3d1cde252d888
-  RNCPushNotificationIOS: 87b8d16d3ede4532745e05b03c42cff33a36cc45
   RNFBAnalytics: 1ae817c23433d97e14f99f86b06fe3b314a077e4
   RNFBApp: 39904cebc3958e2d377dccf870b5c5d76cb089a9
   RNFBMessaging: 7decac9e31a7eb9f53d9c34ebacea795687f433b
