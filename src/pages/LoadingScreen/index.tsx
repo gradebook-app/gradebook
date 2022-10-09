@@ -26,7 +26,6 @@ import messaging from "@react-native-firebase/messaging";
 import FadeIn from "../../components/FadeIn";
 import { getSettings } from "../../store/selectors/settings.selectors";
 import { getUserId } from "../../store/selectors/user.selectors";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import IOSButton from "../../components/IOSButton";
 
 const GradebookIcon = require("../../../assets/gradebook-logo.png");
@@ -168,7 +167,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
             { (isBiometricsEnabled) && (
                 <TouchableOpacity onPress={handleLogOut} style={styles.signOut}>
                     <IOSButton style={{ marginHorizontal: Platform.OS === "ios" ? 0 : 10 }} onPress={handleLogOut}>Sign Out</IOSButton>
-                    <FontAwesomeIcon color={"#006ee6"} icon={faSignOutAlt as IconProp} />
+                    <FontAwesomeIcon color={"#006ee6"} icon={faSignOutAlt} />
                 </TouchableOpacity>
             )}
             <FadeIn style={styles.loadingContainer} show={visible}>

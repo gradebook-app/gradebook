@@ -54,7 +54,7 @@ const categoryColors = {
 const theme:IThemeStatic = {
     palette: {
         primary: "#a2d2ff",
-        secondary: "#43A4FF",
+        secondary: "#2C72C1",
         blue: "#147EFB"
     }, 
     gradeColors,

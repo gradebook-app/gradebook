@@ -5,7 +5,6 @@ import GradesScreen from "../GradesScreen";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBook, faCalendarAlt, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "../../hooks/useTheme";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import AccountScreen from "../AccountScreen";
 import { setNotificationToken, setShownAlert } from "../../store/actions/user.actions";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +20,7 @@ import { useDynamicColor } from "../../hooks/useDynamicColor";
 type TabIconProps = {
     focused: boolean,
     iconSize?: number,
-    icon: IconProp,
+    icon: any,
 }
 
 const TabIcon : React.FC<TabIconProps> = ({ focused, iconSize, icon, ...props }) => {
@@ -51,17 +50,6 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
     const state = useSelector((state:IRootReducer) => state);
     const dispatch = useDispatch();
     const user = getUser(state);
-
-    // const handleAppStateUpdate = () => {
-    //     console.log("focused");
-    // };
-
-    // useEffect(() => {
-    //     AppState.addEventListener('focus', handleAppStateUpdate);
-    //     return () => {
-    //         AppState.removeEventListener('focus', handleAppStateUpdate);
-    //     }
-    // });
 
     const getPermission = async () => {
         try {
@@ -93,6 +81,7 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
     }, [ user?.notificationToken ]);
 
     useEffect(() => {
+        
         const subscription = messaging().onTokenRefresh(handleNotificationUpdate);
         return subscription;
     }, []);
@@ -108,13 +97,17 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
         dark: "rgba(255, 255, 255, 0.1)",
     });
 
-    const [ showAlert, setShowAlert ] = useState(false);
+    const [ showAlert, setShowAlert ] = useState(true);
 
     const shownAlert = getShownAlert(state);
 
     const handleDismissAlert = () => {
         setShowAlert(false);
         dispatch(setShownAlert(true));
+    };
+
+    const handleDonate = () => {
+       
     };
 
     return (
@@ -128,13 +121,13 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 tabBarIcon: ({ focused }) => {
                     switch(route.name) {
                     case "Grades": {
-                        return <TabIcon icon={faBook as IconProp} focused={focused} />;
+                        return <TabIcon icon={faBook} focused={focused} />;
                     }
                     case "Schedule": {
-                        return <TabIcon icon={faCalendarAlt as IconProp} focused={focused} />;
+                        return <TabIcon icon={faCalendarAlt} focused={focused} />;
                     }
                     case "Account": {
-                        return <TabIcon icon={faUser as IconProp} focused={focused} />;
+                        return <TabIcon icon={faUser} focused={focused} />;
                     }
                     default: {
                         return; 
@@ -144,6 +137,9 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 tabBarStyle: {
                     backgroundColor: theme?.secondary,
                     borderTopColor: separatorBarColor,
+                },
+                headerStyle: {
+                    height: 0
                 },
                 headerShown: false,
                 tabBarLabel: "",
@@ -169,13 +165,13 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 <Alert 
                     delay={showAlert ? 500 : 0}
                     visible={showAlert && !shownAlert}
-                    title="🥳 Version 1.2"
-                    description="Version 1.2 introduces many improvements to the UX and bug fixes.
-                                A new feature included in this update is viewing future assignment points.
-                                Additionally, Version 1.2 introduces Ads to the application. In order to provide students with
-                                our services we display Ads by default. If you wish to reduce Ads and not support the application you
-                                can disable them in settings."
-                    buttons={[{ title: "Continue", onPress: handleDismissAlert}]}
+                    title="🚀 GPA Update"
+                    description="For a long time the GPA calculation has been inaccurate because Genesus was not able to accurately detect which classes were AP and Honors classes. Now, users are able to manually change the weighting of each class to improve their GPA accuracy. Find the option by clicking on a class and pressing the gradient button indicating the current weighting."
+                    buttons={[
+                        { 
+                            title: "Continue", onPress: handleDismissAlert
+                        }
+                    ]}
                 />
             }
         </>
