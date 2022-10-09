@@ -33,7 +33,9 @@ export const useAccount = () => {
 
     const reload = () => {
         setLoading(true);
-        getAccount().finally(() => setLoading(false));
+        getAccount().finally(() => {
+            setLoading(false)
+        });
     };
 
     useEffect(() => {

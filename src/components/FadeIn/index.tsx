@@ -5,10 +5,11 @@ type FadeInProps = {
     children: ReactChild,
     show: boolean, 
     style?: StyleProp<ViewStyle>,
-    delay?: number | null
+    delay?: number | null,
+    onHidden?: () => void; 
 }
 
-const FadeIn : React.FC<FadeInProps> = ({ show = false, children, style, delay = null }) => {
+const FadeIn : React.FC<FadeInProps> = ({ show = false, children, style, delay = null, onHidden }) => {
     const containerOpacity = useRef(new Animated.Value(0)).current; 
 
     const handleOpacity = useCallback(() => {
@@ -21,14 +22,18 @@ const FadeIn : React.FC<FadeInProps> = ({ show = false, children, style, delay =
                     duration: 200,
                     useNativeDriver: true,
                 }
-            )
-        ]).start();
+            ),
+        ]).start(() => {
+            if (!show && !!onHidden) onHidden();
+        });
     }, [ show ]);
 
     useEffect(handleOpacity, [ handleOpacity ]);
 
     return (
-        <Animated.View style={[ { opacity: containerOpacity }, style ]}>
+        <Animated.View style={[ { 
+            opacity: containerOpacity,
+        }, style ]}>
             { children }
         </Animated.View>
     );

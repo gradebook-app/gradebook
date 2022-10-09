@@ -2,7 +2,8 @@ require File.join(File.dirname(`node --print "require.resolve('expo/package.json
 require File.join(File.dirname(`node --print "require.resolve('react-native/package.json')"`), "scripts/react_native_pods")
 require File.join(File.dirname(`node --print "require.resolve('@react-native-community/cli-platform-ios/package.json')"`), "native_modules")
 
-platform :ios, '12.0'
+platform :ios, '12.4'
+install! 'cocoapods', :deterministic_uuids => false
 
 require 'json'
 podfile_properties = JSON.parse(File.read('./Podfile.properties.json')) rescue {}
@@ -13,13 +14,16 @@ target 'Gradebook' do
   use_expo_modules!
 
   config = use_native_modules!
+
+  flags = get_default_flags()
   
   pod 'FirebaseCore', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
 
   use_react_native!(
     :path => config[:reactNativePath],
-    :hermes_enabled => podfile_properties['expo.jsEngine'] == 'hermes'
+    :hermes_enabled => true,
+    :fabric_enabled => flags[:fabric_enabled]
   )
 
   # Uncomment to opt-in to using Flipper
@@ -30,8 +34,8 @@ target 'Gradebook' do
 
 
   post_install do |installer|
-    react_native_post_install(installer)
-
+    react_native_post_install(installer, :mac_catalyst_enabled => false)
+    __apply_Xcode_12_5_M1_post_install_workaround(installer)
     # Workaround `Cycle inside FBReactNativeSpec` error for react-native 0.64
     # Reference: https://github.com/software-mansion/react-native-screens/issues/842#issuecomment-812543933
     installer.pods_project.targets.each do |target|
@@ -43,7 +47,7 @@ target 'Gradebook' do
         end
       end
       target.build_configurations.each do |config|
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.4'
       end
     end
   end

@@ -1,8 +1,8 @@
 import "react-native-gesture-handler";
-import React, { Suspense, useEffect } from "react";
-import { Dimensions, Platform, StyleSheet } from "react-native";
+import React, { Suspense, useCallback, useEffect } from "react";
+import { Dimensions, Platform, StyleSheet, UIManager } from "react-native";
 import LoadingScreen from "./src/pages/LoadingScreen";
-import { Provider as ReduxProvider } from "react-redux";
+import { Provider as ReduxProvider, useDispatch } from "react-redux";
 import store, { persistor } from "./src/store";
 import AppNavigator from "./AppNavigator";
 import { PersistGate } from 'redux-persist/integration/react';
@@ -11,8 +11,19 @@ import { useDynamicColor } from "./src/hooks/useDynamicColor";
 import { StatusBar } from "expo-status-bar";
 import changeNavigationBarColor from "react-native-navigation-bar-color";
 import SplashScreen from 'react-native-splash-screen'
-const { width, height } = Dimensions.get('window');
 import mobileAds, { MaxAdContentRating } from 'react-native-google-mobile-ads';
+import {endConnection, getProducts, initConnection} from 'react-native-iap';
+import config from "./config";
+import { setDonateProducts } from "./src/store/actions";
+
+const { width, height } = Dimensions.get('window');
+
+if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+  ) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 mobileAds()
   .setRequestConfiguration({
@@ -23,7 +34,7 @@ mobileAds()
   })
   .then(() => {
     mobileAds().initialize();
-})
+}) 
 
 const ReduxBlocker = () => {
     const backgroundColor = useDynamicColor({ dark: "#000", light: "#fff" });
@@ -37,6 +48,30 @@ const styles = StyleSheet.create({
         height: height,
     },
 });
+
+const IAPConnection : React.FC = ({ children }) => {
+    const dispatch = useDispatch();
+
+    // Set up In-App Purchases (IAP)
+    const handleIAPBootstrap = useCallback(async () => {
+        await initConnection();
+
+        const products = await getProducts({ 
+            skus: config.iap.skus
+        }).catch(_e => []);
+
+        if (!products.length) return; 
+
+        dispatch(setDonateProducts(products));
+    }, []);
+
+    useEffect(() => { 
+        handleIAPBootstrap(); 
+        return  () => { endConnection(); }
+    }, [ handleIAPBootstrap ]);
+    
+    return <>{ children }</>;
+};
 
 export default function App() {
     changeNavigationBarColor("#000000", false, false);
@@ -52,7 +87,9 @@ export default function App() {
                     { Platform.OS === "android" && (
                          <StatusBar translucent={true} />
                     )}
-                    <AppNavigator />
+                    <IAPConnection>
+                        <AppNavigator />
+                    </IAPConnection>
                 </Suspense>
             </PersistGate>
         </ReduxProvider>

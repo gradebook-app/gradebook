@@ -1,7 +1,7 @@
-import { faFlagUsa, faIdBadge, faKey, faPizzaSlice, faSchool, faUserCog, faPhone, faShieldAlt } from "@fortawesome/free-solid-svg-icons";
+import { faFlagUsa, faIdBadge, faKey, faPizzaSlice, faSchool, faUserCog, faPhone, faShieldAlt, faCoins } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useMemo } from "react";
-import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Platform } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Platform, Linking } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import { useDispatch, useSelector } from "react-redux";
 import BrandButton from "../../components/BrandButton";
@@ -14,7 +14,6 @@ import { getAccessToken, getUser } from "../../store/selectors";
 import { genesisConfig } from "../../constants/genesis";
 import jwt_decode from "jwt-decode";
 import { getUserId } from "../../store/selectors/user.selectors";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import analytics from '@react-native-firebase/analytics';
 
 type AccountScreenProps = {
@@ -36,10 +35,10 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
 
     const handleLogOut = async () => {
         navigation.navigate("login");
-        dispatch(setLogoutClient({ userId }));
         await analytics().setUserId(null);
         await AsyncStorage.getAllKeys()
             .then(keys => AsyncStorage.multiRemove(keys as string[]));
+        dispatch(setLogoutClient({ userId }));
     };
 
     const { account, loading, reload } = useAccount();
@@ -49,8 +48,10 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
     };
 
     const handleAuth = useCallback(() => {
-        if (!accessToken) return; 
-        reload();
+        if (!isAccessToken) return; 
+        setTimeout(() => {
+            reload();
+        }, 0);
     }, [ isAccessToken ]);
 
     useEffect(handleAuth, [ handleAuth ]);
@@ -86,12 +87,17 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
         navigation.navigate("privacy-policy");
     };
 
+    const handleDonateLink = () => {
+        navigation.navigate("donate");
+    };
+
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <View style={ styles.account }>
                 <ScrollView 
                     refreshControl={
                         <RefreshControl
+                            enabled={true}
                             refreshing={loading}
                             onRefresh={onRefresh}
                         />
@@ -119,33 +125,49 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                             </View>
                         </View>
                         <Box.Separator />
-                        <Box.Content iconColor={"#9B7F00"} icon={faSchool as IconProp} title="Grade Level">
+                        <Box.Content iconColor={"#9B7F00"} icon={faSchool} title="Grade Level">
                             <Box.Value value={`${account.grade || ""}`}></Box.Value>
                         </Box.Content>
                         <Box.Separator />
-                        <Box.Content iconColor={"#DD0370"} icon={faPizzaSlice as IconProp} title="Lunch Balance">
+                        <Box.Content iconColor={"#DD0370"} icon={faPizzaSlice} title="Lunch Balance">
                             <Box.Value value={`${account.lunchBalance || ""}`}></Box.Value>
                         </Box.Content>
                         <Box.Separator />
-                        <Box.Content iconColor={"#034FDD"} icon={faKey as IconProp} title="Locker">
+                        <Box.Content iconColor={"#034FDD"} icon={faKey} title="Locker">
                             <Box.Value value={`${account.locker || ""}`}></Box.Value>
                         </Box.Content>
                         <Box.Separator />
-                        <Box.Content iconColor={"#9B6000"} icon={faIdBadge as IconProp} title="Student ID">
+                        <Box.Content iconColor={"#9B6000"} icon={faIdBadge} title="Student ID">
                             <Box.Value value={`${account.studentId || ""}`}></Box.Value>
                         </Box.Content>
                         <Box.Separator />
-                        <Box.Content iconColor={"#009B8D"} icon={faFlagUsa as IconProp} title="State ID">
+                        <Box.Content iconColor={"#009B8D"} icon={faFlagUsa} title="State ID">
                             <Box.Value value={`${account.stateId || ""}`}></Box.Value>
                         </Box.Content>
                     </Box>
                     <Box.Space />
                     <Box style={{ flexDirection: "column" }}>
+                        {
+                            Platform.OS === "ios" && (
+                                <>
+                                    <Box.Clickable onPress={handleDonateLink}>
+                                        <Box.Content 
+                                            title="Donate"
+                                            iconColor={"#89A0DD"}
+                                            icon={faCoins}
+                                        >
+                                            <Box.Arrow onPress={handleDonateLink} />
+                                        </Box.Content>
+                                    </Box.Clickable>
+                                    <Box.Separator />
+                                </>
+                            )
+                        }
                         <Box.Clickable onPress={handleOptions}>
                                 <Box.Content 
                                     title="Options"
                                     iconColor={"#DD4503"}
-                                    icon={faUserCog as IconProp}
+                                    icon={faUserCog}
                                 >
                                     <Box.Arrow onPress={handleOptions} />
                                 </Box.Content>
@@ -154,7 +176,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                         <Box.Clickable onPress={handleContactsSettings}>
                         <Box.Content
                             iconColor={"#34E600"}
-                            icon={faPhone as IconProp}
+                            icon={faPhone}
                             title="Contact">
                             <Box.Arrow onPress={handleContactsSettings} />
                         </Box.Content>
@@ -164,11 +186,11 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                         <Box.Content 
                             title="Privacy Policy"
                             iconColor={"#E66C00"}
-                            icon={faShieldAlt as IconProp}
+                            icon={faShieldAlt}
                         >
                             <Box.Arrow onPress={handlePrivacySettings} />
                         </Box.Content>
-                    </Box.Clickable>
+                    </Box.Clickable>           
                     </Box>
                     <BrandButton 
                         style={styles.logOut}

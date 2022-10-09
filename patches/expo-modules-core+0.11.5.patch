@@ -1,0 +1,12 @@
+diff --git a/node_modules/expo-modules-core/src/NativeViewManagerAdapter.native.tsx b/node_modules/expo-modules-core/src/NativeViewManagerAdapter.native.tsx
+index 37c6979..02513ed 100644
+--- a/node_modules/expo-modules-core/src/NativeViewManagerAdapter.native.tsx
++++ b/node_modules/expo-modules-core/src/NativeViewManagerAdapter.native.tsx
+@@ -1,6 +1,7 @@
+ import React from 'react';
+ import { NativeModules, requireNativeComponent } from 'react-native';
+ 
++
+ // To make the transition from React Native's `requireNativeComponent` to Expo's
+ // `requireNativeViewManager` as easy as possible, `requireNativeViewManager` is a drop-in
+ // replacement for `requireNativeComponent`.
