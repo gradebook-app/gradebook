@@ -1,9 +1,10 @@
 {
-    "C_Cpp.errorSquiggles": "Disabled",
-    "java.jdt.ls.java.home": "/opt/Homebrew/Cellar/openjdk@11/11.0.12/libexec/openjdk.jdk/Contents/Home",
+    "C_Cpp.errorSquiggles": "disabled",
+    "java.jdt.ls.java.home": "/Users/mahitmehta/.sdkman/candidates/java/17.0.4.1-tem",
     "java.configuration.updateBuildConfiguration": "automatic",
     "search.exclude": {
-        "**/node_modules":true
+       "**/node_modules":false
     },
-    "search.useIgnoreFiles":false
+    "search.useIgnoreFiles": false,
+    "cmake.sourceDirectory": "${workspaceFolder}/android/app/src/main/jni"
 }

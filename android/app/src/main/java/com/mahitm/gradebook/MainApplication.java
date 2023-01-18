@@ -3,6 +3,7 @@ package com.mahitm.gradebook;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
+
 import androidx.annotation.NonNull;
 
 import com.facebook.react.PackageList;
@@ -10,16 +11,17 @@ import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
-import com.facebook.soloader.SoLoader;
-
-import expo.modules.ApplicationLifecycleDispatcher;
-import expo.modules.ReactNativeHostWrapper;
-
 import com.facebook.react.bridge.JSIModulePackage;
+import com.facebook.react.config.ReactFeatureFlags;
+import com.facebook.soloader.SoLoader;
+import com.mahitm.gradebook.newarchitecture.MainApplicationReactNativeHost;
 import com.swmansion.reanimated.ReanimatedJSIModulePackage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+
+import expo.modules.ApplicationLifecycleDispatcher;
+import expo.modules.ReactNativeHostWrapper;
 
 public class MainApplication extends Application implements ReactApplication {
   private final ReactNativeHost mReactNativeHost = new ReactNativeHostWrapper(
@@ -50,14 +52,23 @@ public class MainApplication extends Application implements ReactApplication {
     }
   });
 
+  private final ReactNativeHost mNewArchitectureNativeHost = new MainApplicationReactNativeHost(this);
+
   @Override
   public ReactNativeHost getReactNativeHost() {
-    return mReactNativeHost;
+    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+      return mNewArchitectureNativeHost;
+    } else {
+      return mReactNativeHost;
+    }
   }
 
   @Override
   public void onCreate() {
     super.onCreate();
+
+    ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
+
     SoLoader.init(this, /* native exopackage */ false);
 
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
