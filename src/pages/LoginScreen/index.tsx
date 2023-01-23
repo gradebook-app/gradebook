@@ -16,7 +16,8 @@ import InputField from "../../components/InputField";
 import { setLoginClient } from "../../store/actions/auth.actions";
 import { IRootReducer } from "../../store/reducers";
 import { getAccessToken, isAccessDenied, isLoading } from "../../store/selectors";
-import BottomSheet from "reanimated-bottom-sheet";
+//import BottomSheet from "reanimated-bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 import PasswordField from "../../components/PasswordField";
 
 import EducationSVG from "../../SVG/EducationSVG";
@@ -31,6 +32,7 @@ import IOSButton from "../../components/IOSButton";
 import { useDynamicColor } from "../../hooks/useDynamicColor";
 import analytics from "@react-native-firebase/analytics";
 import { getUserId } from "../../store/selectors/user.selectors";
+import SelectDropdown from "react-native-select-dropdown";
 
 const { width, height } = Dimensions.get("window");
 
@@ -144,22 +146,22 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
 
     const handleSchoolDistrictOpen = () => {
         setSheetOpen(true);
-        schoolDistrictSheet.current.snapTo(0);
+        schoolDistrictSheet.current.snapToIndex(0);
     };
 
     const handleSchoolDistrictClose = () => {
         setSheetOpen(false);
-        schoolDistrictSheet.current.snapTo(1);
+        schoolDistrictSheet.current.close();
     };
 
     const handleTermsOpen = () => {
         setTermsSheetOpen(true);
-        termsSheet.current.snapTo(0);
+        termsSheet.current.snapToIndex(0);
     };  
 
     const handleTermsClose = () => {
         setTermsSheetOpen(false);
-        termsSheet.current.snapTo(1);
+        termsSheet.current.close();
     };
 
     const renderSchoolDistrictSheet = () => {
@@ -268,6 +270,27 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                             </TouchableOpacityGesture>
                         ) : (
                             <View style={styles.androidPicker}>
+                                <SelectDropdown
+                                        data={Object.keys(schoolDistrictsMapped).map(key => schoolDistrictsMapped[key as ESchoolDistricts])}
+                                        onSelect={(selectedItem, index) => {
+                                            handleValueChange("schoolDistrict")(Object.entries(schoolDistrictsMapped).find(([_, value]) => value === selectedItem)?.[0]);
+                                        }}
+                                        buttonTextAfterSelection={(selectedItem, index) => {
+                                            // text represented after item is selected
+                                            // if data array is an array of objects then return selectedItem.property to render after item is selected
+                                            return selectedItem
+                                        }}
+                                        rowTextForSelection={(item, index) => {
+                                            // text represented for each item in dropdown
+                                            // if data array is an array of objects then return item.property to represent item in dropdown
+                                            return item
+                                        }}
+                                        
+                                        onChangeSearchInputText={() => {
+
+                                        }}
+                                    />
+
                                 <Picker     
                                     onValueChange={(itemValue) => {
                                         setDistrictPickerOpen(false);
@@ -284,6 +307,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                                     }}
                                     style={{
                                         borderRadius: 5,
+                                        height: 55,
                                         backgroundColor: theme.secondary
                                     }}
                                 >
@@ -310,7 +334,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                     <InputField 
                         value={values.userId}
                         returnKeyType={"done"}
-                        autoCompleteType={"off"}
+                        autoComplete={"off"}
                         onChangeText={handleValueChange("userId")}
                         placeholder="Email"
                         onSubmitEditing={handleLogin}
@@ -345,6 +369,37 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
             </KeyboardAvoidingView>
             <BottomSheet
                 ref={termsSheet}
+                index={-1}
+                backgroundStyle={{
+                    backgroundColor: theme.background
+                }}
+                handleIndicatorStyle={{
+                    backgroundColor: useDynamicColor({ light: theme.grey, dark: "#fff" })
+                }}
+                enablePanDownToClose={true}
+                snapPoints={['50%', sheetHeight]}
+                onClose={handleTermsClose}
+            >
+                { renderTermsSheet() }
+            </BottomSheet>
+            <BottomSheet
+                ref={schoolDistrictSheet}
+                index={-1}
+                backgroundStyle={{
+                    backgroundColor: theme.background
+                }}
+                handleIndicatorStyle={{
+                    backgroundColor: useDynamicColor({ light: theme.grey, dark: "#fff" })
+                }}
+                enablePanDownToClose={true}
+                onClose={handleSchoolDistrictClose}
+                snapPoints={['50%', sheetHeight]}
+        
+            >
+                { renderSchoolDistrictSheet() }
+            </BottomSheet>
+            {/* <BottomSheet
+                ref={termsSheet}
                 initialSnap={1}
                 snapPoints={[sheetHeight, 0]}
                 borderRadius={25}
@@ -358,7 +413,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                 borderRadius={25}
                 onCloseEnd={handleSchoolDistrictClose}
                 renderContent={renderSchoolDistrictSheet}
-            />
+            /> */}
         </SafeAreaView>
     );
 };
@@ -416,6 +471,7 @@ const styles = StyleSheet.create({
         width: width,
         height: 500,
         padding: 25,
+        paddingTop: 5
     },
     termsList: {
         marginVertical: 15,
@@ -433,7 +489,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.15,
         shadowOffset: { width: 0, height: 0 },
         marginVertical: 10,
-        elevation: 7.5,
+        elevation: 7.5
     }
 }); 
 

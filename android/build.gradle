@@ -2,51 +2,28 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "29.0.3"
+        buildToolsVersion = "33.0.0"
         minSdkVersion = 21
-        compileSdkVersion = 31
-        targetSdkVersion = 31
+        compileSdkVersion = 33
+        targetSdkVersion = 33
+        ndkVersion = "23.1.7779620"
     }
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.1.0")
-        classpath('com.google.gms:google-services:4.3.10')
+        classpath("com.android.tools.build:gradle:3.1.0")
+        classpath("com.facebook.react:react-native-gradle-plugin")
+        classpath 'com.google.gms:google-services:4.3.14'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
-configurations.all {
+/* configurations.all {
     resolutionStrategy {
         force "com.facebook.soloader:soloader:0.8.2"
     }
-}
+} */
 
-allprojects {
-    repositories {
-        google()
-        mavenLocal()
-        maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url(new File(["node", "--print", "require.resolve('react-native/package.json')"].execute().text.trim(), "../android"))
-        }
-        maven {
-            // Android JSC is installed from npm
-            url(new File(["node", "--print", "require.resolve('jsc-android/package.json')"].execute().text.trim(), "../dist"))
-        }
-        // maven {
-        //     // Local Maven repo containing AARs with JSC library built for Android
-        //     url "$rootDir/../node_modules/jsc-android/dist"
-        // }
-        maven {
-            url "$rootDir/../node_modules/@notifee/react-native/android/libs"
-        }
-        mavenCentral()
-        jcenter()
-        maven { url 'https://www.jitpack.io' }
-    }
-}

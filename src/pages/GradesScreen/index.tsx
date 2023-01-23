@@ -224,14 +224,14 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                 { !loading ? <BannerAd style={{ marginTop: 15 }} /> : <></> }
             </ScrollView>
             <Blocker block={showSelector} onPress={handleSelectorBack} />
-            <BottomSheet 
+            {/* <BottomSheet 
                 ref={selectionSheet}
                 initialSnap={1}
                 snapPoints={[sheetHeight, 0]} 
                 borderRadius={25}
                 renderContent={renderMPSelector}
                 onCloseEnd={handleSelectorBack}
-            />
+            /> */}
            
         </SafeAreaView>
     );

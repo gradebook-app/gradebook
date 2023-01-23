@@ -1,5 +1,5 @@
 {
-    "C_Cpp.errorSquiggles": "Disabled",
+    "C_Cpp.errorSquiggles": "disabled",
     "java.jdt.ls.java.home": "/opt/Homebrew/Cellar/openjdk@11/11.0.12/libexec/openjdk.jdk/Contents/Home",
     "java.configuration.updateBuildConfiguration": "automatic",
     "search.exclude": {

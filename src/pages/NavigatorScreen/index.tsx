@@ -116,7 +116,7 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
     return (
         <>
         <Tabs.Navigator 
-            initialRouteName="Grades"
+            initialRouteName="Schedule"
             screenListeners={{tabPress: () => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }}}
@@ -164,7 +164,7 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 children={() => <AccountScreen navigation={navigation} { ...props } />}
             />
         </Tabs.Navigator>
-            {
+            {/* {
                 <Alert 
                     delay={showAlert ? 500 : 0}
                     visible={showAlert && !shownAlert}
@@ -179,7 +179,7 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                         }
                     ]}
                 />
-            }
+            } */}
         </>
     );
 };  

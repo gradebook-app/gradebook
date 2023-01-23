@@ -43,14 +43,16 @@ const Alert : React.FC<AlertProps> = ({ title, description, buttons, visible, de
                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                         { 
                             buttons?.map(({ title, onPress } : IAlertButton, index:number) => (
-                            <>
+                            <View key={index} style={{ 
+                                flexDirection: "row",
+                                alignItems: "center"
+                            }}>
                                 <Button 
-                                    key={index}
                                     onPress={onPress} 
                                     title={title} 
                                 />
-                                { index !== buttons?.length - 1 && <Text style={{ color: theme.text }}>|</Text> }
-                            </>
+                                { index !== buttons?.length - 1 && <Text style={{ color: theme.text, marginHorizontal: 5 }}>|</Text> }
+                            </View>
                             ))
                         }
                     </View>

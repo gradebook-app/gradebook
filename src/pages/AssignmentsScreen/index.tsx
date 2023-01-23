@@ -187,14 +187,14 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                     ) : <></>
                 }
             </ScrollView>
-            <BottomSheet 
+            {/* <BottomSheet 
                 ref={assignmentSheet}
                 initialSnap={1}
                 snapPoints={[400, 0]}
                 borderRadius={25}
                 renderContent={renderAssignmentSheet}
                 onCloseEnd={handleCloseSheet}
-            />
+            /> */}
         </SafeAreaView>
     );
 };

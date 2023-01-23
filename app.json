@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "Gradebook",
+    "displayName": "Genesus",
     "slug": "Gradebook",
     "version": "1.0.0",
     "orientation": "portrait",
