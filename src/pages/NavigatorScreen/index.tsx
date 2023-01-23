@@ -5,7 +5,6 @@ import GradesScreen from "../GradesScreen";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBook, faCalendarAlt, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "../../hooks/useTheme";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import AccountScreen from "../AccountScreen";
 import { setNotificationToken, setShownAlert } from "../../store/actions/user.actions";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,13 +16,11 @@ import * as Haptics from "expo-haptics";
 import Alert from "../../components/Alert";
 import { getShownAlert } from "../../store/selectors/user.selectors";
 import { useDynamicColor } from "../../hooks/useDynamicColor";
-import { Linking } from "react-native";
-import config from "../../../config";
 
 type TabIconProps = {
     focused: boolean,
     iconSize?: number,
-    icon: IconProp,
+    icon: any,
 }
 
 const TabIcon : React.FC<TabIconProps> = ({ focused, iconSize, icon, ...props }) => {
@@ -110,13 +107,13 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
     };
 
     const handleDonate = () => {
-        Linking.openURL(config.donateLink);
+       
     };
 
     return (
         <>
         <Tabs.Navigator 
-            initialRouteName="Schedule"
+            initialRouteName="Grades"
             screenListeners={{tabPress: () => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }}}
@@ -124,13 +121,13 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 tabBarIcon: ({ focused }) => {
                     switch(route.name) {
                     case "Grades": {
-                        return <TabIcon icon={faBook as IconProp} focused={focused} />;
+                        return <TabIcon icon={faBook} focused={focused} />;
                     }
                     case "Schedule": {
-                        return <TabIcon icon={faCalendarAlt as IconProp} focused={focused} />;
+                        return <TabIcon icon={faCalendarAlt} focused={focused} />;
                     }
                     case "Account": {
-                        return <TabIcon icon={faUser as IconProp} focused={focused} />;
+                        return <TabIcon icon={faUser} focused={focused} />;
                     }
                     default: {
                         return; 
@@ -164,22 +161,19 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 children={() => <AccountScreen navigation={navigation} { ...props } />}
             />
         </Tabs.Navigator>
-            {/* {
+            {
                 <Alert 
                     delay={showAlert ? 500 : 0}
                     visible={showAlert && !shownAlert}
-                    title="🚀 #SaveGenesus"
-                    description="The current solution is no longer viable for hosting Genesus servers as they are shutting down their free tier. Support us at our GoFundMe before November 28th, 2022 to Save Genesus! Even just one dollar from a quarter of our users is enough to last Genesus for years to come."
+                    title="🚀 GPA Update"
+                    description="For a long time the GPA calculation has been inaccurate because Genesus was not able to accurately detect which classes were AP and Honors classes. Now, users are able to manually change the weighting of each class to improve their GPA accuracy. Find the option by clicking on a class and pressing the gradient button indicating the current weighting."
                     buttons={[
                         { 
                             title: "Continue", onPress: handleDismissAlert
-                        },
-                        {
-                            title: "Donate", onPress: handleDonate
                         }
                     ]}
                 />
-            } */}
+            }
         </>
     );
 };  

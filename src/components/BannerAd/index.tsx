@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { IRootReducer } from "../../store/reducers";
 import { getLimitAds } from "../../store/selectors/settings.selectors";
 import { BannerAd as AdMobBannerAd, TestIds, BannerAdSize } from "react-native-google-mobile-ads";
+import { useAppearanceTheme } from "../../hooks/useAppearanceTheme";
 
 const { width } = Dimensions.get("screen");
 
@@ -36,17 +37,24 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
         nativeAdViewRef.current?.loadAd();
     }, []);
     
+    const { isDark } = useAppearanceTheme();
+
     return (
         !limitAds ? (
             <FadeIn show={loaded} style={[ styles.container, style ]}>
-               <View style={styles.adContainer}>
+               <View style={[
+                 styles.adContainer,
+                 {
+                    borderRadius: isDark ? 5 : 0
+                 }
+               ]}>
                     <AdMobBannerAd
                         unitId={unitID as string}
                         onAdLoaded={handleAdReceived}
                         onAdFailedToLoad={handleAdFailed}
                         size={BannerAdSize.BANNER}
                         requestOptions={{
-                            keywords: [ "education", "school", "math", "english" ],
+                            keywords: [ "education", "school", "math", "english", "science" ],
                             requestNonPersonalizedAdsOnly: true,
                         }}
                     />
@@ -67,7 +75,6 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     adContainer: {
-        borderRadius: 5,
         overflow: "hidden",
     }
 });

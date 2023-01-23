@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Dimensions, StyleSheet, Image, Text, TouchableOpacity, Linking, GestureResponderEvent, LayoutAnimation } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Dimensions, StyleSheet, Image, Text, TouchableOpacity, GestureResponderEvent, LayoutAnimation } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import LinearGradient from "react-native-linear-gradient";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -9,11 +9,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { IRootReducer } from "../../store/reducers";
 import { getShownSaveBanner } from "../../store/selectors/user.selectors";
 import { setShownSaveBanner } from "../../store/actions/user.actions";
-import config from "../../../config";
-    
+
 const { width } = Dimensions.get("screen");
 
-const SaveBanner = () => {
+interface ISaveBannerProps {
+    onPress: () => void; 
+}
+
+const SaveBanner : React.FC<ISaveBannerProps>  = ({ onPress }) => {
     const { theme, palette } = useTheme();
 
     const state = useSelector((state:IRootReducer) => state);
@@ -23,7 +26,7 @@ const SaveBanner = () => {
     const [ unmount, setUnmount ] = useState(false);
 
     const handlePress = () => {
-        Linking.openURL(config.donateLink);
+        onPress()
     }
 
     const handleX = (e: GestureResponderEvent) => {
@@ -33,9 +36,15 @@ const SaveBanner = () => {
         dispatch(setShownSaveBanner(true));
     };
 
+    const wasBeingShown = useRef(false);
+
+    useEffect(() => {
+        if (!shownSaveBanner) wasBeingShown.current = true;
+    }, [ shownSaveBanner ]);
+
     return (
-        <FadeIn show={!shownSaveBanner} onHidden={() => {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        <FadeIn style={{ display: wasBeingShown.current ? undefined : "none" }} show={!shownSaveBanner} onHidden={() => {
+            if (wasBeingShown.current) LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             setUnmount(true);
         }}>
             {
@@ -49,7 +58,7 @@ const SaveBanner = () => {
                                 source={require("../../../assets/coins.png")}
                             />
                             <Text style={[ styles.title, { color: "#fff" }]}>#SaveGenesus</Text>
-                            <Text style={[ styles.caption, { color: "#fff" }]}>Click to Fund.</Text>
+                            <Text style={[ styles.caption, { color: "#fff" }]}>Click to Contribute.</Text>
                         </LinearGradient>
                         <TouchableOpacity style={styles.x} onPress={handleX}>
                             <FontAwesomeIcon color="#fff" size={17.5} icon={faXmark} />

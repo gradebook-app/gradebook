@@ -1,4 +1,3 @@
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { ReactChild } from "react";
@@ -25,7 +24,7 @@ type BoxProps = {
 };
 
 type IBoxContentProps = {
-    icon?: IconProp,
+    icon?: any,
     iconColor?: string,
     title: string,
     children?: ReactChild,

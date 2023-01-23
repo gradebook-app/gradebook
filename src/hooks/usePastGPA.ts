@@ -31,8 +31,7 @@ export const usePastGPA = () => {
         if (!pastGPA.length) setLoading(true);
 
         const response = await api.get(GET_PAST_GPA, controller).catch(_ => null);
-        
-        if (response && response?.pastGradePointAverages?.length) {
+        if (response && response?.pastGradePointAverages) {
             setPastGPA(response.pastGradePointAverages);
             AsyncStorage.setItem("@gpaPast", JSON.stringify(response));
         }

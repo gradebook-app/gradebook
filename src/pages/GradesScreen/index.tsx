@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { 
     Dimensions, 
     SafeAreaView, 
@@ -8,7 +8,7 @@ import {
     RefreshControl,
     Text,
     Button,
-    Platform
+    Platform,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useSelector } from "react-redux";
@@ -61,8 +61,14 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         markingPeriod: adjustedMarkingPeriod
     });
 
+    const [ loadingGrades, setLoadingGrades ] = useState(false);
+
+    useEffect(() => {
+        setLoadingGrades(loadingGrades);
+    }, [ loading ]);
+
     const { reload:reloadGPA, loading:loadingGPA, gpa } = useGPA();
-    const { pastGPA } = usePastGPA();
+    const { reload:reloadPastGPA , pastGPA } = usePastGPA();
 
 
     useEffect(() => {
@@ -96,6 +102,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         if (!accessToken) return; 
         reload();
         reloadGPA();
+        reloadPastGPA();
     }, [ isAccessToken ]);
 
     useEffect(handleAuth, [ handleAuth ]);
@@ -103,6 +110,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     const onRefresh = () => {
         reload();
         reloadGPA();
+        reloadPastGPA();
     };
 
     const { theme, palette }  = useTheme();
@@ -152,6 +160,10 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
     //{/*  <IOSButton style={{ marginTop: 10 }}>{ selectedValue }</IOSButton> */} 
 
+    const handleDonateScreen = () => {
+        navigation.navigate("donate");
+    };
+
     const [ mpPickerOpen, setMPPickerOpen ] = useState(false);
 
     return (
@@ -191,7 +203,8 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                    )
                }
                 <GPASlideshow handleGPAScreen={handleGPAScreen} pastGPA={pastGPA} gpa={gpa} />
-                <SaveBanner />
+                { !loadingGrades ? <BannerAd style={{ marginTop: 15 }} /> : <></> }
+                <SaveBanner onPress={handleDonateScreen} />
                 { courses.map((course, index) => {
                     return (
                         <CourseBox 
@@ -221,18 +234,16 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                         </FadeIn>
                     )
                 }
-                { !loading ? <BannerAd style={{ marginTop: 15 }} /> : <></> }
             </ScrollView>
             <Blocker block={showSelector} onPress={handleSelectorBack} />
-            {/* <BottomSheet 
+            <BottomSheet 
                 ref={selectionSheet}
                 initialSnap={1}
                 snapPoints={[sheetHeight, 0]} 
                 borderRadius={25}
                 renderContent={renderMPSelector}
                 onCloseEnd={handleSelectorBack}
-            /> */}
-           
+            />
         </SafeAreaView>
     );
 };

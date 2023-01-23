@@ -5,7 +5,7 @@ import NavigatorScreen from "./src/pages/NavigatorScreen";
 import AssignmentsScreen from "./src/pages/AssignmentsScreen";
 import LoadingScreen from "./src/pages/LoadingScreen";
 import LoginScreen from "./src/pages/LoginScreen";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import GPAScreen from "./src/pages/GPAScreen";
 import NotificationScreen from "./src/pages/NotificationScreen";
 // import SharedGroupPreferences from "react-native-shared-group-preferences";
@@ -14,11 +14,11 @@ import messaging from "@react-native-firebase/messaging";
 import SecurityScreen from "./src/pages/SecurityScreen";
 import PrivacyPolicyScreen from "./src/pages/PrivacyPolicyScreen";
 import notifee from "@notifee/react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import OptionsScreen from "./src/pages/OptionsScreen";
 import AdsSettingsScreen from "./src/pages/AdsSettingsScreen";
 import { useTheme } from "./src/hooks/useTheme";
 import AdvancedOptionsScreen from "./src/pages/AdvancedOptionsScreen";
+import DonateScreen from "./src/pages/DonateScreen";
 
 const Stack = createStackNavigator();
 
@@ -39,9 +39,9 @@ const AppNavigator = () => {
     //     }
     // }, []);
 
-    // useEffect(() => {
-    //     setAppGroupData();
-    // });
+    useEffect(() => {
+       // setAppGroupData();
+    });
 
     useEffect(()=>{
         const subscription = messaging().onMessage(message => {
@@ -159,6 +159,16 @@ const AppNavigator = () => {
                         headerTitle: "", 
                         gestureEnabled: true,
                         headerBackTitle: "Options",
+                    }}
+                />
+                 <Stack.Screen
+                    name="donate"
+                    component={DonateScreen}
+                    options={{ 
+                        headerShown: true, 
+                        headerTitle: "", 
+                        headerBackTitle: "",
+                        gestureEnabled: true,
                     }}
                 />
                 <Stack.Screen 
