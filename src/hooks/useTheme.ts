@@ -17,7 +17,7 @@ export type ITheme = IThemeDynamic & IThemeStatic;
 
 export const useTheme = () => {
     const dynamicBackgroundColor = useDynamicColor({
-        light: "#fff",
+        light: "#FDFDFE",
         dark: "#000",
     });
       

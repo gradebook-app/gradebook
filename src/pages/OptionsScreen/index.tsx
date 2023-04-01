@@ -1,5 +1,5 @@
 import React from "react";
-import { View, SafeAreaView, Dimensions, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, SafeAreaView, Dimensions, StyleSheet, ScrollView, Text, Platform } from 'react-native';
 import Box from "../../components/Box";
 import { useTheme } from "../../hooks/useTheme";
 import { faBell, faDollarSign, faLock, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
@@ -78,17 +78,21 @@ const OptionsScreen : React.FC<OptionsScreenProps> = ({ navigation }) => {
                         </Box.Content>
                     </Box.Clickable>
                     <Box.Separator />
-                    <Box.Clickable onPress={handleAdvancedOptions}>
-                        <Box.Content
-                            title="Advanced"
-                            iconColor={"#8a2be2"}
-                            icon={faWandMagicSparkles}
-                        >
-                            <>
-                                <Box.Arrow onPress={handleAdvancedOptions}/>
-                            </>
-                        </Box.Content>
-                    </Box.Clickable>
+                    {
+                        Platform.OS === "ios" && (
+                            <Box.Clickable onPress={handleAdvancedOptions}>
+                                <Box.Content
+                                    title="Advanced"
+                                    iconColor={"#8a2be2"}
+                                    icon={faWandMagicSparkles}
+                                >
+                                    <>
+                                        <Box.Arrow onPress={handleAdvancedOptions}/>
+                                    </>
+                                </Box.Content>
+                            </Box.Clickable>
+                        )
+                    }
                 </Box>
                 <View style={styles.captionContainer}>
                     <Text style={[{ color: theme.grey }]}>

@@ -45,6 +45,7 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/rngesturehandler_codegen_autolinked_build/cmake_install.cmake")
+  include("/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/RNIap_autolinked_build/cmake_install.cmake")
   include("/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/safeareacontext_autolinked_build/cmake_install.cmake")
   include("/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/rnscreens_autolinked_build/cmake_install.cmake")
   include("/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/rnsvg_autolinked_build/cmake_install.cmake")

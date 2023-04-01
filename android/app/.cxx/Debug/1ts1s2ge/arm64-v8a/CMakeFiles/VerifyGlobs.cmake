@@ -60,6 +60,30 @@ if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   file(TOUCH_NOCREATE "/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/arm64-v8a/CMakeFiles/cmake.verify_globs")
 endif()
 
+# react_codegen_SRCS at /Users/mahitmehta/Desktop/ReactNative/Gradebook/node_modules/react-native-iap/android/build/generated/source/codegen/jni/CMakeLists.txt:9 (file)
+file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/mahitmehta/Desktop/ReactNative/Gradebook/node_modules/react-native-iap/android/build/generated/source/codegen/jni/*.cpp")
+set(OLD_GLOB
+  "/Users/mahitmehta/Desktop/ReactNative/Gradebook/node_modules/react-native-iap/android/build/generated/source/codegen/jni/RNIap-generated.cpp"
+  )
+if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
+  message("-- GLOB mismatch!")
+  file(TOUCH_NOCREATE "/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/arm64-v8a/CMakeFiles/cmake.verify_globs")
+endif()
+
+# react_codegen_SRCS at /Users/mahitmehta/Desktop/ReactNative/Gradebook/node_modules/react-native-iap/android/build/generated/source/codegen/jni/CMakeLists.txt:9 (file)
+file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/mahitmehta/Desktop/ReactNative/Gradebook/node_modules/react-native-iap/android/build/generated/source/codegen/jni/react/renderer/components/RNIap/*.cpp")
+set(OLD_GLOB
+  "/Users/mahitmehta/Desktop/ReactNative/Gradebook/node_modules/react-native-iap/android/build/generated/source/codegen/jni/react/renderer/components/RNIap/EventEmitters.cpp"
+  "/Users/mahitmehta/Desktop/ReactNative/Gradebook/node_modules/react-native-iap/android/build/generated/source/codegen/jni/react/renderer/components/RNIap/Props.cpp"
+  "/Users/mahitmehta/Desktop/ReactNative/Gradebook/node_modules/react-native-iap/android/build/generated/source/codegen/jni/react/renderer/components/RNIap/RNIapJSI-generated.cpp"
+  "/Users/mahitmehta/Desktop/ReactNative/Gradebook/node_modules/react-native-iap/android/build/generated/source/codegen/jni/react/renderer/components/RNIap/ShadowNodes.cpp"
+  "/Users/mahitmehta/Desktop/ReactNative/Gradebook/node_modules/react-native-iap/android/build/generated/source/codegen/jni/react/renderer/components/RNIap/States.cpp"
+  )
+if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
+  message("-- GLOB mismatch!")
+  file(TOUCH_NOCREATE "/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/arm64-v8a/CMakeFiles/cmake.verify_globs")
+endif()
+
 # LIB_CUSTOM_SRCS at /Users/mahitmehta/Desktop/ReactNative/Gradebook/node_modules/react-native-safe-area-context/android/src/main/jni/CMakeLists.txt:21 (file)
 file(GLOB NEW_GLOB LIST_DIRECTORIES true "/Users/mahitmehta/Desktop/ReactNative/Gradebook/node_modules/react-native-safe-area-context/android/src/main/jni/*.cpp")
 set(OLD_GLOB

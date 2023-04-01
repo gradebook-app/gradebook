@@ -17,9 +17,7 @@ import { ICourse } from "../../store/interfaces/course.interface";
 import { IRootReducer } from "../../store/reducers";
 import { getAccessToken } from "../../store/selectors";
 import CourseBox from "./components/CourseBox";
-import BottomSheet from "reanimated-bottom-sheet";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import Blocker from "../../components/Blocker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../../hooks/useTheme";
 import GPASlideshow from "./components/GPASlideshow";
@@ -31,6 +29,7 @@ import { useDynamicColor } from "../../hooks/useDynamicColor";
 import NoCoursesSVG from "../../SVG/NoCoursesSVG";
 import FadeIn from "../../components/FadeIn";
 import SaveBanner from "../../components/SaveBanner";
+import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 
 const { width, height } = Dimensions.get("window");
 
@@ -119,6 +118,17 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         navigation.navigate("gpa");
     };
 
+    const renderBackdrop = useCallback((props) => (
+        <BottomSheetBackdrop 
+            { ...props } 
+            opacity={0.25}
+            disappearsOnIndex={-1}
+            appearsOnIndex={0}
+            pressBehavior="close"
+        />
+    ), []);
+
+
     const renderMPSelector = () => {
         return (
             <View style={[ styles.selectContainer, { backgroundColor: theme.background } ]}>
@@ -144,18 +154,14 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         );
     };
 
-    const [ showSelector, setShowSelector ] = useState(false);
-
     const handleSelectorBack = () => {
-        setShowSelector(false);
-        selectionSheet.current.snapTo(1);
+        selectionSheet.current.close();
 
         setAdjustedMarkingPeriod(selectedValue);
     };
 
     const handleSelectionMenuPress = () => {
-        setShowSelector(true);
-        selectionSheet.current.snapTo(0);
+        selectionSheet.current.snapToIndex(0);
     };
 
     //{/*  <IOSButton style={{ marginTop: 10 }}>{ selectedValue }</IOSButton> */} 
@@ -235,15 +241,22 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                     )
                 }
             </ScrollView>
-            <Blocker block={showSelector} onPress={handleSelectorBack} />
-            <BottomSheet 
+            <BottomSheet
                 ref={selectionSheet}
-                initialSnap={1}
-                snapPoints={[sheetHeight, 0]} 
-                borderRadius={25}
-                renderContent={renderMPSelector}
-                onCloseEnd={handleSelectorBack}
-            />
+                index={-1}
+                backdropComponent={renderBackdrop}
+                backgroundStyle={{
+                    backgroundColor: theme.background
+                }}
+                handleIndicatorStyle={{
+                    backgroundColor: useDynamicColor({ light: theme.grey, dark: "#fff" })
+                }}
+                enablePanDownToClose={true}
+                snapPoints={['50%', sheetHeight]}
+                onClose={handleSelectorBack}
+            >
+                { renderMPSelector() }
+            </BottomSheet>
         </SafeAreaView>
     );
 };

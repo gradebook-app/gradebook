@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { SafeAreaView, View, StyleSheet, Dimensions, Text, RefreshControl } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
-import LoadingBox from "../../components/LoadingBox";
 import { useGPA } from "../../hooks/useGPA";
 import { usePastGPA } from "../../hooks/usePastGPA";
 import Box from "../../components/Box";
@@ -35,28 +34,24 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
     const pastGPAUnweighted = useMemo(() => {
         let total = 0; 
         pastGPA.forEach((eachGPA) => { total += eachGPA.unweightedGPA; });
-        const totalGPAs = pastGPA.length;
-        if (!totalGPAs) return 0; 
-        return roundGrade(total / totalGPAs);
+        return total 
     }, [ pastGPA ]);
 
     const pastGPAWeighted = useMemo(() => {
         let total = 0;
         pastGPA.forEach((eachGPA) => { total += eachGPA.weightedGPA; });
-        const totalGPAs = pastGPA.length;
-        if (!totalGPAs) return 0; 
-        return roundGrade(total / totalGPAs);
+        return total; 
     }, [ pastGPA ]);
 
 
     const highschoolGPAUnweighted = useMemo(() => {
         const total = pastGPAUnweighted + (gpa.unweightedGPA || 0);
-        return (total / (gpa.unweightedGPA && pastGPAUnweighted ? 2 : 1));
+        return (total / (pastGPA.length + 1));
     }, [ pastGPAUnweighted, gpa ]);
 
     const highschoolGPAWeighted = useMemo(() => {
         const total = pastGPAWeighted + (gpa.weightedGPA || 0);
-        return (total / (gpa.weightedGPA && pastGPAWeighted ? 2 : 1));
+        return (total / (pastGPA.length + 1));
     }, [ pastGPAWeighted, gpa ]);
 
     const onRefresh = () => {

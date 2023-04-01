@@ -80,40 +80,36 @@ const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA, handleGPAScr
     const pastGPAUnweighted = useMemo(() => {
         let total = 0; 
         pastGPA.forEach((eachGPA) => { total += eachGPA.unweightedGPA; });
-        const totalGPAs = pastGPA.length;
-        if (!totalGPAs) return 0; 
-        return roundGrade(total / totalGPAs);
+        return total; 
     }, [ pastGPA ]);
 
     const pastGPAWeighted = useMemo(() => {
         let total = 0;
         pastGPA.forEach((eachGPA) => { total += eachGPA.weightedGPA; });
-        const totalGPAs = pastGPA.length;
-        if (!totalGPAs) return 0; 
-        return roundGrade(total / totalGPAs);
+        return total; 
     }, [ pastGPA ]);
 
     const highschoolGPAUnweighted = useMemo(() => {
         const unweightedGPA = gpa.unweightedGPA || user?.unweightedGPA;
         const total = pastGPAUnweighted + (unweightedGPA || 0);
-        return (total / (unweightedGPA && pastGPAUnweighted ? 2 : 1));
+        return (total / (pastGPA.length + 1));
     }, [ pastGPAUnweighted, gpa, user ]);
 
     const highschoolGPAWeighted = useMemo(() => {
         const weightedGPA = gpa.weightedGPA || user?.weightedGPA;
         const total = pastGPAWeighted + (weightedGPA || 0);
-        return (total / (weightedGPA && pastGPAWeighted ? 2 : 1));
+        return (total / (pastGPA.length + 1));
     }, [ pastGPAWeighted, gpa, user ]);
 
     const highschoolGPAUnweightedProgression = useMemo(() => {
         return unweightedProgression.map(value => {
-            return (value + pastGPAUnweighted) / (pastGPAUnweighted ? 2 : 1);
+            return (value + pastGPAUnweighted) / (pastGPA.length + 1);
         });
     }, [ unweightedProgression, pastGPAUnweighted ]);
 
     const highschoolGPAWeightedProgression = useMemo(() => {
         return weightedProgression.map(value => {
-            return (value + pastGPAWeighted) / (pastGPAWeighted ? 2 : 1);
+            return (value + pastGPAWeighted) / (pastGPA.length + 1);
         });
     }, [ weightedProgression, pastGPAWeighted ]);
 

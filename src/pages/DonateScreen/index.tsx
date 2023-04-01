@@ -266,8 +266,8 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
                     />
                 </TouchableOpacity>
                 <View style={styles.captionContainer}>
-                    <Text style={[{ color: theme.grey }]}>
-                        Recently our server hosting providers stated they are shutting down their free tier, forcing Genesus to migrate to alternative solutions or pay expensive fees to the current provider. In order to save Genesus and continue to operate its servers, it is mandatory to raise the goal before November 28th, 2022 (Which is the last date for using the current free solution).
+                     <Text style={[{ color: theme.grey, marginTop: 15 }]}>
+                        Running Genesus's servers is an expensive operation, so please consider donating if you have enjoyed your experience of using Genesus.
                     </Text>
                     <Text style={[{ color: theme.grey, marginTop: 15 }]}>
                         Even if only 1/3 of the active Genesus users donate 1 dollar, it will be enough to run Genesus for another year.

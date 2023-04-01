@@ -8,9 +8,7 @@ import UngradedAssignment from "./components/UngradedAssignment";
 import { ICourse } from "../../store/interfaces/course.interface";
 import GradeGraphSlider from "./components/GradeGraphSlider";
 import LoadingBox from "../../components/LoadingBox";
-import BottomSheet from "reanimated-bottom-sheet";
 import { IAssignment } from "../../store/interfaces/assignment.interface";
-import Blocker from "../../components/Blocker";
 import AssignmentSheet from "./components/AssignmentSheet";
 import { useTheme } from "../../hooks/useTheme";
 import messaging from "@react-native-firebase/messaging";
@@ -28,6 +26,8 @@ import { setUserCourseWeight } from "../../store/actions/user.actions";
 import { getIsUpdatingCourseWeight } from "../../store/selectors/user.selectors";
 import { IRootReducer } from "../../store/reducers";
 import { useNetInfo } from "@react-native-community/netinfo";
+import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import { useDynamicColor } from "../../hooks/useDynamicColor";
 
 const { width, height } = Dimensions.get("window");
 
@@ -80,15 +80,13 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
     const [ selectedAssignment, setSelectedAssignment ] = useState<IAssignment | null>(null); 
     const handleOpenSheet = useCallback((assignment:IAssignment) => {
         setSelectedAssignment(assignment);
-        assignmentSheet.current.snapTo(0);
+        assignmentSheet.current.snapToIndex(0);
     }, []);
 
     const handleCloseSheet = useCallback(() => {
         setSelectedAssignment(null);
-        assignmentSheet.current.snapTo(1);
+        assignmentSheet.current.close();
     }, []);
-
-    const [ isSettingWeight, setIsSettingWeight ] = useState(false);
 
     const dispatch = useDispatch();
     const state = useSelector((state:IRootReducer) => state);
@@ -96,13 +94,11 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
 
     const handleCloseWeightsSheet = useCallback(() => {
         if (isUpdatingCourseWeight) return;
-        setIsSettingWeight(false);
-        weightSheet.current.snapTo(1);
+        weightSheet.current.close();
     }, [ isUpdatingCourseWeight ]);
 
     const handleOpenWeightsSheet = useCallback(() => {
-        setIsSettingWeight(true);
-        weightSheet.current.snapTo(0);
+        weightSheet.current.snapToIndex(0);
     }, []);
 
     const renderAssignmentSheet = () => {
@@ -122,8 +118,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
         });
         
         if (response === true) setWeight(newWeight);
-        setIsSettingWeight(false);
-        weightSheet.current.snapTo(1);
+        weightSheet.current.close();
 
     }, [ courseId, sectionId, setWeight ]);
 
@@ -156,16 +151,20 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
 
     const { isDark } = useAppearanceTheme();
 
-    const handleBlockerClick = () => {
-        if (!!selectedAssignment) handleCloseSheet();
-        if (isSettingWeight) handleCloseWeightsSheet();
-    };
+    const renderBackdrop = useCallback((props) => (
+        <BottomSheetBackdrop 
+            { ...props } 
+            opacity={0.25}
+            disappearsOnIndex={-1}
+            appearsOnIndex={0}
+            pressBehavior="close"
+        />
+    ), []);
 
     const { isInternetReachable } = useNetInfo();
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
-            <Blocker block={!!selectedAssignment || isSettingWeight} onPress={handleBlockerClick} />
             <LoadingBox loading={loading && !assignments.length} />
             <View style={ styles.classHeader }>
                 <View>
@@ -278,14 +277,39 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                     ) : <></>
                 }
             </ScrollView>
-            <BottomSheet 
+            <BottomSheet
                 ref={assignmentSheet}
-                initialSnap={1}
-                snapPoints={[400, 0]}
-                borderRadius={25}
-                renderContent={renderAssignmentSheet}
-                onCloseEnd={handleCloseSheet}
-            />
+                index={-1}
+                backdropComponent={renderBackdrop}
+                backgroundStyle={{
+                    backgroundColor: theme.background
+                }}
+                handleIndicatorStyle={{
+                    backgroundColor: useDynamicColor({ light: theme.grey, dark: "#fff" })
+                }}
+                enablePanDownToClose={true}
+                snapPoints={[500]}
+                onClose={handleCloseSheet}
+            >
+                { renderAssignmentSheet() }
+            </BottomSheet>
+            <BottomSheet
+                ref={weightSheet}
+                index={-1}
+                backdropComponent={renderBackdrop}
+                backgroundStyle={{
+                    backgroundColor: theme.background
+                }}
+                handleIndicatorStyle={{
+                    backgroundColor: useDynamicColor({ light: theme.grey, dark: "#fff" })
+                }}
+                enablePanDownToClose={true}
+                snapPoints={[500]}
+                onClose={handleCloseWeightsSheet}
+            >
+                { renderWeightSelector() }
+            </BottomSheet>
+            {/*
               <BottomSheet 
                 ref={weightSheet}
                 initialSnap={1}
@@ -294,7 +318,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                 enabledGestureInteraction={!isUpdatingCourseWeight}
                 renderContent={renderWeightSelector}
                 onCloseEnd={handleCloseWeightsSheet}
-            />
+            /> */}
         </SafeAreaView>
     );
 };

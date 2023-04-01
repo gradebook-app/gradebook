@@ -4,6 +4,9 @@
 /Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/rngesturehandler_codegen_autolinked_build/CMakeFiles/rebuild_cache.dir
 /Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/rngesturehandler_codegen_autolinked_build/CMakeFiles/edit_cache.dir
 /Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/rngesturehandler_codegen_autolinked_build/CMakeFiles/react_codegen_rngesturehandler_codegen.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/RNIap_autolinked_build/CMakeFiles/rebuild_cache.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/RNIap_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/RNIap_autolinked_build/CMakeFiles/react_codegen_RNIap.dir
 /Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/safeareacontext_autolinked_build/CMakeFiles/rebuild_cache.dir
 /Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/safeareacontext_autolinked_build/CMakeFiles/edit_cache.dir
 /Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1ts1s2ge/x86/safeareacontext_autolinked_build/CMakeFiles/react_codegen_safeareacontext.dir

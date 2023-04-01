@@ -111,15 +111,15 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                     <View style={styles.headerContainer}>
                         <Text style={[ styles.header, { color: theme.text }]}>Account</Text>
                     </View>
-                    <Box style={{ flexDirection: "column" }}>
-                        <View style={ styles.userSection }>
+                    <Box style={{ flexDirection: "column", position: "relative" }}>
+                        <View style={[ styles.userSection ] }>
                             <Avatar 
                                 url={userProfilePhotoURL} 
                                 headers={{
                                     "Cookie": avatarCookie,
                                 }}
                             />
-                            <View style={ styles.userDetailsContainer }>
+                            <View style={[  styles.userDetailsContainer, { flex: 1}]}>
                                 <Text style={[ styles.name, { color: theme.text }]}>{ account.name }</Text>
                                 <Text style={[styles.school, { color: theme.grey }]}>{ account.school }</Text>
                             </View>

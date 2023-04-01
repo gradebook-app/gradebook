@@ -34,7 +34,7 @@ mobileAds()
   })
   .then(() => {
     mobileAds().initialize();
-}) 
+});
 
 const ReduxBlocker = () => {
     const backgroundColor = useDynamicColor({ dark: "#000", light: "#fff" });
@@ -54,7 +54,7 @@ const IAPConnection : React.FC = ({ children }) => {
 
     // Set up In-App Purchases (IAP)
     const handleIAPBootstrap = useCallback(async () => {
-        await initConnection();
+        await initConnection().catch(() => null);
 
         const products = await getProducts({ 
             skus: config.iap.skus

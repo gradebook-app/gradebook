@@ -22,7 +22,7 @@
       android:theme="@style/AppTheme"
       android:supportsRtl="true"
       android:usesCleartextTraffic="true">
-    <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"  android:value="ca-app-pub-8555090951806711~9906284761"/> 
+    <!-- <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"  android:value="ca-app-pub-8704529290641186~9528631345r"/>  -->
     <meta-data android:name="expo.modules.updates.ENABLED" android:value="true"/>
     <meta-data android:name="expo.modules.updates.EXPO_SDK_VERSION" android:value="43.0.0"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
