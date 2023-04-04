@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, SafeAreaView, StyleSheet, View, Text, Image, RefreshControl, TouchableOpacity } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, View, Text, RefreshControl, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useAssigments } from "../../hooks/useAssignments";
 import Assignment from "./components/Assignment";

@@ -72,8 +72,8 @@ const GradeGraphSlider : React.FC<GradeGraphSliderProps> = ({ assignments }) => 
     return (
         <>
             <Slider>
-                { grouped.map(({ key, value }, index) => {
-                    return <GradeSlide key={index} category={key} value={value} />;
+                { grouped.map(({ key, value }) => {
+                    return <GradeSlide key={key} category={key} value={value} />;
                 })}
             </Slider>
         </>

@@ -119,7 +119,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                                     "Cookie": avatarCookie,
                                 }}
                             />
-                            <View style={ styles.userDetailsContainer }>
+                            <View style={[ styles.userDetailsContainer, { flex: 1}]}>
                                 <Text style={[ styles.name, { color: theme.text }]}>{ account.name }</Text>
                                 <Text style={[styles.school, { color: theme.grey }]}>{ account.school }</Text>
                             </View>

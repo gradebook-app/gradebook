@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     courseContainer: {
+        borderRadius: 7.5,
         width: width * 0.9,
         height: 75,
         padding: 15,
