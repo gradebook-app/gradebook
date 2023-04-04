@@ -39,7 +39,10 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
                <View style={[
                  styles.adContainer,
                  {
-                    borderRadius: isDark ? 5 : 0
+                    borderColor: "rgba(0,0,0,0.05)",
+                    borderWidth: isDark || __DEV__ ? 0 : 1,
+                    height: 50,
+                    borderRadius: __DEV__ ? 0 : 10
                  }
                ]}>
                     <AdMobBannerAd
@@ -65,7 +68,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection:"row",
         justifyContent: "center",
-        height: 50,
+        height: 52,
         overflow: "hidden",
     },
     adContainer: {
