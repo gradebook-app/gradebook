@@ -50,7 +50,7 @@ const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
     }, [ assignment ]);
 
     return (
-        <View style={[ styles.assignmentSheet, { backgroundColor: theme.background } ]}>
+        <View style={[ styles.assignmentSheet, { backgroundColor: isDark ? theme.background : theme.secondary } ]}>
             <View style={styles.headerContainer}>
                 <Text 
                     style={[ styles.header, { color: theme.text } ]}

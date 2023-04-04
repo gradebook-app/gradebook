@@ -20,10 +20,8 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
 
     const unitID = __DEV__ ? TestIds.BANNER : Platform.select({
         ios: "ca-app-pub-8704529290641186/4889775423", // genesus.app account
-        android: "ca-app-pub-8555090951806711/6375245625",
+        android: "ca-app-pub-8704529290641186/6902468009",
     });
-
-    const nativeAdViewRef = React.useRef<any | null>(null);
 
     const handleAdReceived = () => {
         setLoaded(true)
@@ -33,10 +31,6 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
         setLoaded(false);
     }
 
-    React.useEffect(() => {
-        nativeAdViewRef.current?.loadAd();
-    }, []);
-    
     const { isDark } = useAppearanceTheme();
 
     return (

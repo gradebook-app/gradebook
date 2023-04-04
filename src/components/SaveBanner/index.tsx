@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Dimensions, StyleSheet, Image, Text, TouchableOpacity, GestureResponderEvent, LayoutAnimation } from "react-native";
+import { Dimensions, StyleSheet, Image, Text, TouchableOpacity, GestureResponderEvent, LayoutAnimation, View } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import LinearGradient from "react-native-linear-gradient";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import FadeIn from "../FadeIn";
 import { useDispatch, useSelector } from "react-redux";
@@ -57,7 +57,7 @@ const SaveBanner : React.FC<ISaveBannerProps>  = ({ onPress }) => {
                                 style={{ width, height: 60, position: "absolute" }}
                                 source={require("../../../assets/coins.png")}
                             />
-                            <Text style={[ styles.title, { color: "#fff" }]}>#SaveGenesus</Text>
+                            <Text style={[ styles.title, { color: "#fff", marginLeft: 5 }]}>Love Genesus?</Text>
                             <Text style={[ styles.caption, { color: "#fff" }]}>Click to Contribute.</Text>
                         </LinearGradient>
                         <TouchableOpacity style={styles.x} onPress={handleX}>
