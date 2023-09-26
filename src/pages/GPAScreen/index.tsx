@@ -34,7 +34,7 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
     const pastGPAUnweighted = useMemo(() => {
         let total = 0; 
         pastGPA.forEach((eachGPA) => { total += eachGPA.unweightedGPA; });
-        return total 
+        return total; 
     }, [ pastGPA ]);
 
     const pastGPAWeighted = useMemo(() => {

@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, SafeAreaView, Text, ScrollView, Dimensions, RefreshControl, View, Platform } from "react-native";
 import { useSelector } from "react-redux";
 import { useSchedule } from "../../hooks/useSchedule";
@@ -16,7 +16,7 @@ interface IScheduleScreenProps {
 
 const { width, height } = Dimensions.get("window");
 
-const ScheduleScreen : React.FC<IScheduleScreenProps> = ({ navigation }) => {
+const ScheduleScreen : React.FC<IScheduleScreenProps> = () => {
     const { theme } = useTheme();
 
     const state = useSelector((state:IRootReducer) => state);

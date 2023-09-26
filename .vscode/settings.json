@@ -3,8 +3,8 @@
     "java.jdt.ls.java.home": "/Users/mahitmehta/.sdkman/candidates/java/17.0.4.1-tem",
     "java.configuration.updateBuildConfiguration": "automatic",
     "search.exclude": {
-       "**/node_modules":false
+       "**/node_modules":true
     },
-    "search.useIgnoreFiles": false,
+    "search.useIgnoreFiles": true,
     "cmake.sourceDirectory": "${workspaceFolder}/android/app/src/main/jni"
 }

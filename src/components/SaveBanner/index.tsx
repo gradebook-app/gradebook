@@ -26,12 +26,12 @@ const SaveBanner : React.FC<ISaveBannerProps>  = ({ onPress }) => {
     const [ unmount, setUnmount ] = useState(false);
 
     const handlePress = () => {
-        onPress()
-    }
+        onPress();
+    };
 
     const handleX = (e: GestureResponderEvent) => {
         e.preventDefault();
-        e.stopPropagation()
+        e.stopPropagation();
 
         dispatch(setShownSaveBanner(true));
     };
@@ -68,8 +68,8 @@ const SaveBanner : React.FC<ISaveBannerProps>  = ({ onPress }) => {
             }
         </FadeIn>
 
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {

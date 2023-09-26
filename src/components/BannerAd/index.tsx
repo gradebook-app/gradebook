@@ -24,27 +24,27 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
     });
 
     const handleAdReceived = () => {
-        setLoaded(true)
+        setLoaded(true);
     };
 
     const handleAdFailed = () => {
         setLoaded(false);
-    }
+    };
 
     const { isDark } = useAppearanceTheme();
 
     return (
         !limitAds ? (
             <FadeIn show={loaded} style={[ styles.container, style ]}>
-               <View style={[
-                 styles.adContainer,
-                 {
-                    borderColor: "rgba(0,0,0,0.05)",
-                    borderWidth: isDark || __DEV__ ? 0 : 1,
-                    height: 50,
-                    borderRadius: __DEV__ ? 0 : 10
-                 }
-               ]}>
+                <View style={[
+                    styles.adContainer,
+                    {
+                        borderColor: "rgba(0,0,0,0.05)",
+                        borderWidth: isDark || __DEV__ ? 0 : 1,
+                        height: 50,
+                        borderRadius: __DEV__ ? 0 : 10
+                    }
+                ]}>
                     <AdMobBannerAd
                         unitId={unitID as string}
                         onAdLoaded={handleAdReceived}
@@ -55,7 +55,7 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
                             requestNonPersonalizedAdsOnly: true,
                         }}
                     />
-               </View>
+                </View>
             </FadeIn>
         ) : null
     );

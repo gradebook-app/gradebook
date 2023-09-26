@@ -5,10 +5,8 @@ import { StyleSheet, View, Text, Dimensions, } from "react-native";
 import { useTheme } from "../../../hooks/useTheme";
 import { useAppearanceTheme } from "../../../hooks/useAppearanceTheme";
 import { useCategoryColor } from "../../../hooks/useCategoryColor";
-import { useGradeColor } from "../../../hooks/useGradeColor";
 import { IAssignment } from "../../../store/interfaces/assignment.interface";
 import moment from "moment";
-import GradientText from "../../../components/GradientText";
 import Percentage from "../../../components/Percentage";
 
 type AssignmentSheetProps = {
@@ -50,7 +48,7 @@ const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
     }, [ assignment ]);
 
     return (
-        <View style={[ styles.assignmentSheet, { backgroundColor: isDark ? theme.background : theme.secondary } ]}>
+        <View style={[ styles.assignmentSheet, { backgroundColor: theme.background } ]}>
             <View style={styles.headerContainer}>
                 <Text 
                     style={[ styles.header, { color: theme.text } ]}
@@ -93,8 +91,8 @@ const styles = StyleSheet.create({
     assignmentSheet: {
         width: width,
         height: 400,
-        backgroundColor: "#fff",
         padding: 20,
+        paddingTop: 10,
         display: "flex",
         flexDirection: "column",
     },

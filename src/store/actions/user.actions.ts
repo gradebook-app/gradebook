@@ -23,14 +23,14 @@ export const setNotificationToken = (payload:string | null) : ISetNotificationTo
 export const setUserPurgeCache = (payload:any) : IUserPurgeCache  => ({
     type: EUserActions.USER_PURGE_CACHE,
     payload
-})
+});
 
-export const setUserCourseWeight = (payload:ISetUserCourseWeight['payload']) : ISetUserCourseWeight  => ({
+export const setUserCourseWeight = (payload:ISetUserCourseWeight["payload"]) : ISetUserCourseWeight  => ({
     type: EUserActions.SET_USER_COURSE_WEIGHT,
     payload
 });
 
-export const setUpdatingCourseWeight = (payload: ISetUpdatingCourseWeight['payload']) : ISetUpdatingCourseWeight => ({
+export const setUpdatingCourseWeight = (payload: ISetUpdatingCourseWeight["payload"]) : ISetUpdatingCourseWeight => ({
     type: EUserActions.SET_UPDATING_COURSE_WEIGHT,
     payload
-})
+});

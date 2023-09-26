@@ -23,7 +23,7 @@ function constructURL(endpoint:string):string {
     return url; 
 }
 
-const revalidateClient = async () => {
+export const revalidateClient = async (specifiedStudentId?:string) => {
     const credentials = await AsyncStorage.getItem("@credentials");
     let token = null; 
     try {
@@ -37,7 +37,12 @@ const revalidateClient = async () => {
 
     if (credentials) {
         const data = JSON.parse(credentials);
-        const response:any = await post(LOGIN_CLIENT, { ...data, notificationToken: token });
+        const response:any = await post(LOGIN_CLIENT, { 
+            ...data, 
+            notificationToken: 
+            token,  
+            studentId: specifiedStudentId
+        });
 
         if (response && response?.access === true) {
             const user = response?.user;
@@ -112,7 +117,7 @@ export const post = async <Body, >(endpoint:string, body?:any, controller?:Abort
                 let initialResponse = null; 
 
                 try { initialResponse = res.json(); }
-                catch (e) { initialResponse = null } 
+                catch (e) { initialResponse = null; } 
                 finally { resolve(initialResponse); }
             })
             .catch(async (e:string) => {

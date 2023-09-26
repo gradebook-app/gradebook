@@ -5,7 +5,7 @@ import { LineChart, Grid, YAxis } from "react-native-svg-charts";
 import { useAppearanceTheme } from "../../hooks/useAppearanceTheme";
 // import Svg, { Path, Text as SVGText, G } from "react-native-svg";
 
-import * as shape from 'd3-shape';
+import * as shape from "d3-shape";
 // import * as scale from 'd3-scale';
 import FadeIn from "../FadeIn";
 
@@ -54,7 +54,7 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxis }) =
 
     return  (
         <>
-                {/* <Svg width={30}>
+            {/* <Svg width={30}>
                     <G>
                         {
                             ticks.map(([ y, value ], index) => {
@@ -76,7 +76,7 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxis }) =
                         }
                     </G>
                 </Svg> */}
-                {/* <Svg width={"100%"} height={"100%"}>
+            {/* <Svg width={"100%"} height={"100%"}>
                     <Path 
                         scale={1}
                         stroke={stroke || palette.primary}
@@ -84,30 +84,30 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxis }) =
                         d={graphPoints!} 
                     />
                 </Svg> */}
-                <YAxis
-                    data={data}
-                    contentInset={{ top: 20, bottom: 20 }}
-                    svg={{
-                        fill: "grey",
-                        fontSize: 10,
-                    }}
-                    numberOfTicks={5}
-                    formatLabel={(value) => yAxis ? yAxis(value) : value}
-                />
-                <LineChart
-                    style={{ height: 300, width: width * 0.8 }}
-                    data={data}
-                    curve={shape.curveMonotoneX}
-                    svg={{ 
-                        stroke: stroke || palette.primary, 
-                        strokeWidth: 3
-                    }}
-                    contentInset={{ top: 20, bottom: 20, left: 5, right: 5, }}
-                >
-                    <Grid svg={{ 
-                        stroke: isDark ? "rgba(255,255,255, 0.1)" : "rgba(0,0,0, 0.1)" 
-                    }} />
-                </LineChart>
+            <YAxis
+                data={data}
+                contentInset={{ top: 20, bottom: 20 }}
+                svg={{
+                    fill: "grey",
+                    fontSize: 10,
+                }}
+                numberOfTicks={5}
+                formatLabel={(value) => yAxis ? yAxis(value) : value}
+            />
+            <LineChart
+                style={{ height: 300, width: width * 0.8 }}
+                data={data}
+                curve={shape.curveMonotoneX}
+                svg={{ 
+                    stroke: stroke || palette.primary, 
+                    strokeWidth: 3
+                }}
+                contentInset={{ top: 20, bottom: 20, left: 5, right: 5, }}
+            >
+                <Grid svg={{ 
+                    stroke: isDark ? "rgba(255,255,255, 0.1)" : "rgba(0,0,0, 0.1)" 
+                }} />
+            </LineChart>
         </>
     );
 };
@@ -156,16 +156,16 @@ const withFadeIn = (Component: React.FC<GradeChartProps & IChartFadeConfig>) => 
     return (
         <View style={styles.graphContainer}>
             <View style={[ styles.graph, { backgroundColor: theme.secondary } ]}>
-            {
-                fadeIn ? (
-                    <FadeIn style={styles.graphFadeInContainer} show={true} delay={fadeInDelay}>
-                        <Component { ...props }  />
-                    </FadeIn>
-                ) : <Component { ...props } />
-            }
+                {
+                    fadeIn ? (
+                        <FadeIn style={styles.graphFadeInContainer} show={true} delay={fadeInDelay}>
+                            <Component { ...props }  />
+                        </FadeIn>
+                    ) : <Component { ...props } />
+                }
             </View>
         </View>
-    )
+    );
 };
 
 export default withFadeIn(React.memo(GradeChart)); 

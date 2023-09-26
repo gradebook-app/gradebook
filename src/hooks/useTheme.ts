@@ -51,6 +51,6 @@ export const useTheme = () => {
             text: dynamicTextColor,
             grey: dynamicGreyColor
         }
-    }
+    };
     return theme; 
 };

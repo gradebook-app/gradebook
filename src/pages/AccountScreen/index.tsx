@@ -1,7 +1,7 @@
 import { faFlagUsa, faIdBadge, faKey, faPizzaSlice, faSchool, faUserCog, faPhone, faShieldAlt, faCoins } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useMemo } from "react";
-import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Platform, Linking } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Platform } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import { useDispatch, useSelector } from "react-redux";
 import BrandButton from "../../components/BrandButton";
@@ -14,7 +14,7 @@ import { getAccessToken, getUser } from "../../store/selectors";
 import { genesisConfig } from "../../constants/genesis";
 import jwt_decode from "jwt-decode";
 import { getUserId } from "../../store/selectors/user.selectors";
-import analytics from '@react-native-firebase/analytics';
+import analytics from "@react-native-firebase/analytics";
 
 type AccountScreenProps = {
     navigation: any,
@@ -164,33 +164,33 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                             )
                         }
                         <Box.Clickable onPress={handleOptions}>
-                                <Box.Content 
-                                    title="Options"
-                                    iconColor={"#DD4503"}
-                                    icon={faUserCog}
-                                >
-                                    <Box.Arrow onPress={handleOptions} />
-                                </Box.Content>
+                            <Box.Content 
+                                title="Options"
+                                iconColor={"#DD4503"}
+                                icon={faUserCog}
+                            >
+                                <Box.Arrow onPress={handleOptions} />
+                            </Box.Content>
                         </Box.Clickable>
                         <Box.Separator />
                         <Box.Clickable onPress={handleContactsSettings}>
-                        <Box.Content
-                            iconColor={"#34E600"}
-                            icon={faPhone}
-                            title="Contact">
-                            <Box.Arrow onPress={handleContactsSettings} />
-                        </Box.Content>
-                    </Box.Clickable>
-                    <Box.Separator />
-                    <Box.Clickable onPress={handlePrivacySettings}>
-                        <Box.Content 
-                            title="Privacy Policy"
-                            iconColor={"#E66C00"}
-                            icon={faShieldAlt}
-                        >
-                            <Box.Arrow onPress={handlePrivacySettings} />
-                        </Box.Content>
-                    </Box.Clickable>           
+                            <Box.Content
+                                iconColor={"#34E600"}
+                                icon={faPhone}
+                                title="Contact">
+                                <Box.Arrow onPress={handleContactsSettings} />
+                            </Box.Content>
+                        </Box.Clickable>
+                        <Box.Separator />
+                        <Box.Clickable onPress={handlePrivacySettings}>
+                            <Box.Content 
+                                title="Privacy Policy"
+                                iconColor={"#E66C00"}
+                                icon={faShieldAlt}
+                            >
+                                <Box.Arrow onPress={handlePrivacySettings} />
+                            </Box.Content>
+                        </Box.Clickable>           
                     </Box>
                     <BrandButton 
                         style={styles.logOut}

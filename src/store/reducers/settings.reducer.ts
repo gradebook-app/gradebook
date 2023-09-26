@@ -10,7 +10,7 @@ export interface ISettingsReducer {
 }
 
 const persistConfig = {
-    key: 'settings',
+    key: "settings",
     storage: AsyncStorage,
 };
 
@@ -18,25 +18,25 @@ const initialState:ISettingsReducer = {
     biometricsEnabled: false,
     limitAds: false,
     savePassword: true,
-}
+};
 
 const settingsReducer = (state:ISettingsReducer = initialState, action:IAction) : ISettingsReducer => {
     switch (action.type) {
-        case ESettingsActions.SET_RESET_SETTINGS: {
-            return { ...initialState };
-        }
-        case ESettingsActions.SET_BIOMETRICS_ENABLED: {
-            return { ...state, biometricsEnabled: action.payload }
-        }
-        case ESettingsActions.SET_LIMIT_ADS: {
-            return { ...state, limitAds: action.payload }
-        }
-        case ESettingsActions.SET_SAVE_PASSWORD: {
-            return { ...state, savePassword: action.payload }
-        }
-        default: {
-            return state; 
-        }
+    case ESettingsActions.SET_RESET_SETTINGS: {
+        return { ...initialState };
+    }
+    case ESettingsActions.SET_BIOMETRICS_ENABLED: {
+        return { ...state, biometricsEnabled: action.payload };
+    }
+    case ESettingsActions.SET_LIMIT_ADS: {
+        return { ...state, limitAds: action.payload };
+    }
+    case ESettingsActions.SET_SAVE_PASSWORD: {
+        return { ...state, savePassword: action.payload };
+    }
+    default: {
+        return state; 
+    }
     }
 };
 

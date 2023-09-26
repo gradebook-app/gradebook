@@ -40,7 +40,7 @@ const AppNavigator = () => {
     // }, []);
 
     useEffect(() => {
-       // setAppGroupData();
+        // setAppGroupData();
     });
 
     useEffect(()=>{
@@ -141,7 +141,7 @@ const AppNavigator = () => {
                         headerBackTitle: "Account",
                     }}
                 />
-                 <Stack.Screen
+                <Stack.Screen
                     name="options"
                     component={OptionsScreen}
                     options={{ 
@@ -151,7 +151,7 @@ const AppNavigator = () => {
                         headerBackTitle: "Account",
                     }}
                 />
-                 <Stack.Screen
+                <Stack.Screen
                     name="advanced-options"
                     component={AdvancedOptionsScreen}
                     options={{ 
@@ -161,7 +161,7 @@ const AppNavigator = () => {
                         headerBackTitle: "Options",
                     }}
                 />
-                 <Stack.Screen
+                <Stack.Screen
                     name="donate"
                     component={DonateScreen}
                     options={{ 
