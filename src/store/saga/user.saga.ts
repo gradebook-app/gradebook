@@ -20,7 +20,7 @@ function* setUserNotificationToken({ payload } : ISetNotificationToken) : Genera
 
 function* setUserCourseWeight({ payload: { resolve, ...payload} } : ISetUserCourseWeight) : Generator<any> {
     yield put(setUpdatingCourseWeight(true));
-    const body = { ...payload }
+    const body = { ...payload };
     const response = yield api.post(SET_COURSE_WEIGHT, body)
         .catch(() => null);
     yield put(setUpdatingCourseWeight(false));

@@ -19,6 +19,7 @@ target 'Gradebook' do
   
   pod 'FirebaseCore', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
+  pod 'react-native-in-app-review', :path => '../node_modules/react-native-in-app-review'
 
   use_react_native!(
     :path => config[:reactNativePath],
@@ -48,6 +49,7 @@ target 'Gradebook' do
       end
       target.build_configurations.each do |config|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', '_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']
       end
     end
   end

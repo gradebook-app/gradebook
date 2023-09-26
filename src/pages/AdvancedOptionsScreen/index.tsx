@@ -1,7 +1,7 @@
 import { faDatabase } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { View, SafeAreaView, Dimensions, StyleSheet, ScrollView, Text, ActivityIndicator } from 'react-native';
+import { View, SafeAreaView, Dimensions, StyleSheet, ScrollView, Text, ActivityIndicator } from "react-native";
 import Box from "../../components/Box";
 import FadeIn from "../../components/FadeIn";
 import { useTheme } from "../../hooks/useTheme";
@@ -10,7 +10,7 @@ import { setUserPurgeCache } from "../../store/actions/user.actions";
 import RNTStorageCalculator from "../../components/RNTStorageCalculator";
 import StorageCalculator from "../../components/RNTStorageCalculator";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 type OptionsScreenProps = {
     navigation: any,
@@ -32,7 +32,7 @@ const AdvancedOptionsScreen : React.FC<OptionsScreenProps> = ({ navigation }) =>
         if (typeof size === "number") setCacheSize(size);
     }, [ RNTStorageCalculator ]);
 
-    useEffect(() => { updateStorage() }, [ updateStorage ]);
+    useEffect(() => { updateStorage(); }, [ updateStorage ]);
 
     const [ clearingCache, setClearingCache ] = useState(false);
 
@@ -49,9 +49,9 @@ const AdvancedOptionsScreen : React.FC<OptionsScreenProps> = ({ navigation }) =>
         await AsyncStorage.multiRemove(removableKeys);
 
         await new Promise((resolve) => {
-                dispatch(setUserPurgeCache({
-                    result: () => resolve(true)
-                }))
+            dispatch(setUserPurgeCache({
+                result: () => resolve(true)
+            }));
         });
         setClearingCache(false); 
 
@@ -109,15 +109,15 @@ const AdvancedOptionsScreen : React.FC<OptionsScreenProps> = ({ navigation }) =>
                 </View>
             </ScrollView>
         </SafeAreaView>
-    )
+    );
 };
 
 const styles = StyleSheet.create({
     scrollView: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        height: '100%',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        height: "100%",
     },
     headerContainer: {
         width: width,

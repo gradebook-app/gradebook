@@ -1,7 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { queryAssignments } from "../constants/endpoints/assignments";
-import { IAssignment } from "../store/interfaces/assignment.interface";
 import * as api from "../utils/api";
 import { ISchedule } from "../store/interfaces/schedule.interface";
 import { getScheduleEndpoint } from "../constants/endpoints/user";

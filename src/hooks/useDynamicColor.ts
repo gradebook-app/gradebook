@@ -13,4 +13,4 @@ export const useDynamicColor = ({ light, dark } : IDynamicColors) => {
     // const { isDark } = useAppearanceTheme();
     // return isDark ? dark : light; 
     return dark; 
-}
+};

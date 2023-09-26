@@ -1,10 +1,10 @@
 import React from "react";
-import { View, SafeAreaView, Dimensions, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, SafeAreaView, Dimensions, StyleSheet, ScrollView, Text } from "react-native";
 import Box from "../../components/Box";
 import { useTheme } from "../../hooks/useTheme";
 import { faBell, faDollarSign, faLock, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 type OptionsScreenProps = {
     navigation: any,
@@ -97,15 +97,15 @@ const OptionsScreen : React.FC<OptionsScreenProps> = ({ navigation }) => {
                 </View>
             </ScrollView>
         </SafeAreaView>
-    )
+    );
 };
 
 const styles = StyleSheet.create({
     scrollView: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        height: '100%',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        height: "100%",
     },
     headerContainer: {
         width: width,

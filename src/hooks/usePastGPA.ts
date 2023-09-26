@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { GET_GPA, GET_PAST_GPA } from "../constants/endpoints/grades";
+import { GET_PAST_GPA } from "../constants/endpoints/grades";
 import * as api from "../utils/api";
 
 export interface IGPAPast {

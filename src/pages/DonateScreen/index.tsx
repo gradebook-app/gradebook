@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Dimensions, Image, LayoutAnimation, Platform, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 import { getProducts, useIAP, withIAPContext } from "react-native-iap";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,8 +28,8 @@ const DonateOption : React.FC<IDonateOption> = ({ value, onPress, selectedValue,
     const selected = useMemo(() => selectedValue === value, [ value, selectedValue ]);
 
     const handlePress = useCallback(() => {
-       if (!selected) onPress(value)
-    }, [ value, selected ])
+        if (!selected) onPress(value);
+    }, [ value, selected ]);
 
     const { theme, palette } = useTheme();
 
@@ -59,8 +59,8 @@ const DonateOption : React.FC<IDonateOption> = ({ value, onPress, selectedValue,
                 { value }
             </Text>
         </TouchableOpacity>
-    )
-}
+    );
+};
 
 type DonateScreenProps = {
     navigation: any,
@@ -85,7 +85,7 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
 
     const resetConfirmation = useCallback(() => {
         LayoutAnimation.easeInEaseOut();
-        setIsSuccess(false)
+        setIsSuccess(false);
     }, []);
 
     const { 
@@ -105,7 +105,7 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
         if (!productId) return; 
 
         const response = await requestPurchase({ sku: productId })
-            .catch(e => console.log('Failed Donation: ', e));
+            .catch(e => console.log("Failed Donation: ", e));
 
         if (!response) {
             return; // handle failure
@@ -117,16 +117,16 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
     }, [ donateProducts, donateValue, connected ]);
 
     const handleGetProducts = useCallback(async () => {
-        if (!!donateProducts.length) return; 
+        if (donateProducts.length) return; 
 
         setFetchingProducts(true);
         const products = await getProducts({ skus: config.iap.skus })
-            .catch(() => null)
+            .catch(() => null);
 
         setFetchingProducts(false);
 
         if (products && products.length) {
-          dispatch(setDonateProducts(products));
+            dispatch(setDonateProducts(products));
         }
  
     }, [ donateProducts ]);
@@ -135,7 +135,7 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
         setFetchingProducts(true);
 
         const products = await getProducts({ skus: config.iap.skus })
-            .catch(() => null)
+            .catch(() => null);
 
         if (products && products.length) {
             dispatch(setDonateProducts(products));
@@ -152,12 +152,12 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
         try {
             await finishTransaction({ purchase: currentPurchase, isConsumable: true });
         } catch (ackErr) {
-            console.log("Failed to Acknowledge: ", ackErr)
+            console.log("Failed to Acknowledge: ", ackErr);
         }
     }, [ currentPurchase, finishTransaction ]);
 
-    useEffect(() => { handleCheckCurrentPurchase() }, [ handleCheckCurrentPurchase ]);
-    useEffect(() => { handleGetProducts() }, [ handleGetProducts ]);
+    useEffect(() => { handleCheckCurrentPurchase(); }, [ handleCheckCurrentPurchase ]);
+    useEffect(() => { handleGetProducts(); }, [ handleGetProducts ]);
     
     const { isDark } = useAppearanceTheme();
 
@@ -212,19 +212,19 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
                 <View style={styles.donationOptionsWrapper}>
                     <FadeIn show={!!sortedProducts.length} style={styles.donationOptions}>
                         <>
-                        {
-                            sortedProducts.map((product, index) => (
-                                <DonateOption 
-                                    key={product.productId}
-                                    onPress={handleUpdateDonateValue}
-                                    value={product.localizedPrice}
-                                    selectedValue={donateValue}
-                                    style={index === donateProducts.length - 1 ? { 
-                                        marginRight: 0
-                                    } : undefined}
-                                />
-                            ))
-                        }
+                            {
+                                sortedProducts.map((product, index) => (
+                                    <DonateOption 
+                                        key={product.productId}
+                                        onPress={handleUpdateDonateValue}
+                                        value={product.localizedPrice}
+                                        selectedValue={donateValue}
+                                        style={index === donateProducts.length - 1 ? { 
+                                            marginRight: 0
+                                        } : undefined}
+                                    />
+                                ))
+                            }
                         </>
                     </FadeIn>
                     {
@@ -258,7 +258,7 @@ const DonateScreen : React.FC<DonateScreenProps> = ({ navigation }) => {
                     ]}>
                     <Text 
                         style={[ styles.donateButtonText, { color: !isDark ? "#fff" : "#000" }]}
-                        >Contribute to
+                    >Contribute to
                     </Text>
                     <Image 
                         style={{ width: 30, height: 30, borderRadius: 8, marginLeft: 5 }}
@@ -348,8 +348,8 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginTop: 15,
         display: "flex",
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: "center",
+        alignItems: "center",
         flexDirection: "row"
     },
     donateButtonText: {

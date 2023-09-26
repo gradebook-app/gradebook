@@ -15,4 +15,4 @@ export default class StorageCalculator {
     public static async getAbsoluteCacheSize() : Promise<number> {
         return await RNTStorageCalculator.getAbsoluteCacheSize();
     }
-};  
+}  

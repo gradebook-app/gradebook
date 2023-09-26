@@ -14,9 +14,9 @@ export interface IUserReducer {
 }
 
 const persistConfig = {
-    key: 'user',
+    key: "user",
     storage: AsyncStorage,
-    whitelist: [ 'user', 'shownAlert1_5', 'shownSaveBanner' ]
+    whitelist: [ "user", "shownAlert1_5", "shownSaveBanner" ]
 };
 
 
@@ -35,7 +35,7 @@ const userReducer = (state:IUserReducer=initialState, action:IAction) => {
     }
 
     case EUserActions.SET_UPDATING_COURSE_WEIGHT: {
-        return { ...state, updatingCourseWeight: action.payload}
+        return { ...state, updatingCourseWeight: action.payload};
     }
 
     case EUserActions.SET_SHOWN_SAVE_BANNER: {

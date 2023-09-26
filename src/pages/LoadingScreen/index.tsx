@@ -1,7 +1,7 @@
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import analytics from '@react-native-firebase/analytics';
+import analytics from "@react-native-firebase/analytics";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {useNetInfo, addEventListener as networkEventListener } from "@react-native-community/netinfo";
 import { 
@@ -28,7 +28,8 @@ import { getSettings } from "../../store/selectors/settings.selectors";
 import { getUserId } from "../../store/selectors/user.selectors";
 import IOSButton from "../../components/IOSButton";
 
-const GradebookIcon = require("../../../assets/gradebook-logo.png");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const GradebookIcon = require("../../../assets/gradebook-logo.gif");
 
 const { width, height } = Dimensions.get("window");
 
@@ -57,14 +58,14 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
         await analytics().setUserProperty("userId", null);
         await AsyncStorage.getAllKeys().then(keys => AsyncStorage.multiRemove(keys as string[]));
         navigation.navigate("login");
-        if (!!userId) dispatch(setLogoutClient({ userId }));
+        if (userId) dispatch(setLogoutClient({ userId }));
     };
 
     const navigateToNavigator = useCallback(async () => {
-       if (isAccessToken) {
+        if (isAccessToken) {
             await analytics().logLogin({ method: "automatic" });
             navigation.navigate("navigator");
-       }
+        }
     }, [ isAccessToken ]);
 
     const handleAuth = useCallback(async () => {
@@ -123,12 +124,17 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
 
             const data = JSON.parse(credentials);
   
-            if (!!userId){
+            if (userId){
                 await analytics().setUserId(userId);
                 await analytics().setUserProperty("userId", userId);
             }
 
             dispatch(setLoginClient({ ...data, notificationToken: token }));
+        } else if (!userId) {
+            setIsBiometricsEnabled(false);
+            setTimeout(() => {
+                navigation.navigate("login");
+            }, 1000);
         } else {
             setIsBiometricsEnabled(false);
             navigation.navigate("login");
@@ -146,7 +152,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     }, [ handleAuth ]);
 
     useEffect(() => {
-        navigateToNavigator()
+        navigateToNavigator();
     }, [ navigateToNavigator ]);
 
     const networkPrevState = useRef<boolean | null>(null);
@@ -154,9 +160,9 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
     useEffect(() => {
         const subscription = networkEventListener((e) => {
             if (networkPrevState.current === false && e.isConnected === true && !loading) {
-                dispatch(setLoginClient(false))
+                dispatch(setLoginClient(false));
                 handleAuth();
-            };
+            }
             networkPrevState.current = e.isConnected;
         });
         return () => subscription();
@@ -172,8 +178,8 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
             )}
             <FadeIn style={styles.loadingContainer} show={visible}>
                 <>
-                    <View style={{ ...styles.loading, backgroundColor: theme.secondary }}>
-                        <Image style={{ width: 100, height: 100 }} source={GradebookIcon}/>
+                    <View style={{ ...styles.loading, backgroundColor: "#121212"}}>
+                        <Image style={{ width: 100, aspectRatio: 229/205, height: 100, marginBottom: 18 }} source={GradebookIcon}/>
                     </View>
                     <ActivityIndicator animating={loading} />
                 </>
@@ -268,7 +274,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     error: { 
-        color: 'red', 
+        color: "red", 
         textAlign: "center", 
         marginVertical: 15 
     }
