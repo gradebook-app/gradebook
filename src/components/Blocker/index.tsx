@@ -20,7 +20,7 @@ const Blocker : React.FC<BlockerProps> = ({ block, onPress }) => {
                 useNativeDriver: true,
             }
         ).start();
-    }, [ block ]);
+    }, [backgroundRef, block]);
 
     useEffect(setBackground, [ setBackground ]);
 
