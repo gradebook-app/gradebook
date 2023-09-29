@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const IAPConnection : React.FC = ({ children }) => {
+const IAPConnection : React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const dispatch = useDispatch();
 
     // Set up In-App Purchases (IAP)
