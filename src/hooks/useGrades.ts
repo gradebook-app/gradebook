@@ -27,9 +27,9 @@ export const useGrades = ({ markingPeriod } : { markingPeriod: string }) => {
         const cache = await AsyncStorage.getItem(`@courses-${user?.studentId}-${markingPeriod}`);
         if (cache) {
             const cachedDataParsed = JSON.parse(cache);
-            if (
+            if ((
                 !data.courses.length ||
-                 data.currentMarkingPeriod !== markingPeriod
+                 data.currentMarkingPeriod !== markingPeriod) && !!markingPeriod
             ) setData(cachedDataParsed);
         }
     }, [ markingPeriod, data ]); 
@@ -39,7 +39,7 @@ export const useGrades = ({ markingPeriod } : { markingPeriod: string }) => {
             !data.courses.length ||
             data.currentMarkingPeriod !== markingPeriod
         ) setCache();
-
+        
         setLoading(true);
 
         const response = (await api.get(queryGrades(markingPeriod)).catch(() => ({
@@ -50,13 +50,13 @@ export const useGrades = ({ markingPeriod } : { markingPeriod: string }) => {
 
         const { courses = [], markingPeriods = [], currentMarkingPeriod = "", error = false} = response;
         const responseData = { courses, markingPeriods, currentMarkingPeriod };
-
+        
         if (courses.length) {
             setData(responseData);
         }
         
         if (!error) AsyncStorage.setItem(`@courses-${user?.studentId}-${currentMarkingPeriod}`, JSON.stringify(responseData));
-    }, [ markingPeriod ]);
+    }, [ markingPeriod, user?.studentId ]);
 
     const reload = () => {
         setLoading(true);

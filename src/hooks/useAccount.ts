@@ -3,13 +3,19 @@ import { useCallback, useEffect, useState } from "react";
 import { GET_ACCOUNT } from "../constants/endpoints/user";
 import { IAccount } from "../store/interfaces/account.interface";
 import * as api from "../utils/api";
+import { useSelector } from "react-redux";
+import { IRootReducer } from "../store/reducers";
+import { getUser } from "../store/selectors";
 
 export const useAccount = () => {
     const [ loading, setLoading ] = useState(false);
     const [ account, setAccount ] = useState<IAccount>({});
 
+    const state = useSelector((state:IRootReducer) => state);
+    const user = getUser(state);
+
     const setCache = async () => {
-        const cache = await AsyncStorage.getItem("@account");
+        const cache = await AsyncStorage.getItem(`@account-${user?.studentId}`);
         if (cache) {
             const cachedDataParsed = JSON.parse(cache);
             if (
@@ -27,9 +33,9 @@ export const useAccount = () => {
         
         if (response && Object.keys(response).length) {
             setAccount(response);
-            AsyncStorage.setItem("@account", JSON.stringify(response));
+            AsyncStorage.setItem(`@account-${user?.studentId}`, JSON.stringify(response));
         }
-    }, []);
+    }, [ user?.studentId ]);
 
     const reload = () => {
         setLoading(true);

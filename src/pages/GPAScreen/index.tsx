@@ -69,6 +69,40 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                     />
                 }
             >
+                <FadeIn show={true} style={styles.gpaContainer}>
+                    <Box title={"Total GPA"} style={{ flexDirection: "column" }}>
+                        <Box.Content 
+                            showIcon={false}
+                            title="Unweighted GPA"
+                        >
+                            <Box.Value value={roundGrade(highschoolGPAUnweighted) || "N/A"} />
+                        </Box.Content>
+                        <Box.Separator />
+                        <Box.Content 
+                            showIcon={false}
+                            title="Weighted GPA"
+                        >
+                            <Box.Value value={roundGrade(highschoolGPAWeighted) || "N/A"} />
+                        </Box.Content>
+                    </Box>
+                </FadeIn>
+                <FadeIn show={true} style={styles.gpaContainer}>
+                    <Box title={"Current School Year"} style={{ flexDirection: "column" }}>
+                        <Box.Content 
+                            showIcon={false}
+                            title="Unweighted GPA"
+                        >
+                            <Box.Value value={roundGrade(gpa?.unweightedGPA) || "N/A"} />
+                        </Box.Content>
+                        <Box.Separator />
+                        <Box.Content 
+                            showIcon={false}
+                            title="Weighted GPA"
+                        >
+                            <Box.Value value={roundGrade(gpa?.weightedGPA) || "N/A"} />
+                        </Box.Content>
+                    </Box>
+                </FadeIn>
                 {
                     pastGPA.map((eachPastGPA, index) => {
                         return (
@@ -95,40 +129,6 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                         );
                     })
                 }
-                <FadeIn show={true} style={styles.gpaContainer}>
-                    <Box title={"Current School Year"} style={{ flexDirection: "column" }}>
-                        <Box.Content 
-                            showIcon={false}
-                            title="Unweighted GPA"
-                        >
-                            <Box.Value value={roundGrade(gpa?.unweightedGPA) || "N/A"} />
-                        </Box.Content>
-                        <Box.Separator />
-                        <Box.Content 
-                            showIcon={false}
-                            title="Weighted GPA"
-                        >
-                            <Box.Value value={roundGrade(gpa?.weightedGPA) || "N/A"} />
-                        </Box.Content>
-                    </Box>
-                </FadeIn>
-                <FadeIn show={true} style={styles.gpaContainer}>
-                    <Box title={"Total GPA"} style={{ flexDirection: "column" }}>
-                        <Box.Content 
-                            showIcon={false}
-                            title="Unweighted GPA"
-                        >
-                            <Box.Value value={roundGrade(highschoolGPAUnweighted) || "N/A"} />
-                        </Box.Content>
-                        <Box.Separator />
-                        <Box.Content 
-                            showIcon={false}
-                            title="Weighted GPA"
-                        >
-                            <Box.Value value={roundGrade(highschoolGPAWeighted) || "N/A"} />
-                        </Box.Content>
-                    </Box>
-                </FadeIn>
                 <View style={styles.disclaimerContainer}>
                     <Text style={[ styles.disclaimer, { color: theme.grey }]}>
                         Disclaimer: All GPA Calculations are estimated and may differ from your actual GPA. 
@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     },
     disclaimerContainer: {
         width: width,
+        height: 100,
         padding: 25,
     },
     disclaimer: {}

@@ -106,7 +106,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                     contentContainerStyle={{
                         display: "flex",
                         alignItems: "center",
-                        height: height + 65,
+                        minHeight: height,
                     }}>
                     <View style={styles.headerContainer}>
                         <Text style={[ styles.header, { color: theme.text }]}>Account</Text>
@@ -232,7 +232,6 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         width: width,
-        height: height,
     },
     userSection: {
         display: "flex",

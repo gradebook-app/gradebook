@@ -25,8 +25,8 @@ struct GradesQueryBody: Codable {
 
 class WebService {
   static func getGrades(completion:@escaping (GradesQuery?, Error?) -> Void) {
-   // let productionURL = "https://gradebook-web-api.herokuapp.com/"
-    let url = URL(string: "http://localhost:5000/grades/widgetGrades")!
+   // let productionURL = "https://genesus.api.mahitm.com"
+    let url = URL(string: "http://localhost:5001/grades/widgetGrades")!
     let session = URLSession.shared
     
     var request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData)

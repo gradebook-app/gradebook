@@ -56,28 +56,21 @@ interface INavigationParams {
 }
 
 const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
-    const { params: { cachedMarkingPeriod = null  } = {} as any} : INavigationParams = 
-        navigation?.getState()?.routes?.find((route:any) => (route.name == "loading")) ;
+    const { params: { cachedMarkingPeriod = null  } = {} as INavigationParams["params"]} : INavigationParams = 
+        navigation?.getState()?.routes?.find((route:any) => (route.name == "loading"));
 
     const [selectedValue, setSelectedValue] = useState(cachedMarkingPeriod ?? "");
     const [ adjustedMarkingPeriod, setAdjustedMarkingPeriod ] = useState(cachedMarkingPeriod ?? "");
 
-    const { courses, markingPeriods, currentMarkingPeriod, loading, reload } = useGrades({
+    const { courses, markingPeriods, currentMarkingPeriod, loading: loadingGrades, reload } = useGrades({
         markingPeriod: adjustedMarkingPeriod
     });
-
-    const [ loadingGrades, setLoadingGrades ] = useState(false);
-
-    useEffect(() => {
-        setLoadingGrades(loadingGrades);
-    }, [ loading ]);
 
     const { reload:reloadGPA, loading:loadingGPA, gpa } = useGPA();
     const { reload:reloadPastGPA , pastGPA } = usePastGPA();
 
-
     useEffect(() => {
-        const unsubscribe = messaging().onMessage(_ => {
+        const unsubscribe = messaging().onMessage(() => {
             reload();
             reloadGPA();
         });
@@ -87,7 +80,6 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     
     const state = useSelector((state:IRootReducer) => state);
     const accessToken = getAccessToken(state);
-    const isAccessToken = !!accessToken;
 
     const handleCourse = (course:ICourse) => {
         navigation.setParams({ course, markingPeriod: currentMarkingPeriod });
@@ -104,12 +96,16 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     const selectionSheet = React.useRef<BottomSheet | null>(null);
     const accountsSheet = React.useRef<BottomSheet | null>(null);
 
+    const { accounts, reload:reloadAccounts } = useAccounts();
+
     const handleAuth = useCallback(() => {
         if (!accessToken) return; 
         reload();
         reloadGPA();
         reloadPastGPA();
-    }, [ isAccessToken ]);
+        reloadAccounts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [accessToken]);
 
     useEffect(handleAuth, [ handleAuth ]);
 
@@ -126,10 +122,11 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     };
 
     const [ showSelector, setShowSelector ] = useState(false);
+    const [ mpPickerOpen, setMPPickerOpen ] = useState(false);
+
     const [ showAccountSelector, setShowAccountSelector ] = useState(false);
 
     const user = getUser(state);
-    const { accounts } = useAccounts();
     const [aspiredAccount, setAspiredAccount] = useState(user?.studentId);
     const [ changingToAspiredAccount, setChangingToAspiredAccount ] = useState(false);
 
@@ -150,9 +147,12 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         
         if (aspiredAccount != user?.studentId && !!aspiredAccount) {
             setChangingToAspiredAccount(true);
+
             revalidateClient(aspiredAccount).then(() => {
+                setAdjustedMarkingPeriod("");
                 setChangingToAspiredAccount(false);
-                onRefresh();
+                reloadGPA();
+                reloadPastGPA();
             }).catch(() => {
                 setChangingToAspiredAccount(false);
             });
@@ -170,7 +170,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
     const { isDark } = useAppearanceTheme();
 
-    const [ mpPickerOpen, setMPPickerOpen ] = useState(false);
+    const dropdownColor = useDynamicColor({ dark: theme.grey, light: "grey" }); 
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
@@ -221,7 +221,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                     <Picker
                         selectedValue={selectedValue}
                         mode="dropdown"
-                        dropdownIconColor={useDynamicColor({ dark: theme.grey, light: "grey" })}
+                        dropdownIconColor={dropdownColor}
                         onFocus={() => { setMPPickerOpen(true); }}
                         onBlur={() => { setMPPickerOpen(false); }}
                         style={[styles.androidMPPicker,{backgroundColor: theme.secondary}]}
@@ -242,12 +242,12 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                 contentContainerStyle={styles.courses}
                 refreshControl={
                     <RefreshControl
-                        refreshing={loading || loadingGPA}
+                        refreshing={loadingGrades || loadingGPA}
                         onRefresh={onRefresh}
                     />
                 }> 
                 <GPASlideshow handleGPAScreen={handleGPAScreen} pastGPA={pastGPA} gpa={gpa} />
-                { !loadingGrades ? <BannerAd style={{ marginTop: 15 }} /> : <></> }
+                <BannerAd style={{ marginTop: 15 }} />
                 <SaveBanner onPress={handleDonateScreen} />
                 { courses.map((course, index) => {
                     return (
@@ -259,7 +259,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                     );
                 })}
                 {
-                    !courses.length && !loading && (
+                    !courses.length && !loadingGrades && (
                         <FadeIn 
                             show={true}
                             style={{

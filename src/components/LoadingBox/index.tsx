@@ -93,8 +93,13 @@ const LoadingBox: React.FC<LoadingScreenProps> = ({ loading = false }) => {
     return (
         <Animated.View 
             pointerEvents={loading ? "box-only" : "none" }
-            style={[ styles.container, { opacity: containerOpacity }]}>
-            <View style={[styles.loadingContainer, { backgroundColor: theme.secondary }]}>
+            style={[ styles.container, { 
+                opacity: containerOpacity,
+            }]}>
+            <View style={[styles.loadingContainer, { 
+                backgroundColor: theme.secondary,
+                borderColor: theme.border
+            }]}>
                 <Animated.View
                     style={[ styles.track, { 
                         transform: [{
@@ -130,6 +135,8 @@ const styles = StyleSheet.create({
     loadingContainer: {
         position: "absolute",
         zIndex: 1,
+        borderWidth: 2,
+        borderStyle: "solid",
         width: width * 0.35,
         height: width * 0.35,
         minWidth: 100,

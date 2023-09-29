@@ -3,6 +3,9 @@ import * as api from "../utils/api";
 import { ISchedule } from "../store/interfaces/schedule.interface";
 import { getScheduleEndpoint } from "../constants/endpoints/user";
 import moment from "moment";
+import { useSelector } from "react-redux";
+import { IRootReducer } from "../store/reducers";
+import { getUser } from "../store/selectors";
 
 interface IUseSchedule {
     dateSelected: string,
@@ -13,6 +16,9 @@ export const useSchedule = ({ dateSelected }:IUseSchedule) => {
     const [ loading, setLoading ] = useState<boolean>(false);
     const [ fetching, setFetching ] = useState<boolean>(false);
 
+    const state = useSelector((state:IRootReducer) => state);
+    const user = getUser(state);
+
     const dateParameter = useMemo(() => moment(dateSelected).format("L"), [ dateSelected ]);
 
     const getSchedule = useCallback(async () => {
@@ -22,7 +28,7 @@ export const useSchedule = ({ dateSelected }:IUseSchedule) => {
         if (response && Object.keys(response).length) {
             setSchedule(response);
         } else setSchedule({});
-    }, [ dateParameter ]);
+    }, [ dateParameter, user?.studentId ]);
 
     const reload = () => {
         setLoading(true);
