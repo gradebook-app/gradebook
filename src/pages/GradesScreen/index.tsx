@@ -40,7 +40,7 @@ import AccountSelector from "./components/AccountSelector";
 const { width, height } = Dimensions.get("window");
 
 const sheetHeight = (() => {
-    const minHeight = 375; 
+    const minHeight = 400; 
     const dynamicHeight = height * 0.45; 
     return dynamicHeight < minHeight ? minHeight : dynamicHeight; 
 })();
