@@ -22,10 +22,9 @@ export const useSchedule = ({ dateSelected }:IUseSchedule) => {
     const dateParameter = useMemo(() => moment(dateSelected).format("L"), [ dateSelected ]);
 
     const getSchedule = useCallback(async () => {
-        
         const response = await api.get(getScheduleEndpoint(dateParameter)).catch(() => null);
 
-        if (response && Object.keys(response).length) {
+        if (response && Object.keys(response).length && user?.studentId) {
             setSchedule(response);
         } else setSchedule({});
     }, [ dateParameter, user?.studentId ]);

@@ -1,6 +1,6 @@
 import { faFlagUsa, faIdBadge, faKey, faPizzaSlice, faSchool, faUserCog, faPhone, faShieldAlt, faCoins } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Platform } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,7 +29,6 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
 
     const state = useSelector((state:IRootReducer) => state);
     const accessToken = getAccessToken(state);
-    const isAccessToken = !!accessToken; 
     const user = getUser(state);
     const userId = getUserId(state);
 
@@ -46,15 +45,6 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
     const onRefresh = () => {
         reload();
     };
-
-    const handleAuth = useCallback(() => {
-        if (!isAccessToken) return; 
-        setTimeout(() => {
-            reload();
-        }, 0);
-    }, [ isAccessToken ]);
-
-    useEffect(handleAuth, [ handleAuth ]);
 
     const userProfilePhotoURL = useMemo(() => {
         const schoolExtension = user?.schoolDistrict;

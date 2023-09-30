@@ -24,12 +24,12 @@ export const useAccounts = () => {
         
         if (response) setLoading(false);
 
-        const queriedAccounts = response?.accounts; 
+        const queriedAccounts = response?.accounts || [];
 
         if (queriedAccounts.length) {
             setAccounts(queriedAccounts);
         }
-    }, []);
+    }, [controller]);
 
     const reload = () => {
         setLoading(true);
@@ -44,7 +44,7 @@ export const useAccounts = () => {
             setLoading(false);
             controller.abort();
         };
-    }, [ getAccounts ]);
+    }, [controller, getAccounts]);
 
     return { loading, accounts, reload };
 };
