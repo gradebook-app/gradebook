@@ -40,8 +40,14 @@ const AccountSelector : React.FC<AccountSelectorProps> = ({
                 paddingTop: 5,
             }}>
                 <Text style={[ styles.accountsTitle, { color: theme.text } ]}>Select Student Account</Text>
-                <Button title="Done" onPress={handleSelectorBack} />
+                <Button title="Confirm" onPress={handleSelectorBack} />
             </View>
+            <Text style={{ 
+                color: theme.grey,
+                paddingHorizontal: 20,
+            }}>
+                Notifications are only sent to the account that is selected.
+            </Text>
             <Picker
                 selectedValue={selectedValue}
                 onValueChange={(itemValue) => setSelectedValue(itemValue)}
