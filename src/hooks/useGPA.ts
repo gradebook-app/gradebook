@@ -33,8 +33,6 @@ export const useGPA = () => {
     const getGPA = useCallback(async () => {
         if (!hasGPAValue) setCache();
 
-        setLoading(true);
-
         const response = await api.get(GET_GPA).catch((e) => {
             console.log(e);
         });
@@ -47,12 +45,15 @@ export const useGPA = () => {
     }, [hasGPAValue, setCache, user?.studentId]);
 
     const reload = () => {
+        setLoading(true);
         getGPA();
     };
 
     useEffect(() => {
+        if (hasGPAValue) return; 
+        setLoading(true);
         getGPA();
-    }, [getGPA]);
+    }, [getGPA, hasGPAValue]);
     
     return { reload, loading, gpa };
 };
