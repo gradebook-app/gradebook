@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { 
     Dimensions, 
     SafeAreaView, 
@@ -150,6 +150,8 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
             revalidateClient(aspiredAccount).then(() => {
                 setAdjustedMarkingPeriod("");
+                reloadPastGPA();
+                reloadGPA();
                 setChangingToAspiredAccount(false);
             }).catch(() => {
                 setChangingToAspiredAccount(false);
@@ -169,6 +171,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     const { isDark } = useAppearanceTheme();
 
     const dropdownColor = useDynamicColor({ dark: theme.grey, light: "grey" }); 
+    const loading = useMemo(() => loadingGPA || loadingGrades, [ loadingGPA, loadingGrades ]);
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
@@ -240,7 +243,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                 contentContainerStyle={styles.courses}
                 refreshControl={
                     <RefreshControl
-                        refreshing={loadingGrades || loadingGPA}
+                        refreshing={loading}
                         onRefresh={onRefresh}
                     />
                 }> 
