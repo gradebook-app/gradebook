@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import { useGrades } from "../../hooks/useGrades";
 import { ICourse } from "../../store/interfaces/course.interface";
 import { IRootReducer } from "../../store/reducers";
-import { getAccessToken, getUser } from "../../store/selectors";
+import { getUser } from "../../store/selectors";
 import CourseBox from "./components/CourseBox";
 import BottomSheet from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -76,10 +76,11 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         });
 
         return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     
     const state = useSelector((state:IRootReducer) => state);
-    const accessToken = getAccessToken(state);
+    const user = getUser(state);
 
     const handleCourse = (course:ICourse) => {
         navigation.setParams({ course, markingPeriod: currentMarkingPeriod });
@@ -99,13 +100,13 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     const { accounts, reload:reloadAccounts } = useAccounts();
 
     const handleAuth = useCallback(() => {
-        if (!accessToken) return; 
+        if (!user?._id) return; 
         reload();
         reloadGPA();
         reloadPastGPA();
         reloadAccounts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [accessToken]);
+    }, [user?._id]);
 
     useEffect(handleAuth, [ handleAuth ]);
 
@@ -126,7 +127,6 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
     const [ showAccountSelector, setShowAccountSelector ] = useState(false);
 
-    const user = getUser(state);
     const [aspiredAccount, setAspiredAccount] = useState(user?.studentId);
     const [ changingToAspiredAccount, setChangingToAspiredAccount ] = useState(false);
 
@@ -141,18 +141,16 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         selectionSheet.current?.snapToIndex(1);
     };
 
-    const handleAccountSelectorClose= () => {
+    const handleAccountSelectorClose= (refresh = false) => () => {
         setShowAccountSelector(false);
         accountsSheet.current?.snapToIndex(0);
         
-        if (aspiredAccount != user?.studentId && !!aspiredAccount) {
+        if (aspiredAccount != user?.studentId && !!aspiredAccount && refresh) {
             setChangingToAspiredAccount(true);
 
             revalidateClient(aspiredAccount).then(() => {
                 setAdjustedMarkingPeriod("");
                 setChangingToAspiredAccount(false);
-                reloadGPA();
-                reloadPastGPA();
             }).catch(() => {
                 setChangingToAspiredAccount(false);
             });
@@ -332,12 +330,12 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                     backgroundColor: isDark ? theme.text : theme.grey
                 }}
                 onChange={(i) => {
-                    if (i === 0) handleAccountSelectorClose();
+                    if (i === 0) handleAccountSelectorClose(false)();
                 }}
                 backdropComponent={({ ...props }) => (
                     <BottomSheetBackdrop 
                         open={showAccountSelector}
-                        onClose={handleAccountSelectorClose}
+                        onClose={handleAccountSelectorClose(true)}
                         { ...props} 
                     />
                 )}
@@ -347,7 +345,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
             >        
                 <AccountSelector 
                     sheetHeight={sheetHeight}
-                    handleSelectorBack={handleAccountSelectorClose}
+                    handleSelectorBack={handleAccountSelectorClose(true)}
                     accounts={accounts}
                     setSelectedValue={setAspiredAccount} 
                     selectedValue={aspiredAccount || ""} 
