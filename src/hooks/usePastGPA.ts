@@ -22,20 +22,19 @@ export const usePastGPA = () => {
     const state = useSelector((state:IRootReducer) => state);
     const user = getUser(state);
 
-    const hasGPAValue = useMemo(() => pastGPA.value, [ pastGPA ]);
-
     const setCache = useCallback(async () => {
         const cache = await AsyncStorage.getItem(`@gpaPast-${user?.studentId}`);
+       
         if (cache) {
             const cachedDataParsed = JSON.parse(cache);
             if (
-                cachedDataParsed?.pastGradePointAverages?.length && !hasGPAValue
-            ) setPastGPA(cachedDataParsed.pastGradePointAverages);
+                cachedDataParsed?.pastGradePointAverages?.length && !pastGPA.pastGPAs?.length
+            ) setPastGPA({pastGPAs: cachedDataParsed.pastGradePointAverages, value: true});
         }
-    }, [hasGPAValue, user?.studentId]);
+    }, [pastGPA.pastGPAs?.length, user?.studentId]);
 
     const getPastGPA = useCallback(async () => {
-        if (!hasGPAValue) setCache();
+        setCache();
 
         const response = await api.get(GET_PAST_GPA).catch(_ => null);
         if (response && response?.pastGradePointAverages) {
@@ -43,7 +42,7 @@ export const usePastGPA = () => {
             setPastGPA({ pastGPAs: response.pastGradePointAverages, value: true });
             AsyncStorage.setItem(`@gpaPast-${user?.studentId}`, JSON.stringify(response));
         }
-    }, [hasGPAValue, setCache, user?.studentId]);
+    }, [setCache, user?.studentId]);
 
     const reload = () => {
         setLoading(true);
@@ -51,10 +50,11 @@ export const usePastGPA = () => {
     };
 
     useEffect(() => {
-        if (hasGPAValue) return; 
+        if (pastGPA.pastGPAs?.length || pastGPA.value) return; 
         setLoading(true);
         getPastGPA();
-    }, [ getPastGPA, hasGPAValue ]);
+    }, [getPastGPA, pastGPA.pastGPAs?.length, pastGPA.value]);
+
 
     return { reload, loading, pastGPA: pastGPA.pastGPAs || [] };
 };
