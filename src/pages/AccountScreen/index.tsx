@@ -96,7 +96,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                     contentContainerStyle={{
                         display: "flex",
                         alignItems: "center",
-                        minHeight: height,
+                        minHeight: height
                     }}>
                     <View style={styles.headerContainer}>
                         <Text style={[ styles.header, { color: theme.text }]}>Account</Text>
@@ -205,6 +205,7 @@ const styles = StyleSheet.create({
     logOut: {
     //   marginTop: 'auto',
         marginTop: 25,
+        marginBottom: 75
     },
     account: {
         display: "flex",
