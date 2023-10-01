@@ -183,7 +183,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                         justifyContent: "space-between",
                         width: "100%", 
                         paddingHorizontal: 20, 
-                        paddingBottom: 5 
+                        paddingBottom: 5,
                     }}>
                         <TouchableOpacity 
                             style={[

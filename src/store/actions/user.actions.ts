@@ -1,7 +1,7 @@
 import { EUserActions, ISetNotificationToken, ISetUpdatingCourseWeight, ISetUser, ISetUserCourseWeight, IUserPurgeCache } from "../constants/user.constants";
 
 export const setShownAlert = (payload:boolean) => ({
-    type: EUserActions.SET_SHOWN_ALERT_1_5,
+    type: EUserActions.SET_SHOWN_ALERT_2_0,
     payload,
 });
 

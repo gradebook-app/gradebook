@@ -180,7 +180,7 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 <Tabs.Screen 
                     name="Grades" 
                     children={() => <GradesScreen navigation={navigation} { ...props } />}
-                />
+                ></Tabs.Screen>
                 <Tabs.Screen 
                     name="Schedule" 
                     children={() => <ScheduleScreen navigation={navigation} { ...props } />}
