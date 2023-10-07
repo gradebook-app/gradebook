@@ -29,13 +29,22 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxisSuffi
 
     const [ minValue, maxValue ] = useMemo(() => {
         const sortedValues = [ ...data ].sort((a, b) => a - b);
-        return [sortedValues[0], sortedValues[sortedValues.length - 1]];
+        const min = sortedValues[0]; 
+        const max = sortedValues[sortedValues.length - 1]; 
+        return [min - (max - min) * 0.025 , max];
     }, [ data ]);
 
     const decimalPlaces = useMemo(() => {
+        let prev = data[0];
+        for (let i = 1; i < data.length; i++) {
+            if (prev != data[i]) break; 
+            else if (i == data.length - 1) return 1;
+            prev = data[i];
+        }
+
         const increment = (maxValue - minValue) / Y_TICKS;
         return ~Math.floor(Math.log10(increment)) + 1;
-    }, [ minValue, maxValue ]);
+    }, [ minValue, maxValue, data ]);
 
     const yAxisLabelWidth = useMemo(() => {
         return (yAxisSuffix.length + (maxValue << 0).toString().length + decimalPlaces) * 10 + 10;
@@ -46,7 +55,7 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxisSuffi
     }, [yAxisLabelWidth]);
 
     const spacing = useMemo(() => {
-        return (graphWidth - 10) / (data.length % 2 == 0 ? data.length - 1 : data.length);
+        return (graphWidth - 10) / (data.length - 1);
     }, [ data, graphWidth ]);
 
     return  (
@@ -71,7 +80,7 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxisSuffi
             maxValue={maxValue - minValue}
             height={260}
             curved
-            curvature={0.2}
+            curvature={0.15}
             curveType={CurveType.CUBIC}
             hideDataPoints
             color={stroke || palette.primary}
@@ -127,11 +136,11 @@ const withFadeIn = (Component: React.FC<GradeChartProps & IChartFadeConfig>) => 
                 {
                     fadeIn ? (
                         <FadeIn style={styles.graphWrapper} show={true} delay={fadeInDelay}>
-                            <Component { ...props }  />
+                           { props.data.length ? <Component { ...props } /> : <></> }
                         </FadeIn>
                     ) : (
                         <View style={styles.graphWrapper}>
-                            <Component { ...props } />
+                            { props.data.length ? <Component { ...props } /> : <></> }
                         </View> 
                     )
                 }

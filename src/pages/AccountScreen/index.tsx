@@ -15,6 +15,7 @@ import { genesisConfig } from "../../constants/genesis";
 import jwt_decode from "jwt-decode";
 import { getUserId } from "../../store/selectors/user.selectors";
 import analytics from "@react-native-firebase/analytics";
+import { useIsFocused } from "@react-navigation/native";
 
 type AccountScreenProps = {
     navigation: any,
@@ -81,6 +82,8 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
         navigation.navigate("donate");
     };
 
+    const isFocused = useIsFocused();
+
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <View style={ styles.account }>
@@ -88,7 +91,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                     refreshControl={
                         <RefreshControl
                             enabled={true}
-                            refreshing={loading}
+                            refreshing={isFocused && loading}
                             onRefresh={onRefresh}
                         />
                     }

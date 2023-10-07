@@ -9,6 +9,7 @@ import { getAccessToken } from "../../store/selectors";
 import DatePicker from "./components/DatePicker";
 import ScheduleTable from "./components/ScheduleTable";
 import BannerAd from "../../components/BannerAd";
+import { useIsFocused } from "@react-navigation/native";
 
 interface IScheduleScreenProps {
     navigation: any,
@@ -42,6 +43,7 @@ const ScheduleScreen : React.FC<IScheduleScreenProps> = () => {
         reload();
     };  
 
+    const isFocused = useIsFocused();
 
     const dateFormatted = useMemo(() => {
         return moment(dateSelected).format("MMM DD, YYYY");
@@ -52,7 +54,7 @@ const ScheduleScreen : React.FC<IScheduleScreenProps> = () => {
             <ScrollView 
                 refreshControl={
                     <RefreshControl
-                        refreshing={loading}
+                        refreshing={isFocused && loading}
                         onRefresh={onRefresh}
                     />
                 }
