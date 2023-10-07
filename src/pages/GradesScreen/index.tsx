@@ -242,8 +242,8 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                     </Picker>
                 )
             }
-            <ScrollView 
-                contentContainerStyle={styles.courses}
+            <ScrollView       
+                contentContainerStyle={[styles.courses]}
                 refreshControl={
                     <RefreshControl
                         refreshing={isFocused && loading}

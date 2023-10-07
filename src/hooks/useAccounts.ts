@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as api from "../utils/api";
 import { GET_ALL_ACCOUNTS } from "../constants/endpoints/user";
 
@@ -10,29 +10,26 @@ export interface IGeneralUserAccount {
 export const useAccounts = () => {
     const [ accounts, setAccounts ] = useState<IGeneralUserAccount[]>([]);
     const [ loading, setLoading ] = useState<boolean>(false);
-    const controller = useRef(new AbortController()).current;
 
     const getAccounts = useCallback(async () => {
         setLoading(true);
 
         const response = await api.get(
             GET_ALL_ACCOUNTS,
-            controller,
         ).catch(() => {
             setLoading(false);
         });
         
-        if (response) setLoading(false);
+        setLoading(false);
 
         const queriedAccounts = response?.accounts || [];
 
         if (queriedAccounts.length) {
             setAccounts(queriedAccounts);
         }
-    }, [controller]);
+    }, []);
 
     const reload = () => {
-        setLoading(true);
         getAccounts().finally(() => {
             setLoading(false);
         });     
@@ -42,9 +39,8 @@ export const useAccounts = () => {
         getAccounts();
         return () => {
             setLoading(false);
-            controller.abort();
         };
-    }, [controller, getAccounts]);
+    }, [getAccounts]);
 
     return { loading, accounts, reload };
 };
