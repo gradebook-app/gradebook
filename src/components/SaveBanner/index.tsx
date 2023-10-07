@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Dimensions, StyleSheet, Image, Text, TouchableOpacity, GestureResponderEvent, LayoutAnimation, View } from "react-native";
+import { Dimensions, StyleSheet, Image, Text, TouchableOpacity, GestureResponderEvent, LayoutAnimation } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import LinearGradient from "react-native-linear-gradient";
-import { faHeart, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import FadeIn from "../FadeIn";
 import { useDispatch, useSelector } from "react-redux";
