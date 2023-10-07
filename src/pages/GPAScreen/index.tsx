@@ -7,6 +7,7 @@ import Box from "../../components/Box";
 import { ScrollView } from "react-native-gesture-handler";
 import BannerAd from "../../components/BannerAd";
 import FadeIn from "../../components/FadeIn";
+import { useIsFocused } from "@react-navigation/native";
 
 type GPAScreenProps = {
     navigation: any,
@@ -54,6 +55,8 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
         return (total / (pastGPA.length + 1));
     }, [ pastGPAWeighted, gpa ]);
 
+    const isFocused = useIsFocused();
+
     const onRefresh = () => {
         reload();
     };
@@ -64,7 +67,8 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                 contentContainerStyle={{ display: "flex", minHeight: height - 100 }}
                 refreshControl={
                     <RefreshControl
-                        refreshing={loadingGPA || loadingPastGPA}
+                        enabled
+                        refreshing={isFocused && (loadingGPA || loadingPastGPA)}
                         onRefresh={onRefresh}
                     />
                 }
