@@ -132,7 +132,7 @@ const GPASlideshow : React.FC<GPASlideshowProps> = ({ gpa, pastGPA, handleGPAScr
             </Box>
         );
     };
-
+    
     return (
         <Slider caption={renderCaption}>
             <GPASlideMemoized 

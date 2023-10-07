@@ -9,13 +9,8 @@
   
   self.moduleName = @"main";
   self.initialProps = @{};
-  
-  [self.window makeKeyAndVisible];
     
-  UIStoryboard *sb = [UIStoryboard storyboardWithName:@"SplashScreen" bundle:nil];
-  UIViewController *vc = [sb instantiateInitialViewController];
-   
-  ((RCTRootView *)self.window).loadingView = vc.view;
+  [self.window makeKeyAndVisible];
   
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }

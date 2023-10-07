@@ -14,6 +14,7 @@ import mobileAds, { MaxAdContentRating } from "react-native-google-mobile-ads";
 import {endConnection, getProducts, initConnection} from "react-native-iap";
 import config from "./config";
 import { setDonateProducts } from "./src/store/actions";
+import * as SplashScreen from "expo-splash-screen";
 
 const { width, height } = Dimensions.get("window");
 
@@ -74,6 +75,10 @@ const IAPConnection : React.FC<{ children: React.ReactNode }> = ({ children }) =
 
 export default function App() {
     changeNavigationBarColor("#000000", false, false);
+
+    useEffect(() => {
+        SplashScreen.hideAsync();
+    }, []);
 
     return (
         <ReduxProvider store={store}>

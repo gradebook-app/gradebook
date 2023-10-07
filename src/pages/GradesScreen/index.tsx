@@ -36,6 +36,7 @@ import { Picker } from "@react-native-picker/picker";
 import { revalidateClient } from "../../utils/api";
 import { useAccounts } from "../../hooks/useAccounts";
 import AccountSelector from "./components/AccountSelector";
+import { useIsFocused } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -173,6 +174,8 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     const dropdownColor = useDynamicColor({ dark: theme.grey, light: "grey" }); 
     const loading = useMemo(() => loadingGPA || loadingGrades, [ loadingGPA, loadingGrades ]);
 
+    const isFocused = useIsFocused();
+    
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             {
@@ -243,7 +246,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                 contentContainerStyle={styles.courses}
                 refreshControl={
                     <RefreshControl
-                        refreshing={loading}
+                        refreshing={isFocused && loading}
                         onRefresh={onRefresh}
                     />
                 }> 
