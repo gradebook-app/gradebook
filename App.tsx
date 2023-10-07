@@ -10,7 +10,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDynamicColor } from "./src/hooks/useDynamicColor";
 import { StatusBar } from "expo-status-bar";
 import changeNavigationBarColor from "react-native-navigation-bar-color";
-import SplashScreen from "react-native-splash-screen";
 import mobileAds, { MaxAdContentRating } from "react-native-google-mobile-ads";
 import {endConnection, getProducts, initConnection} from "react-native-iap";
 import config from "./config";
@@ -75,10 +74,6 @@ const IAPConnection : React.FC<{ children: React.ReactNode }> = ({ children }) =
 
 export default function App() {
     changeNavigationBarColor("#000000", false, false);
-
-    useEffect(() => {
-        SplashScreen.hide();
-    }, []);
 
     return (
         <ReduxProvider store={store}>

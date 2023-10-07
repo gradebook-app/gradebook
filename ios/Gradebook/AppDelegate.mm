@@ -12,10 +12,10 @@
   
   [self.window makeKeyAndVisible];
     
-   UIStoryboard *sb = [UIStoryboard storyboardWithName:@"SplashScreen" bundle:nil];
-   UIViewController *vc = [sb instantiateInitialViewController];
+  UIStoryboard *sb = [UIStoryboard storyboardWithName:@"SplashScreen" bundle:nil];
+  UIViewController *vc = [sb instantiateInitialViewController];
    
-   ((RCTRootView *)self.window).loadingView = vc.view;
+  ((RCTRootView *)self.window).loadingView = vc.view;
   
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }

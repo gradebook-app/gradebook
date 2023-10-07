@@ -51,9 +51,7 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxisSuffi
 
     return  (
         <LineChart 
-            isAnimated
             dashWidth={5}
-            animationDuration={1000}
             initialSpacing={5}
             endSpacing={0}
             width={graphWidth}
