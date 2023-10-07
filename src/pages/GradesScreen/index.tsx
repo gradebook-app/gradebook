@@ -3,13 +3,13 @@ import {
     Dimensions, 
     SafeAreaView, 
     StyleSheet,
-    ScrollView,
     RefreshControl,
     Text,
     Platform,
     View,
     TouchableOpacity,
     ActivityIndicator,
+    FlatList,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useGrades } from "../../hooks/useGrades";
@@ -20,15 +20,12 @@ import CourseBox from "./components/CourseBox";
 import BottomSheet from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "../../hooks/useTheme";
-import GPASlideshow from "./components/GPASlideshow";
 import { useGPA } from "../../hooks/useGPA";
 import { usePastGPA } from "../../hooks/usePastGPA";
 import messaging from "@react-native-firebase/messaging";
-import BannerAd from "../../components/BannerAd";
 import { useDynamicColor } from "../../hooks/useDynamicColor";
 import NoCoursesSVG from "../../SVG/NoCoursesSVG";
 import FadeIn from "../../components/FadeIn";
-import SaveBanner from "../../components/SaveBanner";
 import { useAppearanceTheme } from "../../hooks/useAppearanceTheme";
 import BottomSheetBackdrop from "../../components/BottomSheetBackdrop";
 import MPSelector from "./components/MPSelector";
@@ -37,6 +34,7 @@ import { revalidateClient } from "../../utils/api";
 import { useAccounts } from "../../hooks/useAccounts";
 import AccountSelector from "./components/AccountSelector";
 import { useIsFocused } from "@react-navigation/native";
+import CourseHeader from "./components/CourseHeader";
 
 const { width, height } = Dimensions.get("window");
 
@@ -119,10 +117,6 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
     const { theme, palette }  = useTheme();
 
-    const handleGPAScreen = () => {
-        navigation.navigate("gpa");
-    };
-
     const [ showSelector, setShowSelector ] = useState(false);
     const [ mpPickerOpen, setMPPickerOpen ] = useState(false);
 
@@ -130,6 +124,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
     const [aspiredAccount, setAspiredAccount] = useState(user?.studentId);
     const [ changingToAspiredAccount, setChangingToAspiredAccount ] = useState(false);
+
 
     const handleSelectorBack = () => {
         setShowSelector(false);
@@ -165,9 +160,7 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
         accountsSheet.current?.snapToIndex(1);
     };
 
-    const handleDonateScreen = () => {
-        navigation.navigate("donate");
-    };
+  
 
     const { isDark } = useAppearanceTheme();
 
@@ -176,6 +169,36 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
 
     const isFocused = useIsFocused();
     
+    const renderCourse = ({ item:course } : { item: ICourse }) => {
+        return (
+            <CourseBox 
+                course={course} 
+                handleCourse={handleCourse}
+            />
+        );
+    };
+
+    const ListEmptyComponent = useCallback(() => {
+        return !loadingGrades ? (
+            <FadeIn 
+                show={true}
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: 15,
+                }}>
+                <>
+                    <NoCoursesSVG width={width * 0.65} />
+                    <Text
+                        style={{ color: theme.grey, marginVertical: 15 }}
+                    >
+                        No Courses Available.
+                    </Text>
+                </>
+            </FadeIn>
+        ) : <></>;
+    }, [loadingGrades, theme.grey]);
+
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             {
@@ -242,47 +265,23 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
                     </Picker>
                 )
             }
-            <ScrollView       
+            <FlatList 
                 contentContainerStyle={[styles.courses]}
+                ListHeaderComponent={
+                    <CourseHeader gpa={gpa} pastGPA={pastGPA} navigation={navigation} />
+                }
+                ListEmptyComponent={ListEmptyComponent}
+                ListHeaderComponentStyle={{ display: "flex", alignItems: "center" }}
                 refreshControl={
                     <RefreshControl
                         refreshing={isFocused && loading}
                         onRefresh={onRefresh}
                     />
-                }> 
-                <GPASlideshow handleGPAScreen={handleGPAScreen} pastGPA={pastGPA} gpa={gpa} />
-                <BannerAd style={{ marginTop: 15 }} />
-                <SaveBanner onPress={handleDonateScreen} />
-                { courses.map((course, index) => {
-                    return (
-                        <CourseBox 
-                            course={course} 
-                            key={index} 
-                            handleCourse={handleCourse}
-                        />
-                    );
-                })}
-                {
-                    !courses.length && !loadingGrades && (
-                        <FadeIn 
-                            show={true}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                padding: 15,
-                            }}>
-                            <>
-                                <NoCoursesSVG width={width * 0.65} />
-                                <Text
-                                    style={{ color: theme.grey, marginVertical: 15 }}
-                                >
-                                    No Courses Available.
-                                </Text>
-                            </>
-                        </FadeIn>
-                    )
                 }
-            </ScrollView>
+                data={courses}
+                keyExtractor={(_, index) => index.toString()}
+                renderItem={renderCourse}
+            />
             <BottomSheet
                 ref={selectionSheet}
                 index={0}

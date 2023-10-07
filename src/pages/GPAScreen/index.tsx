@@ -73,6 +73,7 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                     />
                 }
             >
+                <BannerAd style={{ marginTop: 15 }} />
                 <FadeIn show={true} style={styles.gpaContainer}>
                     <Box title={"Total GPA"} style={{ flexDirection: "column" }}>
                         <Box.Content 
@@ -138,7 +139,6 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                         Disclaimer: All GPA Calculations are estimated and may differ from your actual GPA. 
                     </Text>
                 </View>
-                <BannerAd style={{ marginBottom: 100 }} />
             </ScrollView>
         </SafeAreaView>
     );
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     },
     disclaimerContainer: {
         width: width,
-        height: 100,
+        height: 175,
         padding: 25,
     },
     disclaimer: {}
