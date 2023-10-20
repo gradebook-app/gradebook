@@ -139,7 +139,7 @@ const LoadingScreen : React.FC<LoadingScreenProps> = ({ navigation }) => {
             setIsBiometricsEnabled(false);
             navigation.navigate("login");
         }
-    }, [ isAccessToken, accessDenied, loginError, settings, userId ]);
+    }, [isAccessToken, accessDenied, settings, userId, navigation, dispatch]);
 
     const [ visible, setVisible ] = useState(false);
 

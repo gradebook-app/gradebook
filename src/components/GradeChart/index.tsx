@@ -14,6 +14,7 @@ type GradeChartProps = {
 }
 
 const Y_TICKS = 5; 
+const MAX_OVERFLOW = 25; 
 
 const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxisSuffix = "" }) => {
     const { palette }  = useTheme();
@@ -31,7 +32,7 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxisSuffi
         const sortedValues = [ ...data ].sort((a, b) => a - b);
         const min = sortedValues[0]; 
         const max = sortedValues[sortedValues.length - 1]; 
-        return [min - (max - min) * 0.025 , max];
+        return [min, max]; // min = min - (max - min) * 0.025
     }, [ data ]);
 
     const decimalPlaces = useMemo(() => {
@@ -43,6 +44,7 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxisSuffi
         }
 
         const increment = (maxValue - minValue) / Y_TICKS;
+        if (increment >= 1) return 0; 
         return ~Math.floor(Math.log10(increment)) + 1;
     }, [ minValue, maxValue, data ]);
 
@@ -73,7 +75,9 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxisSuffi
             yAxisLabelWidth={yAxisLabelWidth}
             noOfSections={Y_TICKS}
             yAxisColor={"transparent"}
-            xAxisColor={"transparent"}
+            xAxisColor={outlineColor}
+            xAxisType="dashed"
+            overflowBottom={MAX_OVERFLOW}
             yAxisTextStyle={{ color: "grey", fontSize: 12 }}
             rulesColor={outlineColor}
             thickness={3}
@@ -91,7 +95,7 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxisSuffi
 const styles = StyleSheet.create({
     graphContainer: {
         width: width * 0.9,
-        height: 315,
+        height: 325,
         zIndex: 1,
         display: "flex",
         justifyContent: "center",
@@ -99,7 +103,7 @@ const styles = StyleSheet.create({
     },
     graph: {
         width: width * 0.9,
-        height: 300,
+        height: 310,
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-around",

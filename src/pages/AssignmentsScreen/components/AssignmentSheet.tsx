@@ -1,7 +1,7 @@
 
 
 import React, { useMemo } from "react";
-import { StyleSheet, View, Text, Dimensions, } from "react-native";
+import { StyleSheet, View, Text, Dimensions, ScrollView, } from "react-native";
 import { useTheme } from "../../../hooks/useTheme";
 import { useAppearanceTheme } from "../../../hooks/useAppearanceTheme";
 import { useCategoryColor } from "../../../hooks/useCategoryColor";
@@ -72,7 +72,11 @@ const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
             <Text style={[styles.points, { color: theme.text }]}>{ points ?? "" }</Text>
             <View style={styles.commentContainer}>
                 <Text style={[ styles.commentHeader, { color: theme.grey }]}>Teacher Comment:</Text>
-                <View 
+                <ScrollView 
+                    contentContainerStyle={{
+                        paddingVertical: 15,
+                        paddingHorizontal: 10
+                    }}
                     style={[ styles.comment, { 
                         backgroundColor: isDark ? 
                             theme.secondary : "rgba(0, 0, 0, 0.05)"
@@ -81,7 +85,7 @@ const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
                     <Text style={[ styles.commentText, { color: theme.text }]}>
                         { assignment?.comment || "No Comment" }
                     </Text>
-                </View>
+                </ScrollView>
             </View>
         </View>
     );
@@ -103,8 +107,7 @@ const styles = StyleSheet.create({
     },
     comment: { 
         marginVertical: 10,
-        paddingVertical: 15,
-        paddingHorizontal: 10,
+        maxHeight: 55,
         borderRadius: 5,
         backgroundColor: "rgba(0, 0, 0, 0.05)",
         color: "rgba(0, 0, 0, 0.5)"

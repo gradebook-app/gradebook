@@ -1,12 +1,11 @@
 import "react-native-gesture-handler";
 import React, { Suspense, useCallback, useEffect } from "react";
-import { Dimensions, Platform, StyleSheet, UIManager } from "react-native";
+import { Dimensions, Platform, SafeAreaView, StyleSheet, UIManager } from "react-native";
 import LoadingScreen from "./src/pages/LoadingScreen";
 import { Provider as ReduxProvider, useDispatch } from "react-redux";
 import store, { persistor } from "./src/store";
 import AppNavigator from "./AppNavigator";
 import { PersistGate } from "redux-persist/integration/react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useDynamicColor } from "./src/hooks/useDynamicColor";
 import { StatusBar } from "expo-status-bar";
 import changeNavigationBarColor from "react-native-navigation-bar-color";

@@ -16,10 +16,10 @@ import jwt_decode from "jwt-decode";
 import { getUserId } from "../../store/selectors/user.selectors";
 import analytics from "@react-native-firebase/analytics";
 import { useIsFocused } from "@react-navigation/native";
+import { RootStackParamList } from "../../../AppNavigator";
+import { StackScreenProps } from "@react-navigation/stack";
 
-type AccountScreenProps = {
-    navigation: any,
-}
+type AccountScreenProps = StackScreenProps<RootStackParamList, "navigator">
 
 const { width, height } = Dimensions.get("window");
 

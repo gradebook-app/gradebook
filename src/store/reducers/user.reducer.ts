@@ -11,6 +11,7 @@ export interface IUserReducer {
     shownAlert2_0: boolean,
     shownSaveBanner: boolean,
     updatingCourseWeight: boolean; 
+    seenInterstitial: boolean; 
 }
 
 const persistConfig = {
@@ -25,13 +26,18 @@ const initialState = {
     notificationToken: null,
     shownAlert2_0: false,
     shownSaveBanner: false,
-    updatingCourseWeight: false
+    updatingCourseWeight: false,
+    seenInterstitial: false
 };
 
 const userReducer = (state:IUserReducer=initialState, action:IAction) => {
     switch(action.type) {
     case EUserActions.SET_SHOWN_ALERT_2_0: {
         return { ...state, shownAlert2_0: action.payload };
+    }
+
+    case EUserActions.SET_SEEN_INTERSTITIAL: {
+        return { ...state, seenInterstitial: action.payload };
     }
 
     case EUserActions.SET_UPDATING_COURSE_WEIGHT: {

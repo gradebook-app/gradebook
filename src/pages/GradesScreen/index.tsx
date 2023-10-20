@@ -35,6 +35,9 @@ import { useAccounts } from "../../hooks/useAccounts";
 import AccountSelector from "./components/AccountSelector";
 import { useIsFocused } from "@react-navigation/native";
 import CourseHeader from "./components/CourseHeader";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../../../AppNavigator";
+import InterstitialAd from "../../components/InterstitialAd";
 
 const { width, height } = Dimensions.get("window");
 
@@ -44,19 +47,12 @@ const sheetHeight = (() => {
     return dynamicHeight < minHeight ? minHeight : dynamicHeight; 
 })();
 
-type GradesScreenProps = {
-    navigation: any,
-}
+type GradesScreenProps = StackScreenProps<RootStackParamList, "navigator">
 
-interface INavigationParams {
-    params: { 
-        cachedMarkingPeriod?: string | null 
-    }
-}
-
-const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
-    const { params: { cachedMarkingPeriod = null  } = {} as INavigationParams["params"]} : INavigationParams = 
-        navigation?.getState()?.routes?.find((route:any) => (route.name == "loading"));
+const GradesScreen : React.FC<GradesScreenProps> = ({ navigation, route }) => {
+    const { params: { cachedMarkingPeriod = null } = {}} = 
+        navigation.getState().routes.find((route) => (route.name == "loading"));
+        
 
     const [selectedValue, setSelectedValue] = useState(cachedMarkingPeriod ?? "");
     const [ adjustedMarkingPeriod, setAdjustedMarkingPeriod ] = useState(cachedMarkingPeriod ?? "");
@@ -82,8 +78,10 @@ const GradesScreen : React.FC<GradesScreenProps> = ({ navigation }) => {
     const user = getUser(state);
 
     const handleCourse = (course:ICourse) => {
-        navigation.setParams({ course, markingPeriod: currentMarkingPeriod });
-        navigation.navigate("assignments");
+        navigation.navigate("assignments", {
+            course,
+            markingPeriod: currentMarkingPeriod
+        });
     };
 
     const setMarkingPeriod = useCallback(() => {

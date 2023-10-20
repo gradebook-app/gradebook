@@ -18,7 +18,9 @@ import { getShownAlert } from "../../store/selectors/user.selectors";
 import { useDynamicColor } from "../../hooks/useDynamicColor";
 import InAppReview from "react-native-in-app-review";
 import moment from "moment";
-import { Text, TouchableOpacity } from "react-native";
+import { Text } from "react-native";
+import { RootStackParamList } from "../../../AppNavigator";
+import { StackScreenProps } from "@react-navigation/stack";
 
 type TabIconProps = {
     focused: boolean,
@@ -42,12 +44,16 @@ const TabIcon : React.FC<TabIconProps> = ({ focused, iconSize, icon, ...props })
     );
 };
 
-type INavigatorScreenProps = {
-    navigation: any,
-}
+type INavigatorScreenProps = StackScreenProps<RootStackParamList, "navigator">
+
+export type BottomTabParamList = {
+    Grades: undefined;
+    Schedule: undefined;
+    Account: undefined;
+};
 
 const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...props }) => {
-    const Tabs = createBottomTabNavigator();
+    const Tabs = createBottomTabNavigator<BottomTabParamList>();
 
     const { theme, palette } = useTheme();
     const state = useSelector((state:IRootReducer) => state);
@@ -86,13 +92,12 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
     }, [ user?.notificationToken ]);
 
     useEffect(() => {
-        
         const subscription = messaging().onTokenRefresh(handleNotificationUpdate);
         return subscription;
     }, []);
 
     useEffect(() => {
-        navigation?.setOptions({ headerStyle: { 
+        navigation.setOptions({ headerStyle: { 
             backgroundColor: theme.background,
         }});
     }, []);
