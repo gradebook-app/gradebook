@@ -7,11 +7,17 @@ export enum EUserActions {
     SET_SHOWN_SAVE_BANNER = "SET_SHOWN_SAVE_BANNER",
     USER_PURGE_CACHE = "USER_PURGE_CACHE",
     SET_USER_COURSE_WEIGHT = "SET_USER_COURSE_WEIGHT",
-    SET_UPDATING_COURSE_WEIGHT = "SET_UPDATING_COURSE_WEIGHT"
+    SET_UPDATING_COURSE_WEIGHT = "SET_UPDATING_COURSE_WEIGHT",
+    SET_SEEN_INTERSTITIAL="SET_SEEN_INTERSTITIAL"
 }
 
 export interface ISetShownAlert {
     type: EUserActions.SET_SHOWN_ALERT_2_0,
+    payload: boolean,
+}
+
+export interface ISetSeenInterstitial{
+    type: EUserActions.SET_SEEN_INTERSTITIAL,
     payload: boolean,
 }
 

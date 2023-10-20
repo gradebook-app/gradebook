@@ -5,6 +5,12 @@ export const setShownAlert = (payload:boolean) => ({
     payload,
 });
 
+export const setSeenInterstitial = (payload:boolean) => ({
+    type: EUserActions.SET_SEEN_INTERSTITIAL,
+    payload,
+});
+
+
 export const setShownSaveBanner = (payload:boolean) => ({
     type: EUserActions.SET_SHOWN_SAVE_BANNER,
     payload,

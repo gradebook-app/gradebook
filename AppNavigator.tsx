@@ -1,14 +1,13 @@
 import "react-native-gesture-handler";
-import { NavigationContainer, DarkTheme } from "@react-navigation/native";
+import { NavigationContainer, DarkTheme, NavigatorScreenParams } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import NavigatorScreen from "./src/pages/NavigatorScreen";
-import AssignmentsScreen from "./src/pages/AssignmentsScreen";
+import NavigatorScreen, { BottomTabParamList } from "./src/pages/NavigatorScreen";
+import AssignmentsScreen, { IAssignmentNavigationParams } from "./src/pages/AssignmentsScreen";
 import LoadingScreen from "./src/pages/LoadingScreen";
 import LoginScreen from "./src/pages/LoginScreen";
 import React, { useEffect } from "react";
 import GPAScreen from "./src/pages/GPAScreen";
 import NotificationScreen from "./src/pages/NotificationScreen";
-// import SharedGroupPreferences from "react-native-shared-group-preferences";
 import ContactScreen from "./src/pages/ContactScreen";
 import messaging from "@react-native-firebase/messaging";
 import SecurityScreen from "./src/pages/SecurityScreen";
@@ -20,29 +19,25 @@ import { useTheme } from "./src/hooks/useTheme";
 import AdvancedOptionsScreen from "./src/pages/AdvancedOptionsScreen";
 import DonateScreen from "./src/pages/DonateScreen";
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+    "navigator": NavigatorScreenParams<BottomTabParamList>;
+    "loading": undefined,
+    "assignments": IAssignmentNavigationParams,
+    "login": undefined,
+    "options": undefined,
+    "contact": undefined,
+    "privacy-policy": undefined,
+    "donate": undefined,
+    "ads-settings": undefined,
+    "gpa": undefined,
+    "notifications": undefined,
+    "advanced-options": undefined,
+    "security": undefined
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => {
-    // const setAppGroupData = useCallback(async () => {
-    //     const credentialsRaw = await AsyncStorage.getItem("@credentials");
-    //     const { userId = null, pass = null } = credentialsRaw ? JSON.parse(credentialsRaw) : {};
-  
-    //     const appGroupIdentifier = "group.com.Gradebook.Gradebook";
-    //     try {
-    //         await SharedGroupPreferences.setItem(
-    //             "credentials",
-    //             { "userId": userId, "pass": pass },
-    //             appGroupIdentifier,
-    //         );
-    //     } catch (e) {
-    //         console.log("Error", e);
-    //     }
-    // }, []);
-
-    useEffect(() => {
-        // setAppGroupData();
-    });
-
     useEffect(()=>{
         const subscription = messaging().onMessage(message => {
             try {
@@ -50,7 +45,9 @@ const AppNavigator = () => {
                     title: message.notification?.title,
                     body: message.notification?.body,
                 });
-            } catch (_) {}
+            } catch (err) {
+                console.error(err);
+            }
         });
         return subscription; 
     },[]);

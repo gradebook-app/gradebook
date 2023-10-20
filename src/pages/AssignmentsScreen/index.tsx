@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, SafeAreaView, StyleSheet, View, Text, RefreshControl, TouchableOpacity } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, View, Text, RefreshControl, TouchableOpacity, Button } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useAssigments } from "../../hooks/useAssignments";
 import Assignment from "./components/Assignment";
@@ -28,34 +28,33 @@ import { getIsUpdatingCourseWeight } from "../../store/selectors/user.selectors"
 import { IRootReducer } from "../../store/reducers";
 import { useNetInfo } from "@react-native-community/netinfo";
 import BottomSheetBackdrop from "../../components/BottomSheetBackdrop";
+import { useIsFocused } from "@react-navigation/native";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../../../AppNavigator";
+import InterstitialAd from "../../components/InterstitialAd";
 
 const { width, height } = Dimensions.get("window");
 
-type AssignmentsScreenProps = {
-    navigation: any,
-}
+type AssignmentsScreenProps = StackScreenProps<RootStackParamList, "assignments">
 
-type INavigationParams = {
-    params: {
-        course: ICourse,
-        markingPeriod: string,
-    }
+export type IAssignmentNavigationParams = {
+    course: ICourse,
+    markingPeriod: string,
 }
 
 const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({ 
-    navigation
+    navigation, route
 }) => {
-    const { params: { course, markingPeriod } } : INavigationParams = navigation?.getState()?.routes?.find((route:any) => (
-        route.name == "navigator"
-    ));
-
+    const { course, markingPeriod } = route.params;
     const { theme } = useTheme();
 
     useEffect(() => {
-        navigation?.setOptions({ headerStyle: { 
-            backgroundColor: theme.background,
-        }});
-    }, []);
+        navigation.setOptions({ 
+            headerStyle: { 
+                backgroundColor: theme.background,
+            }
+        });
+    }, [navigation, theme.background]);
 
     const { courseId, sectionId } = course; 
 
@@ -120,7 +119,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
         setIsSettingWeight(false);
         weightSheet.current?.snapToIndex(0);
 
-    }, [ courseId, sectionId, setWeight ]);
+    }, [courseId, dispatch, sectionId, setWeight]);
 
     useEffect(() => {
         const unsubscribe = messaging().onMessage(_ => {
@@ -143,6 +142,8 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
     const { isDark } = useAppearanceTheme();
     const { isInternetReachable } = useNetInfo();
 
+    const isFocused = useIsFocused();
+    
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <LoadingBox loading={loading && !assignments.length} />
@@ -166,7 +167,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
             <ScrollView 
                 refreshControl={
                     <RefreshControl
-                        refreshing={loading}
+                        refreshing={isFocused && loading}
                         onRefresh={onRefresh}
                     />
                 }
@@ -319,6 +320,7 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
                     setWeight={handleSetWeight}
                 />
             </BottomSheet>
+            <InterstitialAd />
         </SafeAreaView>
     );
 };
