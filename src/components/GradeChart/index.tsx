@@ -77,6 +77,7 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxisSuffi
             yAxisColor={"transparent"}
             xAxisColor={outlineColor}
             xAxisType="dashed"
+            overflowTop={MAX_OVERFLOW}
             overflowBottom={MAX_OVERFLOW}
             yAxisTextStyle={{ color: "grey", fontSize: 12 }}
             rulesColor={outlineColor}
@@ -119,7 +120,8 @@ const styles = StyleSheet.create({
     graphWrapper: {
         display: "flex",
         flexDirection: "row",
-        marginTop: -5
+        marginTop: -5,
+        paddingTop: 5
     }
 });
 

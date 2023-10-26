@@ -14,6 +14,7 @@ import {endConnection, getProducts, initConnection} from "react-native-iap";
 import config from "./config";
 import { setDonateProducts } from "./src/store/actions";
 import * as SplashScreen from "expo-splash-screen";
+import { DarkTheme, NavigationContainer } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -80,17 +81,19 @@ export default function App() {
     }, []);
 
     return (
-        <ReduxProvider store={store}>
-            <PersistGate loading={<ReduxBlocker/>} persistor={persistor}>
-                <Suspense fallback={LoadingScreen}>
-                    { Platform.OS === "android" && (
-                        <StatusBar translucent={true} />
-                    )}
-                    <IAPConnection>
-                        <AppNavigator />
-                    </IAPConnection>
-                </Suspense>
-            </PersistGate>
-        </ReduxProvider>
+        <NavigationContainer theme={DarkTheme}>
+            <ReduxProvider store={store}>
+                <PersistGate loading={<ReduxBlocker/>} persistor={persistor}>
+                    <Suspense fallback={LoadingScreen}>
+                        { Platform.OS === "android" && (
+                            <StatusBar translucent={true} />
+                        )}
+                        <IAPConnection>
+                            <AppNavigator />
+                        </IAPConnection>
+                    </Suspense>
+                </PersistGate>
+            </ReduxProvider>
+        </NavigationContainer>
     );
 }
