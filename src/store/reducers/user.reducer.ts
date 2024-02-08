@@ -8,7 +8,7 @@ export interface IUserReducer {
     accessToken: string | null,
     user?: IUser,
     notificationToken: null | string,
-    shownAlert2_0: boolean,
+    shownAlert3_0: boolean,
     shownSaveBanner: boolean,
     updatingCourseWeight: boolean; 
     seenInterstitial: boolean; 
@@ -17,14 +17,14 @@ export interface IUserReducer {
 const persistConfig = {
     key: "user",
     storage: AsyncStorage,
-    whitelist: [ "user", "shownAlert2_0", "shownSaveBanner" ]
+    whitelist: [ "user", "shownAlert3_0", "shownSaveBanner" ]
 };
 
 
 const initialState = {
     accessToken: null,
     notificationToken: null,
-    shownAlert2_0: false,
+    shownAlert3_0: false,
     shownSaveBanner: false,
     updatingCourseWeight: false,
     seenInterstitial: false
@@ -32,8 +32,8 @@ const initialState = {
 
 const userReducer = (state:IUserReducer=initialState, action:IAction) => {
     switch(action.type) {
-    case EUserActions.SET_SHOWN_ALERT_2_0: {
-        return { ...state, shownAlert2_0: action.payload };
+    case EUserActions.SET_SHOWN_ALERT_3_0: {
+        return { ...state, shownAlert3_0: action.payload };
     }
 
     case EUserActions.SET_SEEN_INTERSTITIAL: {

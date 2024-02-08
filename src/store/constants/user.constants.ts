@@ -3,7 +3,7 @@ import { ECourseWeight } from "../enums/weights";
 export enum EUserActions {
     SET_USER = "SET_USER",
     SET_NOTIFICATION_TOKEN = "SET_NOTIFICATION_TOKEN",
-    SET_SHOWN_ALERT_2_0 = "SET_SHOWN_ALERT_2_0",
+    SET_SHOWN_ALERT_3_0 = "SET_SHOWN_ALERT_3_0",
     SET_SHOWN_SAVE_BANNER = "SET_SHOWN_SAVE_BANNER",
     USER_PURGE_CACHE = "USER_PURGE_CACHE",
     SET_USER_COURSE_WEIGHT = "SET_USER_COURSE_WEIGHT",
@@ -12,7 +12,7 @@ export enum EUserActions {
 }
 
 export interface ISetShownAlert {
-    type: EUserActions.SET_SHOWN_ALERT_2_0,
+    type: EUserActions.SET_SHOWN_ALERT_3_0,
     payload: boolean,
 }
 

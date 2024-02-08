@@ -22,8 +22,6 @@ const InterstitialAd : React.FC = () => {
     const seenInterstitial = getSeenInterstitial(state);
     const limitAds = getLimitAds(state);
 
-    console.log(seenInterstitial);
-
     const dispatch = useDispatch();
     
     useEffect(() => {
