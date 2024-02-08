@@ -2,7 +2,7 @@ export {};
 
 const config = {
     api: {
-        url: "http://192.168.1.34:5001",
+        url: "http://192.168.1.43:5001",
     }
 };
 

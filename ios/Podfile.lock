@@ -454,6 +454,8 @@ PODS:
   - React-jsinspector (0.72.5)
   - React-logger (0.72.5):
     - glog
+  - react-native-cookies (6.2.1):
+    - React-Core
   - react-native-in-app-review (4.3.3):
     - React-Core
   - react-native-netinfo (9.3.10):
@@ -678,6 +680,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - "react-native-cookies (from `../node_modules/@react-native-cookies/cookies`)"
   - react-native-in-app-review (from `../node_modules/react-native-in-app-review`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -805,6 +808,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-cookies:
+    :path: "../node_modules/@react-native-cookies/cookies"
   react-native-in-app-review:
     :path: "../node_modules/react-native-in-app-review"
   react-native-netinfo:
@@ -926,6 +931,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: ff70a72027dea5cc7d71cfcc6fad7f599f63987a
   React-jsinspector: aef73cbd43b70675f572214d10fa438c89bf11ba
   React-logger: 2e4aee3e11b3ec4fa6cfd8004610bbb3b8d6cca4
+  react-native-cookies: f54fcded06bb0cda05c11d86788020b43528a26c
   react-native-in-app-review: db8bb167a5f238e7ceca5c242d6b36ce8c4404a4
   react-native-netinfo: ccbe1085dffd16592791d550189772e13bf479e2
   react-native-safe-area-context: 238cd8b619e05cb904ccad97ef42e84d1b5ae6ec
