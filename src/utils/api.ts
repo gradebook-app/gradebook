@@ -6,6 +6,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setUser } from "../store/actions/user.actions";
 import { setSetAccessToken } from "../store/actions/auth.actions";
 import messaging from "@react-native-firebase/messaging";
+import { ILoginClient } from "../store/constants/auth.constants";
+import CookieManager from "@react-native-cookies/cookies";
+import { genesisConfig } from "../constants/genesis";
 
 function retrieveAccessToken() {
     const state = store.getState();
@@ -23,6 +26,25 @@ function constructURL(endpoint:string):string {
     return url; 
 }
 
+export const GENESIS_COOKIE = "JSESSIONID";
+
+export const attemptGenesisClientSideLogin = async (payload: ILoginClient["payload"]) : Promise<boolean> => {
+    const formBody = [
+        "j_username=" + encodeURIComponent(payload.userId),
+        "j_password=" + encodeURIComponent(payload.pass),
+    ];
+
+    const genesisURL = `${genesisConfig[payload.schoolDistrict].root}${genesisConfig[payload.schoolDistrict].auth}`;
+    return await fetch(genesisURL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        },
+        body: formBody.join("&"),
+    }).then(() => true).catch(() => false);
+};
+
 export const revalidateClient = async (specifiedStudentId?:string) => {
     const credentials = await AsyncStorage.getItem("@credentials");
     let token = null; 
@@ -33,16 +55,32 @@ export const revalidateClient = async (specifiedStudentId?:string) => {
         if (enabled) {
             token = await messaging().getToken();
         }
-    } catch(e) {}
+    } catch(e) {
+        // Do nothing
+    }
 
     if (credentials) {
-        const data = JSON.parse(credentials);
+        const data = JSON.parse(credentials) as ILoginClient["payload"];
+   
+        const genesisLoginSuccess = await attemptGenesisClientSideLogin(data)
+            .then(() => true)
+            .catch(() => false);
+        
+        let jSessionId = undefined; 
+        if (genesisLoginSuccess) {
+            const cookies = await CookieManager.getAll();
+            const cookie = cookies[GENESIS_COOKIE];
+            jSessionId = cookie.value;
+            CookieManager.clearByName(`${cookie.domain}${cookie.path}`, GENESIS_COOKIE);
+        }
+        console.log("Cook: ", jSessionId);
+
         const response:any = await post(LOGIN_CLIENT, { 
             ...data, 
-            notificationToken: 
-            token,  
-            studentId: specifiedStudentId
-        });
+            notificationToken: token,  
+            studentId: specifiedStudentId,
+            jSessionId
+        } as ILoginClient["payload"]);
 
         if (response && response?.access === true) {
             const user = response?.user;
