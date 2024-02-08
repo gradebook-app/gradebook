@@ -1,4 +1,4 @@
-import React, { ReactChild, useState } from "react";
+import React, { ReactChild, ReactElement, useState } from "react";
 import { Dimensions, StyleSheet, View, Text, Button } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useTheme } from "../../hooks/useTheme";
@@ -11,7 +11,7 @@ interface IAlertButton {
 }
 
 type AlertProps = {
-    title: string,
+    title: string | ReactElement,
     children: ReactChild,
     buttons?: IAlertButton[],
     visible: boolean,
@@ -70,9 +70,10 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 20,
         fontWeight: "700",
+        textAlign: "center"
     },
     alert: {
-        width: width * 0.75 > 300 ? 300 : width * 0.75,
+        width: width * 0.95 > 360 ? 360 : width * 0.75,
         minHeight: 150,
         borderRadius: 25,
         display: "flex",

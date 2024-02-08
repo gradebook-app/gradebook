@@ -15,7 +15,7 @@ const Blocker : React.FC<BlockerProps> = ({ block, onPress }) => {
     const setBackground = useCallback(() => {
         Animated.timing(
             backgroundRef, {
-                toValue: block ? 0.25 : 0,
+                toValue: block ? 0.75 : 0,
                 duration: 150,
                 useNativeDriver: true,
             }

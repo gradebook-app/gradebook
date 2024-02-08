@@ -73,7 +73,6 @@ export const revalidateClient = async (specifiedStudentId?:string) => {
             jSessionId = cookie.value;
             CookieManager.clearByName(`${cookie.domain}${cookie.path}`, GENESIS_COOKIE);
         }
-        console.log("Cook: ", jSessionId);
 
         const response:any = await post(LOGIN_CLIENT, { 
             ...data, 

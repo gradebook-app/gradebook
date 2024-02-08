@@ -21,6 +21,7 @@ import moment from "moment";
 import { Text } from "react-native";
 import { RootStackParamList } from "../../../AppNavigator";
 import { StackScreenProps } from "@react-navigation/stack";
+import GradientText from "../../components/GradientText";
 
 type TabIconProps = {
     focused: boolean,
@@ -128,7 +129,7 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
 
         if (showReview) {
             baseButtons.push({
-                title: "Rate", onPress: () => {
+                title: "Rate & Support", onPress: () => {
                     InAppReview.RequestInAppReview()
                         .then(() => {
                             handleDismissAlert();
@@ -199,18 +200,22 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
                 <Alert 
                     delay={showAlert ? 500 : 0}
                     visible={showAlert && !shownAlert}
-                    title="🥳 Genesus is Back"
+                    title={
+                        <Text>
+                            <Text style={{ color: palette.blue }}>No More</Text> &quot;Unable to Communicate with Server!&quot;
+                        </Text>
+                    }
                     buttons={alertButtons}
                 >
                     <>
                         <Text style={{ color: theme.grey, textAlign: "center" }}>
-                            Genesus&apos; queries are up-to-date with Genesis&apos; redesign now! If you are experiencing any errors still, please contact us by navigating to the&nbsp; 
+                            It&apos;s been a while, but Genesus is back up and running 🙌 (for the most part at least 😅). While the app is fully functional, notifications remain disabled 😢. If you are experiencing any errors still, or someone you know, please contact us by navigating to the&nbsp; 
                             <Text style={{ color: palette.blue }} onPress={() => navigation.navigate("contact")}>Contact</Text> screen.
                         </Text>
                         {
                             showReview && (
                                 <Text style={{ color: theme.grey, textAlign: "center", marginTop: 15 }}>
-                                    Additionally, if in the past { daysSinceAccountCreation } days Genesus has helped you in any way, or you have generally enjoyed your experience, please rate the app by clicking the blue rate button below (It&apos;ll only take 3 seconds).
+                                    Additionally, if in the past { daysSinceAccountCreation } days Genesus has helped you in any way, or you have generally enjoyed your experience, please rate the app by clicking the blue rate button below (It&apos;ll only take 2 seconds).
                                 </Text>
                             )
                         }
