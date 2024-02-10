@@ -10,14 +10,14 @@ import {
     Text,
 } from "react-native";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 type BrandButtonProps = {
     style?: StyleProp<ViewStyle>,
     children?: ReactChild,
 }
 
-const BrandButton : React.FC<BrandButtonProps & ButtonProps> = ({ style, title, onPress, children, ...props }) => {
+const BrandButton : React.FC<BrandButtonProps & ButtonProps> = ({ style, title, onPress, children }) => {
     const { palette } = useTheme();
 
     return (
@@ -28,9 +28,9 @@ const BrandButton : React.FC<BrandButtonProps & ButtonProps> = ({ style, title, 
                 display: "flex",
                 flexDirection: "row",
             }, style ]}>
-             <Text
+            <Text
                 style={{ color: "#fff", fontSize: 17.5, marginHorizontal: 5 }}
-             >{title}</Text>
+            >{title}</Text>
             { children }
         </TouchableOpacity>
     );

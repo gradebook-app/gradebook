@@ -25,7 +25,7 @@ const Assignment : React.FC<AssignmentProp> = ({ assignment, children, onPress }
 
     return (
         <TouchableOpacity onPress={handlePress}>
-            <View style={[ styles.container, { backgroundColor: theme.background } ]}>
+            <View style={[ styles.container, { backgroundColor: isDark ? theme.background : theme.secondary } ]}>
                 <View>
                     <View style={ styles.metaInfo }>
                         <Text 
@@ -36,7 +36,7 @@ const Assignment : React.FC<AssignmentProp> = ({ assignment, children, onPress }
                             <FontAwesomeIcon 
                                 style={styles.comment} 
                                 size={20} 
-                                color={ isDark ? theme.grey
+                                color={ isDark ? "rgba(255, 255, 255, 0.5)"
                                     : "rgba(0, 0, 0, 0.15)"} 
                                 icon={faCommentDots} /> 
                             : <></>}

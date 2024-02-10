@@ -42,7 +42,7 @@ const CourseBox : React.FC<CourseBoxProps> = ({ course, handleCourse }) => {
         <FadeIn style={styles.fadeContainer} show={show}>
             <TouchableOpacity onPress={handlePress}>
                 <View style={[ styles.container, { backgroundColor: theme.secondary } ]} >
-                    <View>
+                    <View style={{ flex: 1 }}>
                         <Text 
                             numberOfLines={1}
                             style={[ styles.name, { color: theme.text } ]}

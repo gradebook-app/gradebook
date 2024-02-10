@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import GradesScreen from "../GradesScreen";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBook, faCalendarAlt, faUser } from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +16,12 @@ import * as Haptics from "expo-haptics";
 import Alert from "../../components/Alert";
 import { getShownAlert } from "../../store/selectors/user.selectors";
 import { useDynamicColor } from "../../hooks/useDynamicColor";
+import InAppReview from "react-native-in-app-review";
+import moment from "moment";
+import { Text } from "react-native";
+import { RootStackParamList } from "../../../AppNavigator";
+import { StackScreenProps } from "@react-navigation/stack";
+import GradientText from "../../components/GradientText";
 
 type TabIconProps = {
     focused: boolean,
@@ -39,14 +45,18 @@ const TabIcon : React.FC<TabIconProps> = ({ focused, iconSize, icon, ...props })
     );
 };
 
-type INavigatorScreenProps = {
-    navigation: any,
-}
+type INavigatorScreenProps = StackScreenProps<RootStackParamList, "navigator">
+
+export type BottomTabParamList = {
+    Grades: undefined;
+    Schedule: undefined;
+    Account: undefined;
+};
 
 const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...props }) => {
-    const Tabs = createBottomTabNavigator();
+    const Tabs = createBottomTabNavigator<BottomTabParamList>();
 
-    const { theme } = useTheme();
+    const { theme, palette } = useTheme();
     const state = useSelector((state:IRootReducer) => state);
     const dispatch = useDispatch();
     const user = getUser(state);
@@ -58,7 +68,9 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
             const storedToken = user?.notificationToken; 
             if (!token || storedToken === token) return;
             dispatch(setNotificationToken(token));
-        } catch (error) {}
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const getToken = async () => {
@@ -81,13 +93,12 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
     }, [ user?.notificationToken ]);
 
     useEffect(() => {
-        
         const subscription = messaging().onTokenRefresh(handleNotificationUpdate);
         return subscription;
     }, []);
 
     useEffect(() => {
-        navigation?.setOptions({ headerStyle: { 
+        navigation.setOptions({ headerStyle: { 
             backgroundColor: theme.background,
         }});
     }, []);
@@ -106,73 +117,110 @@ const NavigatorScreen : React.FC<INavigatorScreenProps> = ({ navigation, ...prop
         dispatch(setShownAlert(true));
     };
 
-    const handleDonate = () => {
-       
-    };
+    const daysSinceAccountCreation = useMemo(() =>  moment().diff(moment(user?.createdAt), "days"), [ user ]);
+    const showReview = useMemo(() => daysSinceAccountCreation > 14 && InAppReview.isAvailable(), [ daysSinceAccountCreation, InAppReview]);
+
+    const alertButtons = useMemo(() => {
+        const baseButtons = [
+            { 
+                title: "Dismiss", onPress: handleDismissAlert
+            },
+        ];
+
+        if (showReview) {
+            baseButtons.push({
+                title: "Rate & Support", onPress: () => {
+                    InAppReview.RequestInAppReview()
+                        .then(() => {
+                            handleDismissAlert();
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            handleDismissAlert();
+                        });
+                }
+            });
+        }
+
+        return baseButtons;
+    }, [ handleDismissAlert, showReview ]);
 
     return (
         <>
-        <Tabs.Navigator 
-            initialRouteName="Grades"
-            screenListeners={{tabPress: () => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            }}}
-            screenOptions={({ route }) => ({
-                tabBarIcon: ({ focused }) => {
-                    switch(route.name) {
-                    case "Grades": {
-                        return <TabIcon icon={faBook} focused={focused} />;
-                    }
-                    case "Schedule": {
-                        return <TabIcon icon={faCalendarAlt} focused={focused} />;
-                    }
-                    case "Account": {
-                        return <TabIcon icon={faUser} focused={focused} />;
-                    }
-                    default: {
-                        return; 
-                    }
-                    }
-                },
-                tabBarStyle: {
-                    backgroundColor: theme?.secondary,
-                    borderTopColor: separatorBarColor,
-                },
-                headerStyle: {
-                    height: 0
-                },
-                headerShown: false,
-                tabBarLabel: "",
-                tabBarIconStyle: {
-                    marginTop: 15,
-                },
-            })}
-        >
-            <Tabs.Screen 
-                name="Grades" 
-                children={() => <GradesScreen navigation={navigation} { ...props } />}
-            />
-            <Tabs.Screen 
-                name="Schedule" 
-                children={() => <ScheduleScreen navigation={navigation} { ...props } />}
-            />
-            <Tabs.Screen 
-                name="Account" 
-                children={() => <AccountScreen navigation={navigation} { ...props } />}
-            />
-        </Tabs.Navigator>
+            <Tabs.Navigator 
+                initialRouteName="Grades"
+                screenListeners={{tabPress: () => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }}}
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused }) => {
+                        switch(route.name) {
+                        case "Grades": {
+                            return <TabIcon icon={faBook} focused={focused} />;
+                        }
+                        case "Schedule": {
+                            return <TabIcon icon={faCalendarAlt} focused={focused} />;
+                        }
+                        case "Account": {
+                            return <TabIcon icon={faUser} focused={focused} />;
+                        }
+                        default: {
+                            return; 
+                        }
+                        }
+                    },
+                    tabBarStyle: {
+                        backgroundColor: theme?.secondary,
+                        borderTopColor: separatorBarColor,
+                    },
+                    headerStyle: {
+                        height: 0
+                    },
+                    headerShown: false,
+                    tabBarLabel: "",
+                    tabBarIconStyle: {
+                        marginTop: 15,
+                    },
+                })}
+            >
+                <Tabs.Screen 
+                    name="Grades" 
+                    children={() => <GradesScreen navigation={navigation} { ...props } />}
+                ></Tabs.Screen>
+                <Tabs.Screen 
+                    name="Schedule" 
+                    children={() => <ScheduleScreen navigation={navigation} { ...props } />}
+                />
+                <Tabs.Screen 
+                    name="Account" 
+                    children={() => <AccountScreen navigation={navigation} { ...props } />}
+                />
+            </Tabs.Navigator>
             {
                 <Alert 
                     delay={showAlert ? 500 : 0}
                     visible={showAlert && !shownAlert}
-                    title="🚀 GPA Update"
-                    description="For a long time the GPA calculation has been inaccurate because Genesus was not able to accurately detect which classes were AP and Honors classes. Now, users are able to manually change the weighting of each class to improve their GPA accuracy. Find the option by clicking on a class and pressing the gradient button indicating the current weighting."
-                    buttons={[
-                        { 
-                            title: "Continue", onPress: handleDismissAlert
+                    title={
+                        <Text>
+                            <Text style={{ color: palette.blue }}>No More</Text> &quot;Unable to Communicate with Server!&quot;
+                        </Text>
+                    }
+                    buttons={alertButtons}
+                >
+                    <>
+                        <Text style={{ color: theme.grey, textAlign: "center" }}>
+                            It&apos;s been a while, but Genesus is back up and running 🙌 (for the most part at least 😅). While the app is fully functional, notifications remain disabled 😢. If you are experiencing any errors still, or someone you know, please contact us by navigating to the&nbsp; 
+                            <Text style={{ color: palette.blue }} onPress={() => navigation.navigate("contact")}>Contact</Text> screen.
+                        </Text>
+                        {
+                            showReview && (
+                                <Text style={{ color: theme.grey, textAlign: "center", marginTop: 15 }}>
+                                    Additionally, if in the past { daysSinceAccountCreation } days Genesus has helped you in any way, or you have generally enjoyed your experience, please rate the app by clicking the blue rate button below (It&apos;ll only take 2 seconds).
+                                </Text>
+                            )
                         }
-                    ]}
-                />
+                    </>
+                </Alert>
             }
         </>
     );

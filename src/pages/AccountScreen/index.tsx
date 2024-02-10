@@ -1,7 +1,7 @@
 import { faFlagUsa, faIdBadge, faKey, faPizzaSlice, faSchool, faUserCog, faPhone, faShieldAlt, faCoins } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useCallback, useEffect, useMemo } from "react";
-import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Platform, Linking } from "react-native";
+import React, { useMemo } from "react";
+import { Dimensions, SafeAreaView, StyleSheet, View, Text, ScrollView, RefreshControl, Platform } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import { useDispatch, useSelector } from "react-redux";
 import BrandButton from "../../components/BrandButton";
@@ -14,11 +14,12 @@ import { getAccessToken, getUser } from "../../store/selectors";
 import { genesisConfig } from "../../constants/genesis";
 import jwt_decode from "jwt-decode";
 import { getUserId } from "../../store/selectors/user.selectors";
-import analytics from '@react-native-firebase/analytics';
+import analytics from "@react-native-firebase/analytics";
+import { useIsFocused } from "@react-navigation/native";
+import { RootStackParamList } from "../../../AppNavigator";
+import { StackScreenProps } from "@react-navigation/stack";
 
-type AccountScreenProps = {
-    navigation: any,
-}
+type AccountScreenProps = StackScreenProps<RootStackParamList, "navigator">
 
 const { width, height } = Dimensions.get("window");
 
@@ -29,7 +30,6 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
 
     const state = useSelector((state:IRootReducer) => state);
     const accessToken = getAccessToken(state);
-    const isAccessToken = !!accessToken; 
     const user = getUser(state);
     const userId = getUserId(state);
 
@@ -46,15 +46,6 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
     const onRefresh = () => {
         reload();
     };
-
-    const handleAuth = useCallback(() => {
-        if (!isAccessToken) return; 
-        setTimeout(() => {
-            reload();
-        }, 0);
-    }, [ isAccessToken ]);
-
-    useEffect(handleAuth, [ handleAuth ]);
 
     const userProfilePhotoURL = useMemo(() => {
         const schoolExtension = user?.schoolDistrict;
@@ -91,6 +82,8 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
         navigation.navigate("donate");
     };
 
+    const isFocused = useIsFocused();
+
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <View style={ styles.account }>
@@ -98,7 +91,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                     refreshControl={
                         <RefreshControl
                             enabled={true}
-                            refreshing={loading}
+                            refreshing={isFocused && loading}
                             onRefresh={onRefresh}
                         />
                     }
@@ -106,7 +99,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                     contentContainerStyle={{
                         display: "flex",
                         alignItems: "center",
-                        height: height + 65,
+                        minHeight: height
                     }}>
                     <View style={styles.headerContainer}>
                         <Text style={[ styles.header, { color: theme.text }]}>Account</Text>
@@ -119,7 +112,7 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                                     "Cookie": avatarCookie,
                                 }}
                             />
-                            <View style={ styles.userDetailsContainer }>
+                            <View style={[ styles.userDetailsContainer, { flex: 1}]}>
                                 <Text style={[ styles.name, { color: theme.text }]}>{ account.name }</Text>
                                 <Text style={[styles.school, { color: theme.grey }]}>{ account.school }</Text>
                             </View>
@@ -164,33 +157,33 @@ const AccountScreen : React.FC<AccountScreenProps> = ({ navigation }) => {
                             )
                         }
                         <Box.Clickable onPress={handleOptions}>
-                                <Box.Content 
-                                    title="Options"
-                                    iconColor={"#DD4503"}
-                                    icon={faUserCog}
-                                >
-                                    <Box.Arrow onPress={handleOptions} />
-                                </Box.Content>
+                            <Box.Content 
+                                title="Options"
+                                iconColor={"#DD4503"}
+                                icon={faUserCog}
+                            >
+                                <Box.Arrow onPress={handleOptions} />
+                            </Box.Content>
                         </Box.Clickable>
                         <Box.Separator />
                         <Box.Clickable onPress={handleContactsSettings}>
-                        <Box.Content
-                            iconColor={"#34E600"}
-                            icon={faPhone}
-                            title="Contact">
-                            <Box.Arrow onPress={handleContactsSettings} />
-                        </Box.Content>
-                    </Box.Clickable>
-                    <Box.Separator />
-                    <Box.Clickable onPress={handlePrivacySettings}>
-                        <Box.Content 
-                            title="Privacy Policy"
-                            iconColor={"#E66C00"}
-                            icon={faShieldAlt}
-                        >
-                            <Box.Arrow onPress={handlePrivacySettings} />
-                        </Box.Content>
-                    </Box.Clickable>           
+                            <Box.Content
+                                iconColor={"#34E600"}
+                                icon={faPhone}
+                                title="Contact">
+                                <Box.Arrow onPress={handleContactsSettings} />
+                            </Box.Content>
+                        </Box.Clickable>
+                        <Box.Separator />
+                        <Box.Clickable onPress={handlePrivacySettings}>
+                            <Box.Content 
+                                title="Privacy Policy"
+                                iconColor={"#E66C00"}
+                                icon={faShieldAlt}
+                            >
+                                <Box.Arrow onPress={handlePrivacySettings} />
+                            </Box.Content>
+                        </Box.Clickable>           
                     </Box>
                     <BrandButton 
                         style={styles.logOut}
@@ -215,6 +208,7 @@ const styles = StyleSheet.create({
     logOut: {
     //   marginTop: 'auto',
         marginTop: 25,
+        marginBottom: 75
     },
     account: {
         display: "flex",
@@ -232,7 +226,6 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         width: width,
-        height: height,
     },
     userSection: {
         display: "flex",

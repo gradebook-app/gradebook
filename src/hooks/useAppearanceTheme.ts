@@ -13,7 +13,7 @@ export const useAppearanceTheme = () => {
         Appearance?.addChangeListener(listener);
         return () => {
             if (typeof listener === "function" && typeof Appearance.removeChangeListener === "function") {
-                Appearance?.removeChangeListener(listener)
+                Appearance?.removeChangeListener(listener);
             }
         };
     }, []);

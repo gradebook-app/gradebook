@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { queryAssignments } from "../constants/endpoints/assignments";
-import { IAssignment } from "../store/interfaces/assignment.interface";
 import * as api from "../utils/api";
 import { ISchedule } from "../store/interfaces/schedule.interface";
 import { getScheduleEndpoint } from "../constants/endpoints/user";
 import moment from "moment";
+import { useSelector } from "react-redux";
+import { IRootReducer } from "../store/reducers";
+import { getUser } from "../store/selectors";
 
 interface IUseSchedule {
     dateSelected: string,
@@ -16,16 +16,18 @@ export const useSchedule = ({ dateSelected }:IUseSchedule) => {
     const [ loading, setLoading ] = useState<boolean>(false);
     const [ fetching, setFetching ] = useState<boolean>(false);
 
+    const state = useSelector((state:IRootReducer) => state);
+    const user = getUser(state);
+
     const dateParameter = useMemo(() => moment(dateSelected).format("L"), [ dateSelected ]);
 
     const getSchedule = useCallback(async () => {
-        
         const response = await api.get(getScheduleEndpoint(dateParameter)).catch(() => null);
 
-        if (response && Object.keys(response).length) {
+        if (response && Object.keys(response).length && user?.studentId) {
             setSchedule(response);
         } else setSchedule({});
-    }, [ dateParameter ]);
+    }, [ dateParameter, user?.studentId ]);
 
     const reload = () => {
         setLoading(true);

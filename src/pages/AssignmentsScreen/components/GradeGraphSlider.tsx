@@ -32,19 +32,21 @@ const GradeSlide : React.FC<GradeSlideProps> = ({ category, value }) => {
     const categoryColor = useCategoryColor(category);
 
     return (
-        <View style={[ styles.slide, { backgroundColor: theme.background } ]}>
-            <View>
-                <Text style={[ styles.category, { color: categoryColor } ]}>{ formattedCategory } Progess</Text>
-                <GradeChart yAxis={(y) => `${y}%`} stroke={categoryColor} data={points} />
+        points.length > 0 ? (
+            <View style={[ styles.slide, { backgroundColor: theme.background } ]}>
+                <View>
+                    <Text style={[ styles.category, { color: categoryColor } ]}>{ formattedCategory } Progess</Text>
+                    <GradeChart yAxisSuffix={"%"} stroke={categoryColor} data={points} />
+                </View>
             </View>
-        </View>
+        ) : <></>
     );
 };
 
 const GradeGraphSlider : React.FC<GradeGraphSliderProps> = ({ assignments }) => {
     const grouped = useMemo(() => {
-        const sortingHandler = <Object, Key>(list:Object[], keyGetter:(e:Object) => Key) => {
-            const map = new Map<Key, Object[]>();
+        const sortingHandler = <T, Key>(list:T[], keyGetter:(e:T) => Key) => {
+            const map = new Map<Key, T[]>();
 
             list.forEach((item) => {
                 const key = keyGetter(item);
@@ -57,12 +59,12 @@ const GradeGraphSlider : React.FC<GradeGraphSliderProps> = ({ assignments }) => 
                 }
             });
 
-            let arrayMap: { key: Key, value:  Object[];}[] = [];
+            let arrayMap: { key: Key, value:  T[] }[] = [];
             map.forEach((value, key) => {
                 arrayMap.push({ key, value });
             });
 
-            arrayMap = arrayMap.filter(({ value, key }) => value.length > 1); 
+            arrayMap = arrayMap.filter(({ value }) => value.length > 1); 
             return arrayMap;
         };
     
@@ -72,8 +74,8 @@ const GradeGraphSlider : React.FC<GradeGraphSliderProps> = ({ assignments }) => 
     return (
         <>
             <Slider>
-                { grouped.map(({ key, value }, index) => {
-                    return <GradeSlide key={index} category={key} value={value} />;
+                { grouped.map(({ key, value }) => {
+                    return <GradeSlide key={key} category={key} value={value} />;
                 })}
             </Slider>
         </>

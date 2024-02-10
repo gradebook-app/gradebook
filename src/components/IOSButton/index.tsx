@@ -22,8 +22,8 @@ const IOSButton : React.FC<IOSButtonProps> = ({ children, onPress, style = {} })
                 <Text style={[ styles.text, { color: palette.blue }]}>{ children }</Text>
             </TouchableOpacityGesture>
         )
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 16.5,
     }
-})
+});
 
 export default IOSButton;

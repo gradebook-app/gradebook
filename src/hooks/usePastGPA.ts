@@ -1,7 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { GET_GPA, GET_PAST_GPA } from "../constants/endpoints/grades";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { GET_PAST_GPA } from "../constants/endpoints/grades";
 import * as api from "../utils/api";
+import { useSelector } from "react-redux";
+import { IRootReducer } from "../store/reducers";
+import { getUser } from "../store/selectors";
 
 export interface IGPAPast {
     gradeLevel: number,
@@ -12,46 +15,46 @@ export interface IGPAPast {
 
 export const usePastGPA = () => {
     const [ loading, setLoading ] = useState(false);
-    const [ pastGPA, setPastGPA ] = useState<IGPAPast[]>([]);
-    const controller = useRef(new AbortController()).current; 
+    const [ pastGPA, setPastGPA ] = useState<{
+        pastGPAs: IGPAPast[], value: boolean
+    }>({ pastGPAs: [], value: false });
 
-    const setCache = async () => {
-        const cache = await AsyncStorage.getItem("@gpaPast");
+    const state = useSelector((state:IRootReducer) => state);
+    const user = getUser(state);
+
+    const setCache = useCallback(async () => {
+        const cache = await AsyncStorage.getItem(`@gpaPast-${user?.studentId}`);
+       
         if (cache) {
             const cachedDataParsed = JSON.parse(cache);
             if (
-                cachedDataParsed?.pastGradePointAverages?.length && !pastGPA.length
-            ) setPastGPA(cachedDataParsed.pastGradePointAverages);
+                cachedDataParsed?.pastGradePointAverages?.length && !pastGPA.pastGPAs?.length
+            ) setPastGPA({pastGPAs: cachedDataParsed.pastGradePointAverages, value: true});
         }
-    };
+    }, [pastGPA.pastGPAs?.length, user?.studentId]);
 
     const getPastGPA = useCallback(async () => {
-        if (!pastGPA.length) setCache();
+        setCache();
 
-        if (!pastGPA.length) setLoading(true);
-
-        const response = await api.get(GET_PAST_GPA, controller).catch(_ => null);
+        const response = await api.get(GET_PAST_GPA).catch(_ => null);
         if (response && response?.pastGradePointAverages) {
-            setPastGPA(response.pastGradePointAverages);
-            AsyncStorage.setItem("@gpaPast", JSON.stringify(response));
+            setLoading(false);
+            setPastGPA({ pastGPAs: response.pastGradePointAverages, value: true });
+            AsyncStorage.setItem(`@gpaPast-${user?.studentId}`, JSON.stringify(response));
         }
-    }, []);
+    }, [setCache, user?.studentId]);
 
     const reload = () => {
-        getPastGPA().finally(() => setLoading(false));
+        setLoading(true);
+        getPastGPA();
     };
 
     useEffect(() => {
-        let mounted = true; 
-        getPastGPA().finally(() => {
-            if (mounted) setLoading(false);
-        });
+        if (pastGPA.pastGPAs?.length || pastGPA.value) return; 
+        setLoading(true);
+        getPastGPA();
+    }, [getPastGPA, pastGPA.pastGPAs?.length, pastGPA.value]);
 
-        return () => {
-            controller.abort();
-            mounted = false; 
-        };
-    }, [ getPastGPA ]);
 
-    return { reload, loading, pastGPA };
+    return { reload, loading, pastGPA: pastGPA.pastGPAs || [] };
 };

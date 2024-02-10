@@ -1,9 +1,15 @@
 import { EUserActions, ISetNotificationToken, ISetUpdatingCourseWeight, ISetUser, ISetUserCourseWeight, IUserPurgeCache } from "../constants/user.constants";
 
 export const setShownAlert = (payload:boolean) => ({
-    type: EUserActions.SET_SHOWN_ALERT_1_5,
+    type: EUserActions.SET_SHOWN_ALERT_3_0,
     payload,
 });
+
+export const setSeenInterstitial = (payload:boolean) => ({
+    type: EUserActions.SET_SEEN_INTERSTITIAL,
+    payload,
+});
+
 
 export const setShownSaveBanner = (payload:boolean) => ({
     type: EUserActions.SET_SHOWN_SAVE_BANNER,
@@ -23,14 +29,14 @@ export const setNotificationToken = (payload:string | null) : ISetNotificationTo
 export const setUserPurgeCache = (payload:any) : IUserPurgeCache  => ({
     type: EUserActions.USER_PURGE_CACHE,
     payload
-})
+});
 
-export const setUserCourseWeight = (payload:ISetUserCourseWeight['payload']) : ISetUserCourseWeight  => ({
+export const setUserCourseWeight = (payload:ISetUserCourseWeight["payload"]) : ISetUserCourseWeight  => ({
     type: EUserActions.SET_USER_COURSE_WEIGHT,
     payload
 });
 
-export const setUpdatingCourseWeight = (payload: ISetUpdatingCourseWeight['payload']) : ISetUpdatingCourseWeight => ({
+export const setUpdatingCourseWeight = (payload: ISetUpdatingCourseWeight["payload"]) : ISetUpdatingCourseWeight => ({
     type: EUserActions.SET_UPDATING_COURSE_WEIGHT,
     payload
-})
+});

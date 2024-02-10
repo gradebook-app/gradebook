@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo } from "react";
 import { SafeAreaView, View, StyleSheet, Dimensions, Text, RefreshControl } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
-import LoadingBox from "../../components/LoadingBox";
 import { useGPA } from "../../hooks/useGPA";
 import { usePastGPA } from "../../hooks/usePastGPA";
 import Box from "../../components/Box";
 import { ScrollView } from "react-native-gesture-handler";
 import BannerAd from "../../components/BannerAd";
 import FadeIn from "../../components/FadeIn";
+import { useIsFocused } from "@react-navigation/native";
 
 type GPAScreenProps = {
     navigation: any,
@@ -16,7 +16,7 @@ type GPAScreenProps = {
 const { width, height } = Dimensions.get("window");
 
 const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
-    const { theme, palette } = useTheme();
+    const { theme } = useTheme();
 
     const { loading:loadingGPA, gpa, reload } = useGPA();
     const { loading:loadingPastGPA, pastGPA } = usePastGPA();
@@ -35,29 +35,27 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
     const pastGPAUnweighted = useMemo(() => {
         let total = 0; 
         pastGPA.forEach((eachGPA) => { total += eachGPA.unweightedGPA; });
-        const totalGPAs = pastGPA.length;
-        if (!totalGPAs) return 0; 
-        return roundGrade(total / totalGPAs);
+        return total; 
     }, [ pastGPA ]);
 
     const pastGPAWeighted = useMemo(() => {
         let total = 0;
         pastGPA.forEach((eachGPA) => { total += eachGPA.weightedGPA; });
-        const totalGPAs = pastGPA.length;
-        if (!totalGPAs) return 0; 
-        return roundGrade(total / totalGPAs);
+        return total; 
     }, [ pastGPA ]);
 
 
     const highschoolGPAUnweighted = useMemo(() => {
         const total = pastGPAUnweighted + (gpa.unweightedGPA || 0);
-        return (total / (gpa.unweightedGPA && pastGPAUnweighted ? 2 : 1));
+        return (total / (pastGPA.length + 1));
     }, [ pastGPAUnweighted, gpa ]);
 
     const highschoolGPAWeighted = useMemo(() => {
         const total = pastGPAWeighted + (gpa.weightedGPA || 0);
-        return (total / (gpa.weightedGPA && pastGPAWeighted ? 2 : 1));
+        return (total / (pastGPA.length + 1));
     }, [ pastGPAWeighted, gpa ]);
+
+    const isFocused = useIsFocused();
 
     const onRefresh = () => {
         reload();
@@ -69,11 +67,47 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                 contentContainerStyle={{ display: "flex", minHeight: height - 100 }}
                 refreshControl={
                     <RefreshControl
-                        refreshing={loadingGPA || loadingPastGPA}
+                        enabled
+                        refreshing={isFocused && (loadingGPA || loadingPastGPA)}
                         onRefresh={onRefresh}
                     />
                 }
             >
+                <BannerAd style={{ marginTop: 15 }} />
+                <FadeIn show={true} style={styles.gpaContainer}>
+                    <Box title={"Total GPA"} style={{ flexDirection: "column" }}>
+                        <Box.Content 
+                            showIcon={false}
+                            title="Unweighted GPA"
+                        >
+                            <Box.Value value={roundGrade(highschoolGPAUnweighted) || "N/A"} />
+                        </Box.Content>
+                        <Box.Separator />
+                        <Box.Content 
+                            showIcon={false}
+                            title="Weighted GPA"
+                        >
+                            <Box.Value value={roundGrade(highschoolGPAWeighted) || "N/A"} />
+                        </Box.Content>
+                    </Box>
+                </FadeIn>
+                <FadeIn show={true} style={styles.gpaContainer}>
+                    <Box title={"Current School Year"} style={{ flexDirection: "column" }}>
+                        <Box.Content 
+                            showIcon={false}
+                            title="Unweighted GPA"
+                        >
+                            <Box.Value value={roundGrade(gpa?.unweightedGPA) || "N/A"} />
+                        </Box.Content>
+                        <Box.Separator />
+                        <Box.Content 
+                            showIcon={false}
+                            title="Weighted GPA"
+                        >
+                            <Box.Value value={roundGrade(gpa?.weightedGPA) || "N/A"} />
+                        </Box.Content>
+                    </Box>
+                </FadeIn>
                 {
                     pastGPA.map((eachPastGPA, index) => {
                         return (
@@ -100,46 +134,11 @@ const GPAScreen : React.FC<GPAScreenProps> = ({ navigation }) => {
                         );
                     })
                 }
-                <FadeIn show={true} style={styles.gpaContainer}>
-                    <Box title={"Current School Year"} style={{ flexDirection: "column" }}>
-                        <Box.Content 
-                            showIcon={false}
-                            title="Unweighted GPA"
-                        >
-                            <Box.Value value={roundGrade(gpa?.unweightedGPA) || "N/A"} />
-                        </Box.Content>
-                        <Box.Separator />
-                        <Box.Content 
-                            showIcon={false}
-                            title="Weighted GPA"
-                        >
-                            <Box.Value value={roundGrade(gpa?.weightedGPA) || "N/A"} />
-                        </Box.Content>
-                    </Box>
-                </FadeIn>
-                <FadeIn show={true} style={styles.gpaContainer}>
-                    <Box title={"Total GPA"} style={{ flexDirection: "column" }}>
-                        <Box.Content 
-                            showIcon={false}
-                            title="Unweighted GPA"
-                        >
-                            <Box.Value value={roundGrade(highschoolGPAUnweighted) || "N/A"} />
-                        </Box.Content>
-                        <Box.Separator />
-                        <Box.Content 
-                            showIcon={false}
-                            title="Weighted GPA"
-                        >
-                            <Box.Value value={roundGrade(highschoolGPAWeighted) || "N/A"} />
-                        </Box.Content>
-                    </Box>
-                </FadeIn>
                 <View style={styles.disclaimerContainer}>
                     <Text style={[ styles.disclaimer, { color: theme.grey }]}>
                         Disclaimer: All GPA Calculations are estimated and may differ from your actual GPA. 
                     </Text>
                 </View>
-                <BannerAd style={{ marginBottom: 100 }} />
             </ScrollView>
         </SafeAreaView>
     );
@@ -161,6 +160,7 @@ const styles = StyleSheet.create({
     },
     disclaimerContainer: {
         width: width,
+        height: 175,
         padding: 25,
     },
     disclaimer: {}

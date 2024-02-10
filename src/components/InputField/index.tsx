@@ -16,11 +16,11 @@ const InputField : React.FC<InputFieldProps & TextInputProps> =
 
         return (
             <View style={[ 
-                    styles.container, 
-                    { 
-                        backgroundColor: theme.secondary,
-                    }, style 
-                ]}>
+                styles.container, 
+                { 
+                    backgroundColor: theme.secondary,
+                }, style 
+            ]}>
                 <TextInput 
                     onBlur={() => Keyboard.dismiss}
                     placeholderTextColor={Platform.OS === "ios" ? undefined : theme.grey }

@@ -2,10 +2,22 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "29.0.3"
-        minSdkVersion = 21
+        buildToolsVersion = "33.0.0"
+        minSdkVersion = 24
         compileSdkVersion = 31
         targetSdkVersion = 31
+        supportLibVersion = "28.0.0"
+        kotlinVersion = "1.5.20"
+        androidXAnnotation = "1.1.0"
+        androidXBrowser = "1.0.0"
+
+        if (System.properties['os.arch'] == "aarch64") {
+            // For M1 Users we need to use the NDK 24 which added support for aarch64
+            ndkVersion = "24.0.8215888"
+        } else {
+            // Otherwise we default to the side-by-side NDK version from AGP.
+            ndkVersion = "21.4.7075529"
+        }
     }
     repositories {
         google()
@@ -13,12 +25,20 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.1.0")
-        classpath('com.google.gms:google-services:4.3.10')
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath('com.android.tools.build:gradle:7.5.1')
+        classpath 'com.google.gms:google-services:4.3.14'
+        classpath("com.facebook.react:react-native-gradle-plugin")
+        classpath("de.undercouch:gradle-download-task:5.0.1")
     }
 }
+
+// plugins {
+//     id("com.android.library")
+//     id("com.facebook.react")
+//     id("maven-publish")
+//     id("de.undercouch.download")
+// }
+
 
 configurations.all {
     resolutionStrategy {
@@ -32,11 +52,11 @@ allprojects {
         mavenLocal()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url(new File(["node", "--print", "require.resolve('react-native/package.json')"].execute().text.trim(), "../android"))
+            url(new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), "../android"))
         }
         maven {
             // Android JSC is installed from npm
-            url(new File(["node", "--print", "require.resolve('jsc-android/package.json')"].execute().text.trim(), "../dist"))
+            url(new File(["node", "--print", "require.resolve('jsc-android/package.json')"].execute(null, rootDir).text.trim(), "../dist"))
         }
         // maven {
         //     // Local Maven repo containing AARs with JSC library built for Android
@@ -45,8 +65,13 @@ allprojects {
         maven {
             url "$rootDir/../node_modules/@notifee/react-native/android/libs"
         }
-        mavenCentral()
-        jcenter()
+        mavenCentral {
+            // We don't want to fetch react-native from Maven Central as there are
+            // older versions over there.
+            content {
+                excludeGroup "com.facebook.react"
+            }
+        }
         maven { url 'https://www.jitpack.io' }
     }
 }

@@ -16,25 +16,31 @@ import InputField from "../../components/InputField";
 import { setLoginClient } from "../../store/actions/auth.actions";
 import { IRootReducer } from "../../store/reducers";
 import { getAccessToken, isAccessDenied, isLoading } from "../../store/selectors";
-import BottomSheet from "reanimated-bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 import PasswordField from "../../components/PasswordField";
-
 import EducationSVG from "../../SVG/EducationSVG";
 import { Picker } from "@react-native-picker/picker";
 import { schoolDistrictsMapped } from "../../utils/mapping";
 import { ESchoolDistricts } from "../../store/enums/school-districts.enum";
-import Blocker from "../../components/Blocker";
 import messaging from "@react-native-firebase/messaging";
 import { ScrollView, TouchableOpacity as TouchableOpacityGesture } from "react-native-gesture-handler";
 import IOSButton from "../../components/IOSButton";
 import { useDynamicColor } from "../../hooks/useDynamicColor";
 import analytics from "@react-native-firebase/analytics";
 import { getUserId } from "../../store/selectors/user.selectors";
+import { useAppearanceTheme } from "../../hooks/useAppearanceTheme";
+import BottomSheetBackdrop from "../../components/BottomSheetBackdrop";
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get("screen");
 
-const sheetHeight = (() => {
+const termsSheetHeight = (() => {
     const minHeight = 500; 
+    const dynamicHeight = height * 0.45; 
+    return dynamicHeight < minHeight ? minHeight : dynamicHeight; 
+})();
+
+const schoolSheetHeight = (() => {
+    const minHeight = 350; 
     const dynamicHeight = height * 0.45; 
     return dynamicHeight < minHeight ? minHeight : dynamicHeight; 
 })();
@@ -106,7 +112,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                 try {
                     await messaging().requestPermission();
                     notificationToken = await messaging().getToken();
-                } catch {}
+                } catch { /* empty */ }
             }
         } catch(e) {
             console.log(e);
@@ -131,125 +137,43 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         handleNavigate();
     }, [ handleNavigate ]);
 
-    const handleValueChange = (type:keyof IFormValues) => (text:any) => { 
+    const handleValueChange = (type:keyof IFormValues) => (text:string | boolean) => { 
         setValues({ ...values, errorMessage: "", [ type ]: text });
     };
 
-    const [ sheetOpen, setSheetOpen ] = useState(false);
     const [ termsSheetOpen, setTermsSheetOpen ] = useState(false);
+    const [ schoolDistrictSheetOpen, setSchoolDistrictSheetOpen ]= useState(false);
 
-    const schoolDistrictSheet = useRef<any | null>(null);
-    const termsSheet = useRef<any | null>(null);
+    const schoolDistrictSheet = useRef<BottomSheet | null>(null);
+    const termsSheet = useRef<BottomSheet | null>(null);
 
     const handleSchoolDistrictOpen = () => {
-        setSheetOpen(true);
-        schoolDistrictSheet.current.snapTo(0);
+        setSchoolDistrictSheetOpen(true);
+        schoolDistrictSheet.current?.snapToIndex(1);
     };
 
     const handleSchoolDistrictClose = () => {
-        setSheetOpen(false);
-        schoolDistrictSheet.current.snapTo(1);
+        schoolDistrictSheet.current?.snapToIndex(0);
+        setSchoolDistrictSheetOpen(false);
     };
 
     const handleTermsOpen = () => {
         setTermsSheetOpen(true);
-        termsSheet.current.snapTo(0);
-    };  
-
+        termsSheet.current?.snapToIndex(1);
+    };
     const handleTermsClose = () => {
         setTermsSheetOpen(false);
-        termsSheet.current.snapTo(1);
-    };
-
-    const renderSchoolDistrictSheet = () => {
-        return (
-            <View style={[styles.schoolDistrictSheet, { backgroundColor: theme.background }]}>
-                <View style={{ 
-                    flexDirection: "row", 
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    display: "flex",
-                }}>
-                    <Text style={[ styles.sheetHeader, { color: theme.text }]}>Select School District</Text>
-                    <Button title="Done" onPress={handleSchoolDistrictClose} />
-                </View>
-                <Picker 
-                    onValueChange={(itemValue) => handleValueChange("schoolDistrict")(itemValue)}
-                    selectedValue={values.schoolDistrict}
-                >
-                    <Picker.Item 
-                        color={theme.text}
-                        label={"Choose School District"} 
-                        value={undefined} 
-                    />
-                    { Object.keys(schoolDistrictsMapped).map((schoolDistrict, index) => {
-                        return (
-                            <Picker.Item 
-                                key={index}
-                                color={theme.text}
-                                label={schoolDistrictsMapped[schoolDistrict as ESchoolDistricts]} 
-                                value={schoolDistrict} 
-                            />
-                        );
-                    })}
-                </Picker>
-            </View>
-        );
-    };
-
-    const renderTermsSheet = () => {
-        return (
-            <View style={[ styles.termsSheet, { backgroundColor: theme.background }]}>
-                <View style={{ 
-                    flexDirection: "row", 
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    display: "flex",
-                }}>
-                    <Text style={[ styles.sheetHeader, { color: theme.text }]}>Terms & Conditions</Text>
-                    <IOSButton onPress={handleTermsClose}>
-                        Accept
-                    </IOSButton>
-                    {/* <Button title="Accept" onPress={handleTermsClose} /> */}
-                </View>
-                <ScrollView contentContainerStyle={{ paddingBottom: 150 }} style={styles.termsList}>
-                    <Text style={[ styles.termItem, { color: theme.grey }]}>
-                        1. All data, including the client's password, is securely stored on Genesus's servers 
-                        for providing clients with access to their grades. Passwords and other client data
-                        are not shared or sold, Genesus respects everyone's privacy. Passwords are used to login to 
-                        Genesis Parent Portal and periodically query client's current grades, assignments, and past grades. 
-                        Additionally, passwords are used to query account details, grades, assignments, and past grades live every
-                        time a client uses Genesus.
-                    </Text>
-                    <Text style={[ styles.termItem, { color: theme.grey }]}>
-                        2. By entering your credentials and clicking the "View Grades" button clients are giving Genesus
-                        the authority to query data from Genesis Parent Portal on behalf of the client. 
-                    </Text>
-                    <Text style={[ styles.termItem, { color: theme.grey }]}>
-                        3. Client passwords and other data are securely encrypted on Genesus's database to maximize security.
-                        Furthermore, client passwords are encrypted with AES in CBC mode with a 128-bit key for encryption; using PKCS7 padding. 
-                    </Text>
-                    <Text style={[ styles.termItem, { color: theme.grey }]}>
-                        4. Genesus is not to be held responsible for any malicious activity regarding a client's Genesis Parent Portal account. 
-                        Upon signing up, it is the client's own risk of providing their credentials to Genesus.
-                    </Text>
-                </ScrollView>
-            </View>
-        );
-    };  
-
-    const handleSheetClose = () => {
-        handleSchoolDistrictClose();
-        handleTermsClose();
+        termsSheet.current?.snapToIndex(0);
     };
 
     const pickerColor = useDynamicColor({ dark: theme.grey, light: theme.text }); 
     const [ districtPickerOpen, setDistrictPickerOpen ] = useState(false);
 
+    const { isDark } = useAppearanceTheme();
+
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <LoadingBox loading={loading}/>
-            <Blocker onPress={handleSheetClose} block={sheetOpen || termsSheetOpen}/>
             <KeyboardAvoidingView behavior={"padding"}>
                 <View style={ styles.imageContainer }>
                     {/* <Image style={styles.image} source={EducationPNG} /> */}
@@ -276,7 +200,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                                     dropdownIconColor={useDynamicColor({ dark: theme.grey, light: "grey" })}
                                     mode="dropdown"
                                     prompt="School District"
-                                    onFocus={() => { setDistrictPickerOpen(true) }}
+                                    onFocus={() => { setDistrictPickerOpen(true); }}
                                     onBlur={() => { setDistrictPickerOpen(false); }}
                                     itemStyle={{
                                         borderRadius: 5,
@@ -294,22 +218,22 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                                     />  
                                     { Object.keys(schoolDistrictsMapped).map((schoolDistrict, index) => {
                                         return (
-                                                <Picker.Item 
-                                                    key={index}
-                                                    color={districtPickerOpen ? "rgba(0, 0, 0, 1)" : pickerColor as string }
-                                                    label={schoolDistrictsMapped[schoolDistrict as ESchoolDistricts]} 
-                                                    value={schoolDistrict} 
-                                                />
-                                            );
-                                        })}
-                                    </Picker>
+                                            <Picker.Item 
+                                                key={index}
+                                                color={districtPickerOpen ? "rgba(0, 0, 0, 1)" : pickerColor as string }
+                                                label={schoolDistrictsMapped[schoolDistrict as ESchoolDistricts]} 
+                                                value={schoolDistrict} 
+                                            />
+                                        );
+                                    })}
+                                </Picker>
                             </View>
                         )
                     }
                     <InputField 
                         value={values.userId}
                         returnKeyType={"done"}
-                        autoCompleteType={"off"}
+                        autoComplete={"off"}
                         onChangeText={handleValueChange("userId")}
                         placeholder="Email"
                         onSubmitEditing={handleLogin}
@@ -344,20 +268,127 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
             </KeyboardAvoidingView>
             <BottomSheet
                 ref={termsSheet}
-                initialSnap={1}
-                snapPoints={[sheetHeight, 0]}
-                borderRadius={25}
-                onCloseEnd={handleTermsClose}
-                renderContent={renderTermsSheet}
-            />
+                index={0}
+                enablePanDownToClose={true}
+                enableHandlePanningGesture={true}
+                backdropComponent={({ ...props }) => (
+                    <BottomSheetBackdrop 
+                        open={termsSheetOpen}
+                        onClose={handleTermsClose}
+                        { ...props} 
+                    />
+                )}
+                containerStyle={{
+                    zIndex: 1,
+                }}
+                backgroundStyle={{ 
+                    borderRadius: 25,
+                    borderColor: theme.secondary,
+                    borderWidth: 1,
+                    backgroundColor: theme.background 
+                }}
+                handleIndicatorStyle={{
+                    backgroundColor: isDark ? theme.text : theme.grey
+                }}
+                snapPoints={[1, termsSheetHeight]}
+            >
+                <View style={[ styles.termsSheet, { 
+                    zIndex: 1,
+                    backgroundColor: theme.background,
+                    borderColor: theme.secondary,
+                    borderLeftWidth: 1,
+                    borderRightWidth: 1,
+                }]}>
+                    <View style={{ 
+                        flexDirection: "row", 
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        display: "flex",
+                    }}>
+                        <Text style={[ styles.sheetHeader, { color: theme.text }]}>Terms & Conditions</Text>
+                        <IOSButton onPress={handleTermsClose}>
+                            Accept
+                        </IOSButton>
+                    </View>
+                    <ScrollView contentContainerStyle={{ paddingBottom: 150 }} style={styles.termsList}>
+                        <Text style={[ styles.termItem, { color: theme.grey }]}>
+                            1. All data, including the client&apos;s password, is securely stored on Genesus&apos;s servers 
+                            for providing clients with access to their grades. Passwords and other client data
+                            are not shared or sold, Genesus respects everyone&apos;s privacy. Passwords are used to login to 
+                            Genesis Parent Portal and periodically query client&apos;s current grades, assignments, and past grades. 
+                            Additionally, passwords are used to query account details, grades, assignments, and past grades live every
+                            time a client uses Genesus.
+                        </Text>
+                        <Text style={[ styles.termItem, { color: theme.grey }]}>
+                            2. By entering your credentials and clicking the &quot;View Grades&quot; button clients are giving Genesus
+                            the authority to query data from Genesis Parent Portal on behalf of the client. 
+                        </Text>
+                        <Text style={[ styles.termItem, { color: theme.grey }]}>
+                            3. Client passwords and other data are securely encrypted on Genesus&apos;s database to maximize security.
+                            Furthermore, client passwords are encrypted with AES in CBC mode with a 128-bit key for encryption; using PKCS7 padding. 
+                        </Text>
+                        <Text style={[ styles.termItem, { color: theme.grey }]}>
+                            4. Genesus is not to be held responsible for any malicious activity regarding a client&apos;s Genesis Parent Portal account. 
+                            Upon signing up, it is the client&apos;s own risk of providing their credentials to Genesus.
+                        </Text>
+                    </ScrollView>
+                </View>
+            </BottomSheet>
             <BottomSheet
                 ref={schoolDistrictSheet}
-                initialSnap={1}
-                snapPoints={[sheetHeight, 0]}
-                borderRadius={25}
-                onCloseEnd={handleSchoolDistrictClose}
-                renderContent={renderSchoolDistrictSheet}
-            />
+                index={0}
+                backgroundStyle={{ 
+                    borderRadius: 25,
+                    borderColor: theme.secondary,
+                    borderWidth: 1,
+                    backgroundColor: theme.background 
+                }}
+                handleIndicatorStyle={{
+                    backgroundColor: isDark ? theme.text : theme.grey
+                }}
+                backdropComponent={({ ...props }) => (
+                    <BottomSheetBackdrop 
+                        open={schoolDistrictSheetOpen}
+                        onClose={handleSchoolDistrictClose}
+                        { ...props} 
+                    />
+                )}
+                enablePanDownToClose={true}
+                enableHandlePanningGesture={true}
+                snapPoints={[1, schoolSheetHeight]}
+            >
+                <View style={[styles.schoolDistrictSheet, { backgroundColor: theme.background }]}>
+                    <View style={{ 
+                        flexDirection: "row", 
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        display: "flex",
+                    }}>
+                        <Text style={[ styles.sheetHeader, { color: theme.text }]}>Select School District</Text>
+                        <Button title="Done" onPress={handleSchoolDistrictClose} />
+                    </View>
+                    <Picker 
+                        onValueChange={(itemValue) => handleValueChange("schoolDistrict")(itemValue)}
+                        selectedValue={values.schoolDistrict}
+                    >
+                        <Picker.Item 
+                            color={theme.text}
+                            label={"Choose School District"} 
+                            value={undefined} 
+                        />
+                        { Object.keys(schoolDistrictsMapped).map((schoolDistrict, index) => {
+                            return (
+                                <Picker.Item 
+                                    key={index}
+                                    color={theme.text}
+                                    label={schoolDistrictsMapped[schoolDistrict as ESchoolDistricts]} 
+                                    value={schoolDistrict} 
+                                />
+                            );
+                        })}
+                    </Picker>
+                </View>
+            </BottomSheet>
         </SafeAreaView>
     );
 };
@@ -390,8 +421,9 @@ const styles = StyleSheet.create({
     },
     schoolDistrictSheet: {
         width: width,
-        height: sheetHeight,
-        padding: 15,
+        height: schoolSheetHeight,
+        padding: 25,
+        paddingTop: 5
     },
     sheetHeader: {
         fontWeight: "600",
@@ -415,6 +447,7 @@ const styles = StyleSheet.create({
         width: width,
         height: 500,
         padding: 25,
+        paddingTop: 5
     },
     termsList: {
         marginVertical: 15,

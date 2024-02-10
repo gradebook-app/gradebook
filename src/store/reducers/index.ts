@@ -24,15 +24,15 @@ const initialState = {
 
 const defaultReducer = (state:IDefaultReducer=initialState, action:any) => {
     switch(action.type) {
-        case EDefaultActions.SET_LOADING: {
-            return { ...state, loading: action.payload };
-        }
-        case EDefaultActions.SET_DONATE_PRODUCTS: {
-            return { ...state, donateProducts: action.payload}
-        }
-        default: {
-            return state; 
-        }
+    case EDefaultActions.SET_LOADING: {
+        return { ...state, loading: action.payload };
+    }
+    case EDefaultActions.SET_DONATE_PRODUCTS: {
+        return { ...state, donateProducts: action.payload};
+    }
+    default: {
+        return state; 
+    }
     }
 };
 

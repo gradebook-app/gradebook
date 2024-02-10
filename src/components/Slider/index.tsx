@@ -41,6 +41,7 @@ const Slider : React.FC<SliderProps> = ({ children, caption }) => {
     return (
         <>
             <ScrollView 
+                style={{ flexGrow:0 }}
                 horizontal={true}
                 centerContent={true}
                 alwaysBounceHorizontal={true}

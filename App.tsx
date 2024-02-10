@@ -1,40 +1,40 @@
 import "react-native-gesture-handler";
 import React, { Suspense, useCallback, useEffect } from "react";
-import { Dimensions, Platform, StyleSheet, UIManager } from "react-native";
+import { Dimensions, Platform, SafeAreaView, StyleSheet, UIManager } from "react-native";
 import LoadingScreen from "./src/pages/LoadingScreen";
 import { Provider as ReduxProvider, useDispatch } from "react-redux";
 import store, { persistor } from "./src/store";
 import AppNavigator from "./AppNavigator";
-import { PersistGate } from 'redux-persist/integration/react';
-import { SafeAreaView } from "react-native-safe-area-context";
+import { PersistGate } from "redux-persist/integration/react";
 import { useDynamicColor } from "./src/hooks/useDynamicColor";
 import { StatusBar } from "expo-status-bar";
 import changeNavigationBarColor from "react-native-navigation-bar-color";
-import SplashScreen from 'react-native-splash-screen'
-import mobileAds, { MaxAdContentRating } from 'react-native-google-mobile-ads';
-import {endConnection, getProducts, initConnection} from 'react-native-iap';
+import mobileAds, { MaxAdContentRating } from "react-native-google-mobile-ads";
+import {endConnection, getProducts, initConnection} from "react-native-iap";
 import config from "./config";
 import { setDonateProducts } from "./src/store/actions";
+import * as SplashScreen from "expo-splash-screen";
+import { DarkTheme, NavigationContainer } from "@react-navigation/native";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 if (
     Platform.OS === "android" &&
     UIManager.setLayoutAnimationEnabledExperimental
-  ) {
+) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 mobileAds()
-  .setRequestConfiguration({
-    maxAdContentRating: MaxAdContentRating.T,
-    tagForChildDirectedTreatment: true,
-    tagForUnderAgeOfConsent: true,
-    testDeviceIdentifiers: [],
-  })
-  .then(() => {
-    mobileAds().initialize();
-}) 
+    .setRequestConfiguration({
+        maxAdContentRating: MaxAdContentRating.T,
+        tagForChildDirectedTreatment: true,
+        tagForUnderAgeOfConsent: true,
+        testDeviceIdentifiers: [],
+    })
+    .then(() => {
+        mobileAds().initialize();
+    }); 
 
 const ReduxBlocker = () => {
     const backgroundColor = useDynamicColor({ dark: "#000", light: "#fff" });
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const IAPConnection : React.FC = ({ children }) => {
+const IAPConnection : React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const dispatch = useDispatch();
 
     // Set up In-App Purchases (IAP)
@@ -67,7 +67,7 @@ const IAPConnection : React.FC = ({ children }) => {
 
     useEffect(() => { 
         handleIAPBootstrap(); 
-        return  () => { endConnection(); }
+        return  () => { endConnection(); };
     }, [ handleIAPBootstrap ]);
     
     return <>{ children }</>;
@@ -77,21 +77,23 @@ export default function App() {
     changeNavigationBarColor("#000000", false, false);
 
     useEffect(() => {
-        SplashScreen.hide();
+        SplashScreen.hideAsync();
     }, []);
 
     return (
-        <ReduxProvider store={store}>
-            <PersistGate loading={<ReduxBlocker/>} persistor={persistor}>
-                <Suspense fallback={LoadingScreen}>
-                    { Platform.OS === "android" && (
-                         <StatusBar translucent={true} />
-                    )}
-                    <IAPConnection>
-                        <AppNavigator />
-                    </IAPConnection>
-                </Suspense>
-            </PersistGate>
-        </ReduxProvider>
+        <NavigationContainer theme={DarkTheme}>
+            <ReduxProvider store={store}>
+                <PersistGate loading={<ReduxBlocker/>} persistor={persistor}>
+                    <Suspense fallback={LoadingScreen}>
+                        { Platform.OS === "android" && (
+                            <StatusBar translucent={true} />
+                        )}
+                        <IAPConnection>
+                            <AppNavigator />
+                        </IAPConnection>
+                    </Suspense>
+                </PersistGate>
+            </ReduxProvider>
+        </NavigationContainer>
     );
 }

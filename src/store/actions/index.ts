@@ -5,7 +5,7 @@ export const setLoading = (loading:boolean) : ISetLoading => ({
     payload: loading,
 });
 
-export const setDonateProducts = (donateProducts:ISetDonateProducts['payload']) : ISetDonateProducts => ({
+export const setDonateProducts = (donateProducts:ISetDonateProducts["payload"]) : ISetDonateProducts => ({
     type: EDefaultActions.SET_DONATE_PRODUCTS,
     payload: donateProducts
 }); 
