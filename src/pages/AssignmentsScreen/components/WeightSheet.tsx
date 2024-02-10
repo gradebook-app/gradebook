@@ -41,6 +41,7 @@ const WeightSheet : React.FC<WeightSheetProps> = ({ weight, setWeight, onDismiss
                 alignItems: "center",
                 display: "flex",
                 padding: 20,
+                paddingTop: 10
             }}>
                 <Text style={[ styles.title, { color: theme.text } ]}>Select Weight</Text>
                 <View style={[ styles.buttons ]}>
@@ -63,7 +64,7 @@ const WeightSheet : React.FC<WeightSheetProps> = ({ weight, setWeight, onDismiss
                 <Picker.Item color={theme.text} label={"AP (5.0)"} value={"ap"} />
             </Picker>
         </View>
-    )
+    );
 };
 
 const styles = StyleSheet.create({  
@@ -80,6 +81,6 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row"
     }
-})
+});
 
 export default WeightSheet; 

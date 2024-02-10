@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { Dimensions, StyleSheet, View, Text, Button } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useTheme } from '../../hooks/useTheme';
-import Blocker from '../Blocker';
-import BrandButton from '../BrandButton';
-import FadeIn from '../FadeIn';
+import React, { ReactChild, ReactElement, useState } from "react";
+import { Dimensions, StyleSheet, View, Text, Button } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { useTheme } from "../../hooks/useTheme";
+import Blocker from "../Blocker";
+import FadeIn from "../FadeIn";
 
 interface IAlertButton {
     title: string,
@@ -12,16 +11,16 @@ interface IAlertButton {
 }
 
 type AlertProps = {
-    title: string,
-    description: string,
+    title: string | ReactElement,
+    children: ReactChild,
     buttons?: IAlertButton[],
     visible: boolean,
     delay?: number,
 };
 
-const { width, height } = Dimensions.get('screen');
+const { width, height } = Dimensions.get("screen");
 
-const Alert : React.FC<AlertProps> = ({ title, description, buttons, visible, delay = 0 }) => {
+const Alert : React.FC<AlertProps> = ({ title, children, buttons, visible, delay = 0 }) => {
     const { theme } = useTheme();
 
     const [ isComponentMounted, setIsComponentMounted ] = useState(false);
@@ -32,56 +31,53 @@ const Alert : React.FC<AlertProps> = ({ title, description, buttons, visible, de
     }, []);
 
     return (
-        <View pointerEvents={isComponentMounted && visible ? 'auto' : 'none'} style={styles.container}>
+        <View pointerEvents={isComponentMounted && visible ? "auto" : "none"} style={styles.container}>
             <Blocker block={isComponentMounted && visible} />
             <FadeIn delay={delay} show={visible && isComponentMounted} style={[ styles.alert, { backgroundColor: theme.background }]}>
                 <>
                     <Text style={[ styles.header, { color: theme.text }]}>{ title }</Text>
-                    <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 200,}}>
-                        <Text style={[ styles.description, { color: theme.grey }]}>{ description }</Text>
+                    <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 200, margin: 10 }}>
+                        { children }
                     </ScrollView>
-                   <View style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                    <View style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                         { 
                             buttons?.map(({ title, onPress } : IAlertButton, index:number) => (
-                            <View key={index}>
-                                <Button 
-                                    onPress={onPress} 
-                                    title={title} 
-                                />
-                                { index !== buttons?.length - 1 && <Text style={{ color: theme.text }}>|</Text> }
-                            </View>
+                                <View key={index} style={{ display: "flex", flexDirection: "row", alignItems: "center"}}>
+                                    <Button 
+                                        onPress={onPress} 
+                                        title={title} 
+                                    />
+                                    { index !== buttons?.length - 1 && <Text style={{ color: theme.text }}>|</Text> }
+                                </View>
                             ))
                         }
                     </View>
                 </>
             </FadeIn>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         width: width,
         height: height,
-        position: 'absolute',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        position: "absolute",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
     },
     header: {
         fontSize: 20,
-        fontWeight: '700',
-    },
-    description: {
-        margin: 10,
-        textAlign: 'center',
+        fontWeight: "700",
+        textAlign: "center"
     },
     alert: {
-        width: 250,
+        width: width * 0.95 > 360 ? 360 : width * 0.75,
         minHeight: 150,
-        borderRadius: 10,
-        display: 'flex',
-        alignItems:'center',
+        borderRadius: 25,
+        display: "flex",
+        alignItems:"center",
         padding: 15,
         zIndex: 1,
         borderWidth: 1,

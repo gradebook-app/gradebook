@@ -15,6 +15,7 @@ export interface ILoginClient {
         pass: string,
         schoolDistrict: ESchoolDistricts,
         notificationToken: string | null,
+        jSessionId: string | undefined,
     }
 }
 

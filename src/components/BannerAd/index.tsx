@@ -20,34 +20,31 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
 
     const unitID = __DEV__ ? TestIds.BANNER : Platform.select({
         ios: "ca-app-pub-8704529290641186/4889775423", // genesus.app account
-        android: "ca-app-pub-8555090951806711/6375245625",
+        android: "ca-app-pub-8704529290641186/6902468009",
     });
 
-    const nativeAdViewRef = React.useRef<any | null>(null);
-
     const handleAdReceived = () => {
-        setLoaded(true)
+        setLoaded(true);
     };
 
     const handleAdFailed = () => {
         setLoaded(false);
-    }
+    };
 
-    React.useEffect(() => {
-        nativeAdViewRef.current?.loadAd();
-    }, []);
-    
     const { isDark } = useAppearanceTheme();
 
     return (
         !limitAds ? (
             <FadeIn show={loaded} style={[ styles.container, style ]}>
-               <View style={[
-                 styles.adContainer,
-                 {
-                    borderRadius: isDark ? 5 : 0
-                 }
-               ]}>
+                <View style={[
+                    styles.adContainer,
+                    {
+                        borderColor: "rgba(0,0,0,0.05)",
+                        borderWidth: isDark || __DEV__ ? 0 : 1,
+                        height: 50,
+                        borderRadius: __DEV__ ? 0 : 10
+                    }
+                ]}>
                     <AdMobBannerAd
                         unitId={unitID as string}
                         onAdLoaded={handleAdReceived}
@@ -58,7 +55,7 @@ const BannerAd : React.FC<BannerAdProps> = ({ style = {} }) => {
                             requestNonPersonalizedAdsOnly: true,
                         }}
                     />
-               </View>
+                </View>
             </FadeIn>
         ) : null
     );
@@ -71,7 +68,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection:"row",
         justifyContent: "center",
-        height: 50,
+        height: 52,
         overflow: "hidden",
     },
     adContainer: {

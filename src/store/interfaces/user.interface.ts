@@ -4,6 +4,7 @@ export interface IUser {
     studentId?: string; 
     unweightedGPA?: number; 
     weightedGPA?: number; 
+    createdAt: string;
     gpaHistory?: {
         _id: string,
         userId: string,

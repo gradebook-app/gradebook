@@ -3,6 +3,9 @@ import { useCallback, useEffect, useState } from "react";
 import { queryGrades } from "../constants/endpoints/grades";
 import { ICourse } from "../store/interfaces/course.interface";
 import * as api from "../utils/api";
+import { useSelector } from "react-redux";
+import { IRootReducer } from "../store/reducers";
+import { getUser } from "../store/selectors";
 
 interface IResponse {
     courses: ICourse[],
@@ -17,14 +20,16 @@ export const useGrades = ({ markingPeriod } : { markingPeriod: string }) => {
         currentMarkingPeriod: "",
     });
     const [ loading, setLoading ] = useState<boolean>(false);
+    const state = useSelector((state:IRootReducer) => state);
+    const user = getUser(state);
 
     const setCache = useCallback(async () => {
-        const cache = await AsyncStorage.getItem(`@courses-${markingPeriod}`);
+        const cache = await AsyncStorage.getItem(`@courses-${user?.studentId}-${markingPeriod}`);
         if (cache) {
             const cachedDataParsed = JSON.parse(cache);
-            if (
+            if ((
                 !data.courses.length ||
-                 data.currentMarkingPeriod !== markingPeriod
+                 data.currentMarkingPeriod !== markingPeriod) && !!markingPeriod
             ) setData(cachedDataParsed);
         }
     }, [ markingPeriod, data ]); 
@@ -34,7 +39,7 @@ export const useGrades = ({ markingPeriod } : { markingPeriod: string }) => {
             !data.courses.length ||
             data.currentMarkingPeriod !== markingPeriod
         ) setCache();
-
+        
         setLoading(true);
 
         const response = (await api.get(queryGrades(markingPeriod)).catch(() => ({
@@ -45,13 +50,13 @@ export const useGrades = ({ markingPeriod } : { markingPeriod: string }) => {
 
         const { courses = [], markingPeriods = [], currentMarkingPeriod = "", error = false} = response;
         const responseData = { courses, markingPeriods, currentMarkingPeriod };
-
+        
         if (courses.length) {
             setData(responseData);
         }
         
-        if (!error) AsyncStorage.setItem(`@courses-${currentMarkingPeriod}`, JSON.stringify(responseData));
-    }, [ markingPeriod ]);
+        if (!error) AsyncStorage.setItem(`@courses-${user?.studentId}-${currentMarkingPeriod}`, JSON.stringify(responseData));
+    }, [ markingPeriod, user?.studentId ]);
 
     const reload = () => {
         setLoading(true);

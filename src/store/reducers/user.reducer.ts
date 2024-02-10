@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { persistReducer, PURGE } from "redux-persist";
+import { persistReducer } from "redux-persist";
 import { EUserActions } from "../constants/user.constants";
 import { IAction } from "../interfaces/action.interface";
 import { IUser } from "../interfaces/user.interface";
@@ -8,34 +8,40 @@ export interface IUserReducer {
     accessToken: string | null,
     user?: IUser,
     notificationToken: null | string,
-    shownAlert1_5: boolean,
+    shownAlert3_0: boolean,
     shownSaveBanner: boolean,
     updatingCourseWeight: boolean; 
+    seenInterstitial: boolean; 
 }
 
 const persistConfig = {
-    key: 'user',
+    key: "user",
     storage: AsyncStorage,
-    whitelist: [ 'user', 'shownAlert1_5', 'shownSaveBanner' ]
+    whitelist: [ "user", "shownAlert3_0", "shownSaveBanner" ]
 };
 
 
 const initialState = {
     accessToken: null,
     notificationToken: null,
-    shownAlert1_5: false,
+    shownAlert3_0: false,
     shownSaveBanner: false,
-    updatingCourseWeight: false
+    updatingCourseWeight: false,
+    seenInterstitial: false
 };
 
 const userReducer = (state:IUserReducer=initialState, action:IAction) => {
     switch(action.type) {
-    case EUserActions.SET_SHOWN_ALERT_1_5: {
-        return { ...state, shownAlert1_5: action.payload };
+    case EUserActions.SET_SHOWN_ALERT_3_0: {
+        return { ...state, shownAlert3_0: action.payload };
+    }
+
+    case EUserActions.SET_SEEN_INTERSTITIAL: {
+        return { ...state, seenInterstitial: action.payload };
     }
 
     case EUserActions.SET_UPDATING_COURSE_WEIGHT: {
-        return { ...state, updatingCourseWeight: action.payload}
+        return { ...state, updatingCourseWeight: action.payload};
     }
 
     case EUserActions.SET_SHOWN_SAVE_BANNER: {

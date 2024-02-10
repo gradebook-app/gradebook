@@ -9,6 +9,7 @@ export interface IThemeDynamic {
         icon: OpaqueColorValue | string | any,
         text: OpaqueColorValue | string | any,
         grey: OpaqueColorValue | string | any,
+        border: OpaqueColorValue | string | any,
     },
 }
 
@@ -17,7 +18,7 @@ export type ITheme = IThemeDynamic & IThemeStatic;
 
 export const useTheme = () => {
     const dynamicBackgroundColor = useDynamicColor({
-        light: "#fff",
+        light: "#F8FBFF",
         dark: "#000",
     });
       
@@ -41,6 +42,10 @@ export const useTheme = () => {
         dark: "rgba(255, 255, 255, 0.35)",
     });
     
+    const dynamicBorderColor = useDynamicColor({
+        light: "rgba(0, 0, 0, 0.10)",
+        dark: "rgba(255, 255, 255, 0.05)",
+    });
 
     const theme:ITheme = {
         ...staticTheme,
@@ -49,8 +54,9 @@ export const useTheme = () => {
             secondary: dynamicSecondaryColor,
             icon: dynamicIconColor,
             text: dynamicTextColor,
-            grey: dynamicGreyColor
+            grey: dynamicGreyColor,
+            border: dynamicBorderColor
         }
-    }
+    };
     return theme; 
 };

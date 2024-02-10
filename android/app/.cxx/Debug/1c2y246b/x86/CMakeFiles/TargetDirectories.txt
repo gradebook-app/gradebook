@@ -1,0 +1,12 @@
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1c2y246b/x86/CMakeFiles/rebuild_cache.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1c2y246b/x86/CMakeFiles/edit_cache.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1c2y246b/x86/CMakeFiles/rndiffapp_appmodules.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1c2y246b/x86/RNIap_autolinked_build/CMakeFiles/rebuild_cache.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1c2y246b/x86/RNIap_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1c2y246b/x86/RNIap_autolinked_build/CMakeFiles/react_codegen_RNIap.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1c2y246b/x86/rnscreens_autolinked_build/CMakeFiles/rebuild_cache.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1c2y246b/x86/rnscreens_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1c2y246b/x86/rnscreens_autolinked_build/CMakeFiles/react_codegen_rnscreens.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1c2y246b/x86/rnsvg_autolinked_build/CMakeFiles/rebuild_cache.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1c2y246b/x86/rnsvg_autolinked_build/CMakeFiles/edit_cache.dir
+/Users/mahitmehta/Desktop/ReactNative/Gradebook/android/app/.cxx/Debug/1c2y246b/x86/rnsvg_autolinked_build/CMakeFiles/react_codegen_rnsvg.dir

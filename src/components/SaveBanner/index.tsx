@@ -26,12 +26,12 @@ const SaveBanner : React.FC<ISaveBannerProps>  = ({ onPress }) => {
     const [ unmount, setUnmount ] = useState(false);
 
     const handlePress = () => {
-        onPress()
-    }
+        onPress();
+    };
 
     const handleX = (e: GestureResponderEvent) => {
         e.preventDefault();
-        e.stopPropagation()
+        e.stopPropagation();
 
         dispatch(setShownSaveBanner(true));
     };
@@ -57,7 +57,7 @@ const SaveBanner : React.FC<ISaveBannerProps>  = ({ onPress }) => {
                                 style={{ width, height: 60, position: "absolute" }}
                                 source={require("../../../assets/coins.png")}
                             />
-                            <Text style={[ styles.title, { color: "#fff" }]}>#SaveGenesus</Text>
+                            <Text style={[ styles.title, { color: "#fff", marginLeft: 5 }]}>Love Genesus?</Text>
                             <Text style={[ styles.caption, { color: "#fff" }]}>Click to Contribute.</Text>
                         </LinearGradient>
                         <TouchableOpacity style={styles.x} onPress={handleX}>
@@ -68,8 +68,8 @@ const SaveBanner : React.FC<ISaveBannerProps>  = ({ onPress }) => {
             }
         </FadeIn>
 
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {

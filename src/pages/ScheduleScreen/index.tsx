@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, SafeAreaView, Text, ScrollView, Dimensions, RefreshControl, View, Platform } from "react-native";
 import { useSelector } from "react-redux";
 import { useSchedule } from "../../hooks/useSchedule";
@@ -9,6 +9,7 @@ import { getAccessToken } from "../../store/selectors";
 import DatePicker from "./components/DatePicker";
 import ScheduleTable from "./components/ScheduleTable";
 import BannerAd from "../../components/BannerAd";
+import { useIsFocused } from "@react-navigation/native";
 
 interface IScheduleScreenProps {
     navigation: any,
@@ -16,7 +17,7 @@ interface IScheduleScreenProps {
 
 const { width, height } = Dimensions.get("window");
 
-const ScheduleScreen : React.FC<IScheduleScreenProps> = ({ navigation }) => {
+const ScheduleScreen : React.FC<IScheduleScreenProps> = () => {
     const { theme } = useTheme();
 
     const state = useSelector((state:IRootReducer) => state);
@@ -42,6 +43,7 @@ const ScheduleScreen : React.FC<IScheduleScreenProps> = ({ navigation }) => {
         reload();
     };  
 
+    const isFocused = useIsFocused();
 
     const dateFormatted = useMemo(() => {
         return moment(dateSelected).format("MMM DD, YYYY");
@@ -52,7 +54,7 @@ const ScheduleScreen : React.FC<IScheduleScreenProps> = ({ navigation }) => {
             <ScrollView 
                 refreshControl={
                     <RefreshControl
-                        refreshing={loading}
+                        refreshing={isFocused && loading}
                         onRefresh={onRefresh}
                     />
                 }
