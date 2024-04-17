@@ -79,3 +79,5 @@ dist/
 
 # Vscode Config
 .vscode/
+
+ios/GradesWidget
