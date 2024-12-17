@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import moment from "moment";
 import { useTheme } from "../../../hooks/useTheme";
-import Timeline from "react-native-snap-carousel";
+// import Timeline from "react-native-snap-carousel";
 import * as Haptics from "expo-haptics";
 
 type IWeekDayProps = {
@@ -137,7 +137,7 @@ const DatePicker : React.FC<DatePickerProps> = ({ handleDateChange, dateSelected
 
     return (
         <View style={styles.container}>
-            <Timeline 
+            { /* <Timeline 
                 loop={true}
                 ref={schedules}
                 layout={"default"}
@@ -147,7 +147,7 @@ const DatePicker : React.FC<DatePickerProps> = ({ handleDateChange, dateSelected
                 sliderWidth={width}
                 onBeforeSnapToItem={handleSnap}
                 renderItem={renderWeekTimeline}
-            />
+            /> */ }
         </View>
     );
 };
