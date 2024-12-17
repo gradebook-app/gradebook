@@ -1,9 +1,6 @@
 {
-    "C_Cpp.errorSquiggles": "disabled",
-    "java.configuration.updateBuildConfiguration": "automatic",
     "search.exclude": {
        "**/node_modules":true
     },
-    "search.useIgnoreFiles": true,
-    "cmake.sourceDirectory": "${workspaceFolder}/android/app/src/main/jni"
+    "search.useIgnoreFiles": true
 }
