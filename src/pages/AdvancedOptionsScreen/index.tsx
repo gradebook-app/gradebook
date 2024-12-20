@@ -1,14 +1,13 @@
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { faDatabase } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { View, SafeAreaView, Dimensions, StyleSheet, ScrollView, Text, ActivityIndicator } from "react-native";
 import Box from "../../components/Box";
 import FadeIn from "../../components/FadeIn";
 import { useTheme } from "../../hooks/useTheme";
 import { useDispatch } from "react-redux";
 import { setUserPurgeCache } from "../../store/actions/user.actions";
-import RNTStorageCalculator from "../../components/RNTStorageCalculator";
-import StorageCalculator from "../../components/RNTStorageCalculator";
+import NativeStorageCalculator from "../../../specs/NativeStorageCalculator";
 
 const { width } = Dimensions.get("window");
 
@@ -23,14 +22,14 @@ const AdvancedOptionsScreen : React.FC<OptionsScreenProps> = ({ navigation }) =>
         navigation?.setOptions({ headerStyle: { 
             backgroundColor: theme.background,
         }});
-    }, []);
+    }, [ theme.background, navigation ]);
 
     const [ cacheSize, setCacheSize ] = useState<number | null>(null);
 
-    const updateStorage = useCallback(async () => {
-        const size = await StorageCalculator.getAbsoluteCacheSize();
+    const updateStorage = useCallback(() => {
+        const size = NativeStorageCalculator.getAbsoluteCacheSize();
         if (typeof size === "number") setCacheSize(size);
-    }, [ RNTStorageCalculator ]);
+    }, []);
 
     useEffect(() => { updateStorage(); }, [ updateStorage ]);
 
@@ -56,7 +55,7 @@ const AdvancedOptionsScreen : React.FC<OptionsScreenProps> = ({ navigation }) =>
         setClearingCache(false); 
 
         updateStorage();
-    }, []);
+    }, [ dispatch, updateStorage ]);
 
     const cacheSizeInKB = useMemo(() => {
         return cacheSize ? (cacheSize / 1024).toLocaleString(undefined, { maximumFractionDigits: 3 }) : null; 
@@ -75,19 +74,17 @@ const AdvancedOptionsScreen : React.FC<OptionsScreenProps> = ({ navigation }) =>
                                 <ActivityIndicator animating={clearingCache} />
                                 { !clearingCache &&  (
                                     <FadeIn style={styles.cacheDescription} show={true}>
-                                        <>
-                                            { 
-                                                cacheSizeInKB && (
-                                                    <Text style={[
-                                                        {
-                                                            color: theme.grey
-                                                        }
-                                                    ]}>
-                                                        { cacheSizeInKB } KB
-                                                    </Text>
-                                                )
-                                            }
-                                        </>
+                                        { 
+                                            cacheSizeInKB && (
+                                                <Text style={[
+                                                    {
+                                                        color: theme.grey
+                                                    }
+                                                ]}>
+                                                    { cacheSizeInKB } KB
+                                                </Text>
+                                            )
+                                        }
                                     </FadeIn>
                                 )}
                             </>
