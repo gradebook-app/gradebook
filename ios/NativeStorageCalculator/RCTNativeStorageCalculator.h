@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <NativeStorageCalculatorSpec/NativeStorageCalculatorSpec.h>
+#import <NativeStorageCalculator/NativeStorageCalculator.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

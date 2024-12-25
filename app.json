@@ -1,44 +1,6 @@
 {
-  "expo": {
-    "name": "Gradebook",
-    "slug": "Gradebook",
-    "version": "2.0.2",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/dark-splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#000000"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true,
-      "userInterfaceStyle": "automatic",
-      "infoPlist": {
-        "NSFaceIDUsageDescription": "FaceID is used optionally to secure user Grades and information."
-      },
-      "bundleIdentifier": "com.mahitm.gradebook",
-      "config": {
-        "googleMobileAdsAppId": "ca-app-pub-8704529290641186~5081347114"
-      }
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      },
-      "package": "com.mahitm.gradebook"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "description": ""
-  },
+  "name": "main",
+  "displayName": "Genesus",
   "react-native-google-mobile-ads": {
     "android_app_id": "ca-app-pub-8555090951806711~9906284761",
     "ios_app_id": "ca-app-pub-8704529290641186~5081347114"

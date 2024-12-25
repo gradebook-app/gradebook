@@ -38,7 +38,7 @@ mobileAds()
 
 const ReduxBlocker = () => {
     const backgroundColor = useDynamicColor({ dark: "#000", light: "#fff" });
-    return <SafeAreaView style={[ styles.container, { backgroundColor }]}></SafeAreaView>;
+    return <SafeAreaView style={[ styles.container, { backgroundColor }]} />;
 };
 
 const styles = StyleSheet.create({
@@ -58,12 +58,12 @@ const IAPConnection : React.FC<{ children: React.ReactNode }> = ({ children }) =
 
         const products = await getProducts({ 
             skus: config.iap.skus
-        }).catch(_e => []);
+        }).catch(() => []);
 
         if (!products.length) return; 
 
         dispatch(setDonateProducts(products));
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => { 
         handleIAPBootstrap(); 

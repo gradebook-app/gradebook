@@ -16,6 +16,8 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+$RNFirebaseAsStaticFramework = true
+
 install! 'cocoapods', :deterministic_uuids => false
 
 require 'json'
@@ -34,8 +36,6 @@ target 'Gradebook' do
   end
 
   config = use_native_modules!
-
-  flags = get_default_flags()
   
   pod 'FirebaseCore', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
