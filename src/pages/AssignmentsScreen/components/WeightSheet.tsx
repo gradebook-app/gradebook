@@ -6,6 +6,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useSelector } from "react-redux";
 import { getIsUpdatingCourseWeight } from "../../../store/selectors/user.selectors";
 import { IRootReducer } from "../../../store/reducers";
+import { BottomSheetView } from "@gorhom/bottom-sheet";
 
 const { width } = Dimensions.get("window");
 
@@ -31,10 +32,10 @@ const WeightSheet : React.FC<WeightSheetProps> = ({ weight, setWeight, onDismiss
             return;
         }
         setWeight(selectedValue);
-    }, [ selectedValue, weight, isUpdating ]);
+    }, [isUpdating, weight, selectedValue, setWeight, onDismiss]);
 
     return (
-        <View style={[ styles.selectContainer, { backgroundColor: theme.background } ]}>
+        <BottomSheetView style={[ styles.selectContainer, { backgroundColor: theme.background } ]}>
             <View style={{ 
                 flexDirection: "row", 
                 justifyContent: "space-between",
@@ -63,7 +64,7 @@ const WeightSheet : React.FC<WeightSheetProps> = ({ weight, setWeight, onDismiss
                 <Picker.Item color={theme.text} label={"Honors (4.5)"} value={"honors"} />
                 <Picker.Item color={theme.text} label={"AP (5.0)"} value={"ap"} />
             </Picker>
-        </View>
+        </BottomSheetView>
     );
 };
 

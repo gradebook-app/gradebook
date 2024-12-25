@@ -8,6 +8,7 @@ import { useCategoryColor } from "../../../hooks/useCategoryColor";
 import { IAssignment } from "../../../store/interfaces/assignment.interface";
 import moment from "moment";
 import Percentage from "../../../components/Percentage";
+import { BottomSheetView } from "@gorhom/bottom-sheet";
 
 type AssignmentSheetProps = {
     assignment?: IAssignment | null,
@@ -48,7 +49,7 @@ const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
     }, [ assignment ]);
 
     return (
-        <View style={[ styles.assignmentSheet, { backgroundColor: theme.background } ]}>
+        <BottomSheetView style={[ styles.assignmentSheet, { backgroundColor: theme.background } ]}>
             <View style={styles.headerContainer}>
                 <Text 
                     style={[ styles.header, { color: theme.text } ]}
@@ -87,7 +88,7 @@ const AssignmentSheet : React.FC<AssignmentSheetProps> = ({ assignment }) => {
                     </Text>
                 </ScrollView>
             </View>
-        </View>
+        </BottomSheetView>
     );
 };
 

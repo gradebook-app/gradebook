@@ -2,6 +2,7 @@ import React from "react";
 import { View, Button, StyleSheet, Text, Dimensions } from "react-native";
 import { useTheme } from "../../../hooks/useTheme";
 import { Picker } from "@react-native-picker/picker";
+import { BottomSheetView } from "@gorhom/bottom-sheet";
 
 interface IMPSelectorProps {
     setSelectedValue: (value:string) => void; 
@@ -23,7 +24,7 @@ const MPSelector : React.FC<IMPSelectorProps> = ({
     const { theme } = useTheme();
 
     return (
-        <View style={[ styles.selectContainer, { 
+        <BottomSheetView style={[ styles.selectContainer, { 
             backgroundColor: theme.background,
             borderColor: theme.secondary,
             borderLeftWidth: 1,
@@ -49,7 +50,7 @@ const MPSelector : React.FC<IMPSelectorProps> = ({
                     <Picker.Item color={theme.text} label={mp} value={mp} key={index} />
                 ))}
             </Picker>
-        </View>
+        </BottomSheetView>
     );
 };
 

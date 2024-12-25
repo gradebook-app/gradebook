@@ -2,7 +2,7 @@ export {};
 
 const config = {
     api: {
-        url: "http://192.168.1.43:5001",
+        url: "http://localhost:5001",
     }
 };
 

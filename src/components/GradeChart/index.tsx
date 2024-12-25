@@ -3,7 +3,7 @@ import { View, StyleSheet, Dimensions } from "react-native";
 import { useTheme } from "../../hooks/useTheme";
 import { useAppearanceTheme } from "../../hooks/useAppearanceTheme";
 import FadeIn from "../FadeIn";
-import { LineChart, CurveType } from "react-native-gifted-charts";
+import { LineChart } from "react-native-gifted-charts";
 
 const { width } = Dimensions.get("window");
 
@@ -86,7 +86,7 @@ const GradeChart : React.FC<GradeChartProps> = ({  data = [], stroke, yAxisSuffi
             height={260}
             curved
             curvature={0.15}
-            curveType={CurveType.CUBIC}
+            curveType={0}
             hideDataPoints
             color={stroke || palette.primary}
         />
@@ -130,6 +130,7 @@ interface IChartFadeConfig {
     fadeInDelay?: number; 
 }
 
+// eslint-disable-next-line react/display-name
 const withFadeIn = (Component: React.FC<GradeChartProps & IChartFadeConfig>) => ({ 
     fadeIn = false, fadeInDelay = 0, ...props 
 } : GradeChartProps & IChartFadeConfig) => {
@@ -142,7 +143,7 @@ const withFadeIn = (Component: React.FC<GradeChartProps & IChartFadeConfig>) => 
                 {
                     fadeIn ? (
                         <FadeIn style={styles.graphWrapper} show={true} delay={fadeInDelay}>
-                           { props.data.length ? <Component { ...props } /> : <></> }
+                            { props.data.length ? <Component { ...props } /> : <></> }
                         </FadeIn>
                     ) : (
                         <View style={styles.graphWrapper}>

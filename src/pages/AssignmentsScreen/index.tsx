@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dimensions, SafeAreaView, StyleSheet, View, Text, RefreshControl, TouchableOpacity, Button } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, View, Text, RefreshControl, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useAssigments } from "../../hooks/useAssignments";
 import Assignment from "./components/Assignment";
@@ -122,11 +122,11 @@ const AssignmentsScreen : React.FC<AssignmentsScreenProps> = ({
     }, [courseId, dispatch, sectionId, setWeight]);
 
     useEffect(() => {
-        const unsubscribe = messaging().onMessage(_ => {
+        const unsubscribe = messaging().onMessage(() => {
             reload();
         });
         return unsubscribe;
-    }, []);
+    }, [reload]);
     
     const onRefresh = () => {
         reload();

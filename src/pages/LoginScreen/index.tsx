@@ -16,7 +16,7 @@ import InputField from "../../components/InputField";
 import { setLoginClient } from "../../store/actions/auth.actions";
 import { IRootReducer } from "../../store/reducers";
 import { getAccessToken, isAccessDenied, isLoading } from "../../store/selectors";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import PasswordField from "../../components/PasswordField";
 import EducationSVG from "../../SVG/EducationSVG";
 import { Picker } from "@react-native-picker/picker";
@@ -79,13 +79,16 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
         errorMessage: "",
     });
 
+    const handleValueChange = useCallback((type:keyof IFormValues) => (text:string | boolean) => { 
+        setValues({ ...values, errorMessage: "", [ type ]: text });
+    }, [values]);
+
     const handleAccessDenied = useCallback(() => {
         if (accessDenied) {
             const message = "Password or Email is not Valid.";
             handleValueChange("errorMessage")(message);
         }
-    }, [ accessDenied ]);
-
+    }, [accessDenied, handleValueChange]);
 
     useEffect(handleAccessDenied, [ handleAccessDenied ]);
 
@@ -112,7 +115,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                 try {
                     await messaging().requestPermission();
                     notificationToken = await messaging().getToken();
-                } catch { /* empty */ }
+                } catch (e) { console.log(e); }
             }
         } catch(e) {
             console.log(e);
@@ -120,9 +123,8 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
 
         setAttemptingLogin(true);
         dispatch(setLoginClient({ ...values, notificationToken: notificationToken }));
-    }, [ values ]));
+    }, [dispatch, handleValueChange, values]));
     
-
     const handleNavigate = useCallback(async () => {
         if (isAccessToken && attemptingLogin) {
             await analytics().logLogin({ method: "manual" });
@@ -130,16 +132,11 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
             await analytics().setUserProperty("userId", userId);
             navigation.navigate("navigator");
         }
-    }, [ isAccessToken, userId, attemptingLogin]);
+    }, [isAccessToken, attemptingLogin, userId, navigation]);
     
-
     useEffect(() => {
         handleNavigate();
     }, [ handleNavigate ]);
-
-    const handleValueChange = (type:keyof IFormValues) => (text:string | boolean) => { 
-        setValues({ ...values, errorMessage: "", [ type ]: text });
-    };
 
     const [ termsSheetOpen, setTermsSheetOpen ] = useState(false);
     const [ schoolDistrictSheetOpen, setSchoolDistrictSheetOpen ]= useState(false);
@@ -170,13 +167,13 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
     const [ districtPickerOpen, setDistrictPickerOpen ] = useState(false);
 
     const { isDark } = useAppearanceTheme();
+    const dropdownIconColor = useDynamicColor({ dark: theme.grey, light: "grey" });
 
     return (
         <SafeAreaView style={[ styles.container, { backgroundColor: theme.background }]}>
             <LoadingBox loading={loading}/>
             <KeyboardAvoidingView behavior={"padding"}>
                 <View style={ styles.imageContainer }>
-                    {/* <Image style={styles.image} source={EducationPNG} /> */}
                     <EducationSVG width={width * 0.85}/>
                 </View>
                 <View style={styles.form}>
@@ -197,7 +194,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                                         handleValueChange("schoolDistrict")(itemValue);
                                     }}
                                     selectedValue={values.schoolDistrict}
-                                    dropdownIconColor={useDynamicColor({ dark: theme.grey, light: "grey" })}
+                                    dropdownIconColor={dropdownIconColor}
                                     mode="dropdown"
                                     prompt="School District"
                                     onFocus={() => { setDistrictPickerOpen(true); }}
@@ -292,7 +289,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                 }}
                 snapPoints={[1, termsSheetHeight]}
             >
-                <View style={[ styles.termsSheet, { 
+                <BottomSheetView style={[ styles.termsSheet, { 
                     zIndex: 1,
                     backgroundColor: theme.background,
                     borderColor: theme.secondary,
@@ -332,7 +329,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                             Upon signing up, it is the client&apos;s own risk of providing their credentials to Genesus.
                         </Text>
                     </ScrollView>
-                </View>
+                </BottomSheetView>
             </BottomSheet>
             <BottomSheet
                 ref={schoolDistrictSheet}
@@ -353,11 +350,20 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                         { ...props} 
                     />
                 )}
+                containerStyle={{
+                    zIndex: 1,
+                }}
                 enablePanDownToClose={true}
                 enableHandlePanningGesture={true}
                 snapPoints={[1, schoolSheetHeight]}
             >
-                <View style={[styles.schoolDistrictSheet, { backgroundColor: theme.background }]}>
+                <BottomSheetView style={[styles.schoolDistrictSheet, { 
+                    zIndex: 1,
+                    backgroundColor: theme.background,
+                    borderColor: theme.secondary,
+                    borderLeftWidth: 1,
+                    borderRightWidth: 1, 
+                }]}>
                     <View style={{ 
                         flexDirection: "row", 
                         justifyContent: "space-between",
@@ -387,7 +393,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({ navigation }) => {
                             );
                         })}
                     </Picker>
-                </View>
+                </BottomSheetView>
             </BottomSheet>
         </SafeAreaView>
     );

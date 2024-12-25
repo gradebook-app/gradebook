@@ -3,6 +3,7 @@ import { View, Button, StyleSheet, Text, Dimensions } from "react-native";
 import { useTheme } from "../../../hooks/useTheme";
 import { Picker } from "@react-native-picker/picker";
 import { IGeneralUserAccount } from "../../../hooks/useAccounts";
+import { BottomSheetView } from "@gorhom/bottom-sheet";
 
 interface AccountSelectorProps {
     setSelectedValue: (value:string) => void; 
@@ -24,7 +25,7 @@ const AccountSelector : React.FC<AccountSelectorProps> = ({
     const { theme } = useTheme();
 
     return (
-        <View style={[ styles.selectContainer, { 
+        <BottomSheetView style={[ styles.selectContainer, { 
             backgroundColor: theme.background,
             borderColor: theme.secondary,
             borderLeftWidth: 1,
@@ -56,7 +57,7 @@ const AccountSelector : React.FC<AccountSelectorProps> = ({
                     <Picker.Item color={theme.text} label={`${name} (${studentId})`} value={studentId} key={index} />
                 ))}
             </Picker>
-        </View>
+        </BottomSheetView>
     );
 };
 
