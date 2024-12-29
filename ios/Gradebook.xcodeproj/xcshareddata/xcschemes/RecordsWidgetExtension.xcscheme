@@ -16,7 +16,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "17E77D602D20C6B600BBBDFC"
+               BlueprintIdentifier = "17428EC62D21E00400E19213"
                BuildableName = "RecordsWidgetExtension.appex"
                BlueprintName = "RecordsWidgetExtension"
                ReferencedContainer = "container:Gradebook.xcodeproj">
@@ -62,7 +62,7 @@
          BundleIdentifier = "com.apple.springboard">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "17E77D602D20C6B600BBBDFC"
+            BlueprintIdentifier = "17428EC62D21E00400E19213"
             BuildableName = "RecordsWidgetExtension.appex"
             BlueprintName = "RecordsWidgetExtension"
             ReferencedContainer = "container:Gradebook.xcodeproj">
