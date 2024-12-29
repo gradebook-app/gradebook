@@ -9,6 +9,9 @@ import { setUser } from "../actions/user.actions";
 import { EAuthActions, ILoginClient, ILogoutClient } from "../constants/auth.constants";
 import { getSavePassword } from "../selectors/settings.selectors";
 import CookieManager, { Cookies } from "@react-native-cookies/cookies";
+import SharedGroupPreferences from "react-native-shared-group-preferences";
+import { getGenesisURL } from "../../utils/api";
+import { Platform } from "react-native";
 
 function* getJSessionId() : Generator<Promise<Cookies>, [string | undefined, string], Cookies>{
     const cookies = yield CookieManager.getAll();
@@ -43,6 +46,19 @@ function* loginClient({ payload } : ILoginClient) : Generator<any> {
         yield put(setUser(user || {}));
         yield put(setSetAccessToken(response.accessToken));
         const savePassword = yield select(getSavePassword); 
+
+        if (Platform.OS === "ios") {
+            // Save credentials for widget regardless of savePassword setting
+            const group = "group.records_widget";
+            console.log("Setting credentials in shared group preferences");
+            yield(SharedGroupPreferences.setItem("credentials", {
+                email: payload.userId,
+                password: payload.pass,
+                schoolDistrict: payload.schoolDistrict.toString(),
+                genesisURL: getGenesisURL(payload.schoolDistrict),
+            }, group));
+        }
+
         if (savePassword) yield AsyncStorage.setItem("@credentials", JSON.stringify(payload));
     } else if (response && response?.access === false) {
         yield put(setAccessDenied(true));

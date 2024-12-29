@@ -9,6 +9,7 @@ import messaging from "@react-native-firebase/messaging";
 import { ILoginClient } from "../store/constants/auth.constants";
 import CookieManager from "@react-native-cookies/cookies";
 import { genesisConfig } from "../constants/genesis";
+import { ESchoolDistricts } from "../store/enums/school-districts.enum";
 
 function retrieveAccessToken() {
     const state = store.getState();
@@ -28,13 +29,17 @@ function constructURL(endpoint:string):string {
 
 export const GENESIS_COOKIE = "JSESSIONID";
 
+export const getGenesisURL = (schoolDistrict: ESchoolDistricts) => {
+    return `${genesisConfig[schoolDistrict].root}${genesisConfig[schoolDistrict].auth}`;
+};
+
 export const attemptGenesisClientSideLogin = async (payload: ILoginClient["payload"]) : Promise<boolean> => {
     const formBody = [
         "j_username=" + encodeURIComponent(payload.userId),
         "j_password=" + encodeURIComponent(payload.pass),
     ];
 
-    const genesisURL = `${genesisConfig[payload.schoolDistrict].root}${genesisConfig[payload.schoolDistrict].auth}`;
+    const genesisURL = getGenesisURL(payload.schoolDistrict);
     return await fetch(genesisURL, {
         method: "POST",
         headers: {

@@ -16,6 +16,7 @@ import { setDonateProducts } from "./src/store/actions";
 import * as SplashScreen from "expo-splash-screen";
 import { DarkTheme, NavigationContainer } from "@react-navigation/native";
 
+
 const { width, height } = Dimensions.get("window");
 
 if (
