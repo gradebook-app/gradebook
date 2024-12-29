@@ -1839,6 +1839,8 @@ PODS:
     - RNNotifee/NotifeeCore (= 3.0.4)
   - RNNotifee/NotifeeCore (3.0.4):
     - React-Core
+  - RNReactNativeSharedGroupPreferences (1.1.24):
+    - React
   - RNReanimated (3.16.6):
     - DoubleConversion
     - glog
@@ -2113,6 +2115,7 @@ DEPENDENCIES:
   - RNGoogleMobileAds (from `../node_modules/react-native-google-mobile-ads`)
   - RNIap (from `../node_modules/react-native-iap`)
   - "RNNotifee (from `../node_modules/@notifee/react-native`)"
+  - RNReactNativeSharedGroupPreferences (from `../node_modules/react-native-shared-group-preferences`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -2320,6 +2323,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-iap"
   RNNotifee:
     :path: "../node_modules/@notifee/react-native"
+  RNReactNativeSharedGroupPreferences:
+    :path: "../node_modules/react-native-shared-group-preferences"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -2435,6 +2440,7 @@ SPEC CHECKSUMS:
   RNGoogleMobileAds: 84807fb00efbc3325a1ae6372586b6a49470a4b6
   RNIap: 5eb856f0d1cda7c17c31043de715a27d866e22ac
   RNNotifee: 1c0bfb1bb04029796ceca320308fa4a51a58d564
+  RNReactNativeSharedGroupPreferences: d4869af3c7757405b6b5ac633d0ef5f9886a9be7
   RNReanimated: ee9a749b8f2ee2a743d2dd7b4ab66f22d63f3bda
   RNScreens: 351f431ef2a042a1887d4d90e1c1024b8ae9d123
   RNSVG: 588c85abb474f7ee58dd886ed1fe198cc73772b2
