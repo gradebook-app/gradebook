@@ -8,18 +8,63 @@
 import WidgetKit
 import SwiftUI
 
+struct Grade: Decodable {
+  var percentage: Double
+  var letter: String
+  var projected: Double
+}
+
+struct WidgetClass: Decodable {
+  var name: String
+  var grade: Grade
+}
+
+struct WidgetContent: Decodable {
+  var unweightedGPA: Double
+  var weightedGPA: Double
+  var classes: [WidgetClass]
+}
+
+struct WidgetContentBody: Encodable {
+  let email: String
+  let password: String
+  let token: String
+}
+
+struct APIConfig {
+    static let baseURL: String = {
+        #if DEBUG
+        return "http://localhost:8000"
+        #else
+        return "https://api.records.mahitm.com"
+        #endif
+    }()
+}
+
+func getWidgetContent(token: String, email: String, password: String) async throws -> WidgetContent {
+  let url = URL(string: "\(APIConfig.baseURL)/grades/widget")!
+    
+  let requestBody = WidgetContentBody(email: email, password: password, token: token)
+    
+  var request = URLRequest(url: url)
+  request.httpMethod = "POST"
+  request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+  request.httpBody = try JSONEncoder().encode(requestBody)
+
+  let (data, response) = try await URLSession.shared.data(for: request)
+  
+  guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+      throw URLError(.badServerResponse)
+  }
+  
+  let widgetContentResponse = try JSONDecoder().decode(WidgetContent.self, from: data)
+  
+  return widgetContentResponse
+}
+
 func getGenesisAuthToken(genesisURL: String, email: String, password: String) async throws -> String {
     guard let url = URL(string: genesisURL) else {
       throw URLError(.badURL)
-    }
-  
-    if let cookies = HTTPCookieStorage.shared.cookies {
-        if let jsessionCookie = cookies.first(where: { $0.name == "JSESSIONID" }) {
-            print("Found cached JSESSIONID Cookie")
-            return jsessionCookie.value
-        } else {
-            print("JSESSIONID Cookie not found.")
-        }
     }
 
     var request = URLRequest(url: url)
@@ -37,28 +82,27 @@ func getGenesisAuthToken(genesisURL: String, email: String, password: String) as
   
     let (_, response) = try await URLSession.shared.data(for: request)
   
-     // Check if the response is valid
-     guard let httpResponse = response as? HTTPURLResponse else {
-         throw URLError(.badServerResponse)
-     }
-     
-     // Extract cookies from the response headers
+    guard let httpResponse = response as? HTTPURLResponse else {
+        throw URLError(.badServerResponse)
+    }
+
     let cookies = HTTPCookie.cookies(withResponseHeaderFields: httpResponse.allHeaderFields as! [String: String], for: httpResponse.url!)
     
     if cookies.count == 0 {
-      let waitTime = 2
-      print("Rate limit exceeded. Retrying in \(waitTime) seconds...")
-      try await Task.sleep(nanoseconds: UInt64(waitTime * 1_000_000_000))
-      
-      return try await getGenesisAuthToken(genesisURL: genesisURL, email: email, password: password)
+      if let cookies = HTTPCookieStorage.shared.cookies {
+          if let jsessionCookie = cookies.first(where: { $0.name == "JSESSIONID" }) {
+              print("Found cached JSESSIONID Cookie")
+              return jsessionCookie.value
+          }
+      }
     }
   
-    // Find JSESSIONID cookie
     if let jsessionCookie = cookies.first(where: { $0.name == "JSESSIONID" }){
-        return jsessionCookie.value // Return the JSESSIONID value
+        return jsessionCookie.value
     }
      
-    throw URLError(.cannotParseResponse)
+    print("JSESSIONID Cookie not found.")
+    throw URLError(.badServerResponse)
 }
 
 struct CredentialsWidgetData: Decodable {
@@ -70,11 +114,28 @@ struct CredentialsWidgetData: Decodable {
 
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-      SimpleEntry(date: Date(), configuration: ConfigurationAppIntent(), text: "example@mahitm.com")
+      SimpleEntry(date: Date(), configuration: ConfigurationAppIntent(), content: WidgetContent(unweightedGPA: 0, weightedGPA: 0, classes: []))
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-      SimpleEntry(date: Date(), configuration: configuration, text: "snapshot@mahitm.com")
+      SimpleEntry(date: Date(), configuration: configuration, content: WidgetContent(unweightedGPA: 3.93, weightedGPA: 4.32, classes: [
+        WidgetClass(
+          name: "Academic English I",
+          grade: Grade(percentage: 98, letter: "A+", projected: 0)
+        ),
+        WidgetClass(
+          name: "AP Physics A",
+          grade: Grade(percentage: 79, letter: "C+", projected: 0)
+        ),
+        WidgetClass(
+          name: "Computer Science",
+          grade: Grade(percentage: 100, letter: "A+", projected: 0)
+        ),
+        WidgetClass(
+          name: "Physical Education",
+          grade: Grade(percentage: 83, letter: "B", projected: 0)
+        )
+      ]))
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
@@ -93,10 +154,11 @@ struct Provider: AppIntentTimelineProvider {
             
             do {
               let jsessionId = try await getGenesisAuthToken(genesisURL: genesisURL, email: email, password: password)
-              print(jsessionId)
+              let content = try await getWidgetContent(token: jsessionId, email: email, password: password)
+              
               let nextRefresh = Calendar.current.date(byAdding: .minute, value: 5, to: entryDate)!
-              let entry = SimpleEntry(date: nextRefresh, configuration: configuration, text: jsessionId)
-              return Timeline(entries: [entry],  policy: .after(Date().addingTimeInterval(3600)))
+              let entry = SimpleEntry(date: nextRefresh, configuration: configuration, content: content)
+              return Timeline(entries: [entry],  policy: .after(Date().addingTimeInterval(900)))
             } catch {
                print("Error occurred during login request: \(error.localizedDescription)")
                print("Failed to get genesis auth token")
@@ -109,37 +171,91 @@ struct Provider: AppIntentTimelineProvider {
       }
       
       let nextRefresh = Calendar.current.date(byAdding: .minute, value: 5, to: entryDate)!
-      let entry = SimpleEntry(date: nextRefresh, configuration: configuration, text: "No data set")
+      let entry = SimpleEntry(date: nextRefresh, configuration: configuration, content: WidgetContent(unweightedGPA: 0, weightedGPA: 0, classes: []))
       return Timeline(entries: [entry], policy: .atEnd)
     }
-
-//    func relevances() async -> WidgetRelevances<ConfigurationAppIntent> {
-//        // Generate a list containing the contexts this widget is relevant in.
-//    }
 }
 
 struct SimpleEntry: TimelineEntry {
-    let date: Date
-    let configuration: ConfigurationAppIntent
-    let text: String
+  let date: Date
+  let configuration: ConfigurationAppIntent
+  let content: WidgetContent
 }
 
 public extension Color {
   static let brandBrown = Color(red: 42 / 255.0, green: 24 / 255.0, blue: 24 / 255.0)
   static let brandDarkBrown = Color(red: 29 / 255.0, green: 16 / 255.0, blue: 16 / 255.0)
+  static let brandLightBrown = Color(red: 86 / 255.0, green: 45 / 255.0, blue: 45 / 255.0)
+  static let brandFunkyBlue = Color(red: 88 / 255.0, green: 175 / 255.0, blue: 194 / 255.0)
+  static let brandFunkyPurple = Color(red: 166 / 255.0, green: 101 / 255.0, blue: 193 / 255.0)
 }
 
 struct RecordsWidgetEntryView : View {
     var entry: Provider.Entry
 
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+
     var body: some View {
       ZStack {
-        Color.brandBrown // Change to your desired background color
-        VStack {
-          Text(entry.text)
-          Text(entry.date, style: .time)
-            .foregroundColor(.white)
-        }// Adjust text color for contrast
+        Color.brandBrown
+        Spacer()
+        VStack(spacing: 0) {
+          HStack {
+            HStack(spacing: 20) {
+              VStack {
+                Text("UW")
+                  .font(.custom("Jersey15-Regular", size: 18))
+                  .foregroundColor(Color.brandFunkyPurple)
+                Text("\(String(format: "%.02f", entry.content.unweightedGPA))")
+                  .font(.custom("Jersey15-Regular", size: 40))
+                  .foregroundColor(Color.white)
+              }
+              VStack {
+                Text("WE")
+                  .font(.custom("Jersey15-Regular", size: 18))
+                  .foregroundColor(Color.brandFunkyBlue)
+                Text("\(String(format: "%.02f", entry.content.weightedGPA))")
+                  .font(.custom("Jersey15-Regular", size: 40))
+                  .foregroundColor(Color.white)
+              }
+            }
+            Spacer()
+            Image("logo")
+              .resizable()
+              .scaledToFit()
+              .frame(width: 60, height: 60)
+          }
+          .padding(.leading, 10)
+          .padding(.trailing, 5)
+          .padding(.bottom, 3)
+          .frame(maxHeight: .infinity, alignment: .center)
+          LazyVGrid(columns: columns, spacing: 5) {
+            ForEach(entry.content.classes, id: \.self.name) { item in
+              HStack {
+                Text(item.name)
+                  .font(.custom("Jersey15-Regular", size: 16))
+                  .foregroundColor(.white)
+                  .lineLimit(1)
+                  .truncationMode(.tail)
+                Spacer()
+                Text("\(String(format: "%.0f", item.grade.percentage))%")
+                  .font(.custom("Jersey15-Regular", size: 16))
+                  .foregroundColor(.white)
+                  .lineLimit(1)
+                  .truncationMode(.tail)
+              }
+              .padding(.horizontal, 7)
+              .padding(.vertical, 10)
+              .background(Color.brandLightBrown)
+              .frame(maxWidth: .infinity)
+              .border(Color.brandDarkBrown, width: 3)
+            }
+          }
+        }
+        .padding(7)
       }
       .containerShape(RoundedRectangle(cornerRadius: 21)) // Ensure the sh
                 .overlay( // Adding a custom border
@@ -193,5 +309,22 @@ extension ConfigurationAppIntent {
 #Preview(as: .systemMedium) {
     RecordsWidget()
 } timeline: {
-  SimpleEntry(date: .now, configuration: .smiley, text: "preview@mahitm.com")
+  SimpleEntry(date: .now, configuration: .smiley, content: WidgetContent(unweightedGPA: 3.93, weightedGPA: 4.32, classes: [
+    WidgetClass(
+      name: "Academic English I",
+      grade: Grade(percentage: 98, letter: "A+", projected: 0)
+    ),
+    WidgetClass(
+      name: "AP Physics A",
+      grade: Grade(percentage: 79, letter: "C+", projected: 0)
+    ),
+    WidgetClass(
+      name: "Computer Science",
+      grade: Grade(percentage: 100, letter: "A+", projected: 0)
+    ),
+    WidgetClass(
+      name: "Physical Education",
+      grade: Grade(percentage: 83, letter: "B", projected: 0)
+    )
+  ]))
 }
